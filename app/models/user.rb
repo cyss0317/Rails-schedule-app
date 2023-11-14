@@ -7,4 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   # before_action :authenticate_user!
+  def full_name
+    "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
+  end
 end
