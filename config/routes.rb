@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  root to: 'home#index'
   devise_for :users
+  # devise_for :registrations
+  # namespace :users do
+  #   resources :registrations, only: %i[new create]
+  # end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -9,7 +14,6 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
 
-  root to: 'home#index'
   # Defines the root path route ("/")
   # root "posts#index"
 end
