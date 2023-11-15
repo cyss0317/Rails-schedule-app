@@ -1,0 +1,31 @@
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign up your account</h2>
+    <%= render "devise/shared/error_messages", resource: resource %>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-6" action="#" method="POST">
+      <%= render partial: "shared/email_field", locals: { form: f } %>
+      <%= render partial: "shared/text_field", locals: { form: f, lable: "first_name" , field: "first_name"  } %>
+      <%= render partial: "shared/text_field", locals: { form: f, lable: "middle_name", field: "middle_name" } %>
+      <%= render partial: "shared/text_field", locals: { form: f, lable: "last_name", field: "last_name" } %>
+
+      <%= render partial: "shared/password_field", locals: { form: f } %>
+      <div class="field m-1">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  %>
+      </div>
+
+      <%= render partial: "shared/button", locals: { display_text: "Sign Up" } %>
+    </form>
+
+    <p class="mt-10 text-center text-sm text-gray-500">
+      Already a Member?
+      <%= render partial: "/devise/shared/links" %>
+    </p>
+  </div>
+</div>
+
+<% end %>

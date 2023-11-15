@@ -1,0 +1,20 @@
+<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+  <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+</div>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+
+        <%= render partial: "shared/email_field", locals: { form: f } %>
+        <%= render partial: "shared/password_field", locals: { form: f } %>
+
+        <%= render partial: "shared/button", locals: { display_text: "Sign in" } %>
+
+      <p class="mt-10 text-center text-sm text-gray-500">
+        Don't have an account?
+        <%= render partial: "/devise/shared/links" %>
+      </p>
+    </div>
+  </div>
+  <%= render "devise/shared/error_messages", resource: resource %>
+<% end %>
+
