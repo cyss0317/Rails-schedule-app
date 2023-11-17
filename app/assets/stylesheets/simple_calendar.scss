@@ -1,0 +1,54 @@
+.simple-calendar {
+  .day {
+    height: 8rem;
+    border: 1px solid #22222260;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    &:hover {
+      background-color: #22222210;
+      font-size: 1.1rem;
+      text-decoration: underline;
+    }
+  }
+  table.table thead tr th {
+    min-width: 5rem;
+  }
+
+  .wday-0 {
+  }
+  .wday-1 {
+  }
+  .wday-2 {
+  }
+  .wday-3 {
+  }
+  .wday-4 {
+  }
+  .wday-5 {
+  }
+  .wday-6 {
+  }
+
+  .today {
+    border: 5px solid #22222280;
+  }
+  .past {
+  }
+  .future {
+  }
+
+  .start-date {
+  }
+
+  .prev-month {
+    background-color: #22222230;
+  }
+  .next-month {
+    background-color: #22222230;
+  }
+  .current-month {
+  }
+
+  .has-events {
+  }
+}
