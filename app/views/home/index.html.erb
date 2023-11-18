@@ -1,8 +1,7 @@
-<% modal_toggle = false %>
 
-
-<%= render partial: "shared/modal", locals: { modal_toggle: modal_toggle } %>
-
+<%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
+ <h1>form goes here</h1>
+<% end %>
 
 <% if current_user %>
   <h1>Welcome, <%= current_user.full_name %></h1>
@@ -25,8 +24,13 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(".day").forEach(day => {
       day.addEventListener("click", (e) => {
-       console.log(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.target.innerText},`))
+        const targetDate = new Date(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.target.innerText},`))
+
+        let displayDate = document.querySelector("#target-date")
+        displayDate.innerText = ""
+        displayDate.innerText += targetDate.toLocaleDateString()
         document.querySelector("#myModal").style.display = "block"
+        console.log(targetDate)
       })
     })
   })
