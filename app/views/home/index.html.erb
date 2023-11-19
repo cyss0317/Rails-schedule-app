@@ -1,14 +1,21 @@
-
 <%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
- <h1>form goes here</h1>
+  <%# render partial: "meetings/new" %>
 <% end %>
 
 <% if current_user %>
   <h1>Welcome, <%= current_user.full_name %></h1>
   <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
   <div class="m-6 text-center">
-    <%= month_calendar do |date| %>
+    <%= month_calendar(events: @meetings) do |date, meetings| %>
       <%= date.day %>
+      <% if !meetings.empty? %>
+        <div>
+          <%= meetings.each do |meeting| %>
+              <%= meeting.name %>
+          <% end %>
+        </div>
+      <% end  %>
+      
     <% end %>
     <%= week_calendar do |date|  %>
       <%= date.day %>
@@ -24,7 +31,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(".day").forEach(day => {
       day.addEventListener("click", (e) => {
-        const targetDate = new Date(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.target.innerText},`))
+        debugger
+        const targetDate = new Date(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.currentTarget.innerText},`))
 
         let displayDate = document.querySelector("#target-date")
         displayDate.innerText = ""

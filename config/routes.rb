@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :meetings
   root to: 'home#index'
   devise_for :users
   # devise_for :registrations
