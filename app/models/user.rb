@@ -10,4 +10,8 @@ class User < ApplicationRecord
   def full_name
     "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
   end
+
+  def name_and_initials
+    "#{first_name.capitalize} #{middle_name[0].capitalize}. #{last_name[0].capitalize}"
+  end
 end
