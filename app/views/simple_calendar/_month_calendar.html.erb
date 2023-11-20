@@ -1,3 +1,12 @@
+<% target_date_range = [] %>
+
+<%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
+  <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
+    <%= week_calendar(date_range: target_date_range) do |date|  %>
+      <%= date.day %>
+    <% end %>
+<% end %>
+
 <div class="simple-calendar">
   <div class="calendar-heading">
     <%= link_to t('simple_calendar.previous', default: 'Previous'), calendar.url_for_previous_view %>
@@ -15,8 +24,9 @@
     </thead>
 
     <tbody>
-      <% date_range.each_slice(7) do |week| %>
-        <tr>
+      <% date_range.each_slice(7).with_index do |week, idx| %>
+      <%= week %>
+        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> >
           <% week.each do |day| %>
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
@@ -31,3 +41,11 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector("tr[class^='week-]").addEventListener("click", (e) => {
+      
+    })
+  })
+</script>
