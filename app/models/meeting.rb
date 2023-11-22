@@ -44,6 +44,7 @@ class Meeting < ApplicationRecord
   private
 
   def start_time_cannot_be_greater_than_end_time
+    debugger
     return unless start_time.present? && end_time.present?
 
     errors.add(:start_time, "can't be greater than end time") if start_time > end_time
