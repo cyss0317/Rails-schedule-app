@@ -27,17 +27,17 @@
 <%# document.querySelector(".calendar-title").innerHTML.split(" ").join(",11,") %>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll(".day").forEach(day => {
-      day.addEventListener("click", (e) => {
-        e.stopPropagation()
-        const targetDate = new Date(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.currentTarget.innerText},`))
+   // document.querySelectorAll(".day").forEach(day => {
+   //   day.addEventListener("click", (e) => {
+   //     e.stopPropagation()
+   //     const targetDate = new Date(document.querySelector(".calendar-title").innerHTML.split(" ").join(`,${e.currentTarget.innerText},`))
 
-        let displayDate = document.querySelector("#target-date")
-        displayDate.innerText = ""
-        displayDate.innerText += targetDate.toLocaleDateString()
-        document.querySelector("#myModal").style.display = "block"
-        console.log(targetDate)
-      })
-    })
+   //     let displayDate = document.querySelector("#target-date")
+   //     displayDate.innerText = ""
+   //     displayDate.innerText += targetDate.toLocaleDateString()
+   //     document.querySelector("#myModal").style.display = "block"
+   //     console.log(targetDate)
+   //   })
+   // })
   })
 </script>

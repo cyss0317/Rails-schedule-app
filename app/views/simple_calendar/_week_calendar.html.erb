@@ -20,7 +20,6 @@
 
     <tbody>
       <% date_range.each_slice(7) do |week| %>
-      <%= date_range %>
         <tr>
           <% week.each do |day| %>
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>

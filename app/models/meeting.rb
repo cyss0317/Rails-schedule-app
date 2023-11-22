@@ -1,4 +1,11 @@
 class Meeting < ApplicationRecord
+  belongs_to :user
+
+  validates :name, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
+  validate :start_time_cannot_be_greater_than_end_time
+
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
   def self.default
@@ -13,16 +20,26 @@ class Meeting < ApplicationRecord
     User.find(user_id).name_and_initials
   end
 
+  def start_time(start_time = DateTime.now)
+    start_time
+  end
+
+  def str_time_to_date(time)
+    if time.is_a? String
+      time.to_date
+    elsif time.instance_of? Date
+      time
+    end
+  end
+
   # display work time from to end
   def work_time
-    "#{start_time.strftime('%H:%M')} - #{end_time.strftime('%H:%M')}"
+    "#{start_time.strftime('%l:%M %p')}-#{end_time.strftime('%H:%M %p')}"
   end
-  belongs_to :user
 
-  validates :name, presence: true
-  validates :start_time, presence: true
-  validates :end_time, presence: true
-  validate :start_time_cannot_be_greater_than_end_time
+  def date_range
+    Meeting.where(start_time: start_time.beginning_of_week..start_time.end_of_week)
+  end
 
   private
 

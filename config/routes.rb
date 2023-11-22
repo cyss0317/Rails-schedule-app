@@ -2,6 +2,7 @@
 
 Rails.application.routes.draw do
   resources :meetings
+  get 'meetings_weekly', to: 'meetings#weekly'
   root to: 'home#index'
   devise_for :users
   # devise_for :registrations

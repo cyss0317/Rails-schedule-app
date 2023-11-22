@@ -1,8 +1,8 @@
 <% target_date_range = [] %>
-
+<% new_start_date ="18 Nov 2023" %>
 <%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
   <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
-    <%= week_calendar(date_range: target_date_range) do |date|  %>
+    <%= week_calendar(start_date: new_start_date) do |date|  %>
       <%= date.day %>
     <% end %>
 <% end %>
@@ -25,10 +25,9 @@
 
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
-      <%= week %>
         <tr class="week-<%= idx %>" data-date-range=<%= date_range %> >
           <% week.each do |day| %>
-            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+            <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
@@ -42,10 +41,23 @@
   </table>
 </div>
 
+<%= week_calendar(start_date: "21 Nov 2023", events: Meeting.where(start_time: DateTime.new(2023, 11, 18).beginning_of_week, end_time: DateTime.new(2023, 11, 18).end_of_week)) do |day| %>
+  <%= day.day %>
+<% end %> 
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector("tr[class^='week-]").addEventListener("click", (e) => {
-      
+    document.querySelectorAll("tr[class^='week-']").forEach(week => {
+      week.addEventListener("click", (e) => {
+        document.querySelector("#myModal").style.display = "block"
+      })
+    })
+
+    document.querySelectorAll(".day").forEach(day => {
+      day.addEventListener("click", (e) => {
+        window.startDate = new Date(e.target.getAttribute("data-date"))
+      })
+
     })
   })
 </script>

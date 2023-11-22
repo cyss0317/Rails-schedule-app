@@ -1,0 +1,8 @@
+<%= week_calendar(events: @meetings) do |day, day_events| %>
+  <%= day.day %>
+  <% if !day_events.empty? %>
+    <% day_events.each do |event| %>
+      <%= render partial: "meetings/custom_meeting", locals: {meeting: event} %>
+    <% end %>
+  <% end %>
+<% end %>
