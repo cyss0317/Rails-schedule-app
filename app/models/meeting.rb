@@ -41,10 +41,15 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: start_time.beginning_of_week..start_time.end_of_week)
   end
 
+  # write a method to get all the meetings with given start_time and end_time
+  def self.find_all_by_start_time_and_end_time(start_time, end_time)
+    Meeting.where(start_time: start_time.beginning_of_week..end_time.end_of_week)
+  end
+
+
   private
 
   def start_time_cannot_be_greater_than_end_time
-    debugger
     return unless start_time.present? && end_time.present?
 
     errors.add(:start_time, "can't be greater than end time") if start_time > end_time

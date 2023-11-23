@@ -7,11 +7,15 @@ class MeetingsController < ApplicationController
   end
 
   def weekly
-    @start_time = params[:start_time] ? params[:start_time].to_date.beggining_of_week : DateTime.now.beginning_of_week
-    @end_time = params[:start_time] ? params[:start_time].to_date.beggining_of_week : DateTime.now.end_of_week
-    # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
-    @meetings = Meeting.default
-
+    if params[:start_date]
+      @start_time = params[:start_date].to_date.beginning_of_week
+      @end_time = params[:start_date].to_date.end_of_week
+    else
+      @start_time = params[:start_time] ? params[:start_time].to_date.beginning_of_week : DateTime.now.beginning_of_week
+      @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week : DateTime.now.end_of_week
+      # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
+    end
+    @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time)
   end
 
   # GET /meetings/1 or /meetings/1.json
