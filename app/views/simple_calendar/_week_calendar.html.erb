@@ -11,7 +11,8 @@
 
   <table class="table table-striped">
     <thead>
-      <tr>
+      <tr class="text-center">
+        <th class="table-header-hour"></th>
         <% date_range.slice(0, 7).each do |day| %>
           <th><%= t('date.abbr_day_names')[day.wday] %></th>
         <% end %>
@@ -21,7 +22,14 @@
     <tbody>
       <% date_range.each_slice(7) do |week| %>
         <tr id="weekly">
+          <td class="text-center" id="time-column">
+            <% (8..20).each do |hour| %>
+              <div class="hour-cell"><%= hour < 12 ? "#{hour}AM" : "#{hour - 11}PM" %></div>
+            <% end %>
+          </td>
+
           <% week.each do |day| %>
+
             <%= content_tag :td, class: calendar.td_classes_for(day) do %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
