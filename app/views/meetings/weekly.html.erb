@@ -1,7 +1,10 @@
+
+<%= render layout: "shared/modal", locals: { modal_title: "Create a schedule" } do %>
+  <%= render partial: "meetings/form", locals: { meeting: Meeting.new, start_time: @start_time} %>
+<% end %>
+
 <%= week_calendar(events: @meetings) do |day, day_events| %>
   <p class="text-center"> <%= day.day %> </p>
-
-
 
   <% if !day_events.empty? %>
     <% day_events.each do |event| %>
@@ -9,3 +12,15 @@
     <% end %>
   <% end %>
 <% end %>
+
+//<script>
+//  document.addEventListener('DOMContentLoaded', () => {
+//    document.querySelectorAll(".day").forEach(day => {
+//      day.addEventListener("click", (e) => {
+//        e.stopPropagation();
+//        console.log("<%= @start_time %>")
+//        document.querySelector("#myModal").style.display = "block";
+//      })
+//    })
+//  })
+//</script>

@@ -1,14 +1,22 @@
 tr#weekly {
   .day {
     height: 100dvh;
+    min-height: 60dvh;
     width: calc(100dvw / 7);
     overflow: auto;
   }
 
   #time-column {
-    height: 100vh;
+    height: 100dvh;
+    min-height: 60dvh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
   }
+
+  .mh1 {
+    min-height: 1rem
+  }
+
+
 }

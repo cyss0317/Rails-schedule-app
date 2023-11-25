@@ -22,15 +22,19 @@
     <tbody>
       <% date_range.each_slice(7) do |week| %>
         <tr id="weekly">
-          <td class="text-center" id="time-column">
-            <% (8..20).each do |hour| %>
-              <div class="hour-cell"><%= hour < 12 ? "#{hour}AM" : "#{hour - 11}PM" %></div>
-            <% end %>
+          <td class="text-center" >
+            <div class="mh1"></div>
+            <div id="time-column">
+              <% (8..20).each do |hour| %>
+                <div class="hour-cell"><%= hour < 12 ? "#{hour}AM" : "#{hour - 11}PM" %></div>
+              <% end %>
+            </div>
           </td>
 
           <% week.each do |day| %>
 
-            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+            <%= content_tag :td, data: { date: day.to_s },onclick: "#{@start_time} = '10/11/2023'", class: calendar.td_classes_for(day).push("TEST")  do %>
+              <%= link_to "TEST", new_meeting_path( start_time: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
@@ -43,3 +47,4 @@
     </tbody>
   </table>
 </div>
+

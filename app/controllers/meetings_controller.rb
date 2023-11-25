@@ -24,6 +24,7 @@ class MeetingsController < ApplicationController
   # GET /meetings/new
   def new
     @meeting = Meeting.new
+    @start_time = params[:start_time]
   end
 
   # GET /meetings/1/edit
