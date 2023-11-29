@@ -13,11 +13,15 @@ class Meeting < ApplicationRecord
   end
 
   def user_name
-    User.find(user_id).full_name
+    user.full_name
   end
 
   def user_name_month
-    User.find(user_id).name_and_initials
+    user.name_and_initials
+  end
+
+  def user_color
+    user.color
   end
 
   def start_time(start_time = DateTime.now)
@@ -45,7 +49,6 @@ class Meeting < ApplicationRecord
   def self.find_all_by_start_time_and_end_time(start_time, end_time)
     Meeting.where(start_time: start_time.beginning_of_week..end_time.end_of_week)
   end
-
 
   private
 

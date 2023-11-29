@@ -33,7 +33,6 @@ class MeetingsController < ApplicationController
 
   # POST /meetings or /meetings.json
   def create
-    debugger
     @meeting = Meeting.new(meeting_params)
     respond_to do |format|
       if @meeting.save

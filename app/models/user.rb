@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  has_many :meetings, dependent: :destroy
+
   # before_action :authenticate_user!
   def full_name
     "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"

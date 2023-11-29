@@ -6,15 +6,14 @@ module Users
     before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
-    def new
-      user = User.new(sign_up_params)
-      user.save!
-    end
+    def new; end
 
     # POST /resource
-    # def create
-    #   super
-    # end
+    def create
+      user = User.new(sign_up_params)
+      debugger
+      user.save!
+    end
 
     # GET /resource/edit
     # def edit
@@ -55,7 +54,8 @@ module Users
     end
 
     def sign_up_params
-      params.require(:user).permit(:last_name, :first_name, :middle_name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:last_name, :first_name, :middle_name, :color, :email, :password,
+                                   :password_confirmation)
     end
 
     # The path used after sign up.
