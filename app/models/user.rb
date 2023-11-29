@@ -14,4 +14,8 @@ class User < ApplicationRecord
   def name_and_initials
     "#{first_name.capitalize} #{middle_name[0].capitalize}. #{last_name[0].capitalize}"
   end
+
+  def time_zone
+    Time.now.zone || 'UTC'
+  end
 end
