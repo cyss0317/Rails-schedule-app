@@ -17,12 +17,12 @@
   </div>
   <div class="my-5">
     <%= form.label :start_time %>
-    <%= form.datetime_field :start_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.datetime_field :start_time, value: start_time.blank? ? DateTime.now : convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
     <%= form.label :end_time %>
-    <%= form.datetime_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.datetime_field :end_time, value: start_time.blank? ? DateTime.now : convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
     <%# form.hidden_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%d")%>

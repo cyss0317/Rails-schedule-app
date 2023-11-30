@@ -1,6 +1,6 @@
 class MeetingsController < ApplicationController
   before_action :set_meeting, only: %i[show edit update destroy]
-  before_action :deserialize_params, only: %i[new create update]
+  # before_action :deserialize_params, only: %i[new create update]
 
   # GET /meetings or /meetings.json
   def index
@@ -34,6 +34,7 @@ class MeetingsController < ApplicationController
   # POST /meetings or /meetings.json
   def create
     @meeting = Meeting.new(meeting_params)
+    debugger
     respond_to do |format|
       if @meeting.save
         format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
@@ -77,17 +78,17 @@ class MeetingsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def meeting_params
-    deserialize_params
+    # deserialize_params
     params.require(:meeting).permit(:name, :start_time, :end_time, :user_id)
   end
 
   def deserialize_params
-    start_time = params[:start_time]
-    end_time = params[:end_time]
-
-    params[:start_time] = start_time.instance_of?(String) ? DateTime.parse(start_time) : start_time
-    params[:end_time] = end_time.instance_of?(String) ? DateTime.parse(end_time) : end_time
-
+    start_time = params[:meeting][:start_time]
+    end_time = params[:meeting][:end_time]
+    # TODO: resolve end time is converted into different timezone
+    debugger
+    params[:meeting][:start_time] = start_time.instance_of?(String) ? DateTime.parse(start_time) : start_time
+    params[:meeting][:end_time] = end_time.instance_of?(String) ? DateTime.parse(end_time) : end_time
     params
   end
 end
