@@ -24,10 +24,6 @@ class Meeting < ApplicationRecord
     user.color
   end
 
-  def start_time(start_time = DateTime.now)
-    start_time
-  end
-
   def str_time_to_date(time)
     if time.is_a? String
       time.to_date

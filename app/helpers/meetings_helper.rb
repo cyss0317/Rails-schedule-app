@@ -1,5 +1,5 @@
 module MeetingsHelper
   def convert_time(time)
-    time.class == String ? DateTime.parse(time) : time
+    time.instance_of?(String) ? DateTime.parse(time) : time
   end
 end

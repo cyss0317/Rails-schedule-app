@@ -37,8 +37,9 @@ class MeetingsController < ApplicationController
     debugger
     respond_to do |format|
       if @meeting.save
-        format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
-        format.json { render :show, status: :created, location: @meeting }
+        # format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
+        format.html { redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: "Meeting was successfully created" }
+        # format.json { render :show, status: :created, location: @meeting }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @meeting.errors, status: :unprocessable_entity }

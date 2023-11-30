@@ -33,8 +33,8 @@
 
           <% week.each do |day| %>
 
-            <%= content_tag :td, data: { date: day.to_s },onclick: "#{@start_time} = '10/11/2023'", class: calendar.td_classes_for(day).push("TEST")  do %>
-              <%= link_to "TEST", new_meeting_path( start_time: day ) %>
+            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("TEST")  do %>
+              <%= link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>

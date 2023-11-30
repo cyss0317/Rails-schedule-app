@@ -1,7 +1,5 @@
 
-<%= render layout: "shared/modal", locals: { modal_title: "Create a schedule" } do %>
-  <%= render partial: "meetings/form", locals: { meeting: Meeting.new, start_time: @start_time} %>
-<% end %>
+
 
 <%= week_calendar(events: @meetings) do |day, day_events| %>
   <p class="text-center"> <%= day.day %> </p>
