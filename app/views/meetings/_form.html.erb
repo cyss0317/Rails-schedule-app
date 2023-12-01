@@ -1,7 +1,6 @@
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
 
 <%= form_with(model: meeting, url: meetings_path(start_time: @start_time), method: :POST, class: "contents") do |form| %>
-<% debugger %>
   <% if meeting.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>
@@ -13,7 +12,6 @@
       </ul>
     </div>
   <% end %>
-<%= debugger  %>
   <div class="my-5">
     <%= form.label :name %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
