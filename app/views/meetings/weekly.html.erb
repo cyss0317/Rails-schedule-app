@@ -5,7 +5,7 @@
 
   <% if !day_events.empty? %>
     <% day_events.each do |event| %>
-      <%= render partial: "meetings/custom_meeting", locals: {meeting: event} %>
+      <%= render partial: "meetings/weekly_meeting", locals: {meeting: event} %>
     <% end %>
   <% end %>
 <% end %>

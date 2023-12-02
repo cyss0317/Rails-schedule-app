@@ -17,7 +17,7 @@ class Meeting < ApplicationRecord
   end
 
   def user_name_month
-    user.name_and_initials
+    user.name_and_last_name
   end
 
   def user_color

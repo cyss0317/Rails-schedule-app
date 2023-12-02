@@ -9,7 +9,7 @@
       <% if !meetings.empty? %>
         <div>
           <% meetings.each do |meeting| %>
-              <%= render partial: "meetings/custom_meeting", locals: { meeting: meeting} %>
+              <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
           <% end %>
         </div>
       <% end  %>
