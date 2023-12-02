@@ -37,6 +37,10 @@ class Meeting < ApplicationRecord
     end
   end
 
+  def shift_belongs_to_hour?(hour)
+    start_time.hour <= hour || end_time.hour <= hour ? true : false
+  end
+
   def morning_shift?
     start_time.hour < 15
   end
@@ -45,13 +49,11 @@ class Meeting < ApplicationRecord
     start_time.hour >= 15
   end
 
-  def self.morning_shifts
-    
-  end
+  def self.morning_shifts; end
 
   # display work time from to end
   def work_time
-    "#{start_time.strftime('%l:%M %p')}-#{end_time.strftime('%H:%M %p')}"
+    "#{start_time.strftime('%l:%M %p')}-#{end_time.strftime('%l:%M %p')}"
   end
 
   def date_range

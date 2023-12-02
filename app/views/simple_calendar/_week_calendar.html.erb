@@ -33,12 +33,22 @@
 
           <% week.each do |day| %>
 
-            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("TEST")  do %>
+            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
               <%= link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-                <% passed_block.call day, sorted_events.fetch(day, []) %>
+                <% (8..21).each do |time| %>
+                  <div class="hour-cell <%= time < 12 ? "#{time}" : "#{time - 12}" %>'o-clock" data-time=<% time %> >
+                  <%# passed_block.call day, sorted_events.fetch(day, []) %>
+                    <% sorted_events.fetch(day, []).each do |event| %>
+                    <%# debugger %>
+                      <% if event.shift_belongs_to_hour?(time) %>
+                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event} %>
+                      <% end %>
+                    <% end %>
+                 </div>
+                <% end %>
               <% end %>
             <% end %>
           <% end %>
