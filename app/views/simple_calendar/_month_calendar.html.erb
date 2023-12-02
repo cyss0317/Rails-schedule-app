@@ -41,10 +41,6 @@
   </table>
 </div>
 
-<%= week_calendar(start_date: "21 Nov 2023", events: Meeting.where(start_time: DateTime.new(2023, 11, 18).beginning_of_week, end_time: DateTime.new(2023, 11, 18).end_of_week)) do |day| %>
-  <%= day.day %>
-<% end %> 
-
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll("tr[class^='week-']").forEach(week => {

@@ -1,5 +1,6 @@
 @use "meetings/meeting.scss";
 @use "meetings/weekly.scss";
+@use "meetings/monthly.scss";
 
 .simple-calendar {
   .day {
@@ -10,7 +11,7 @@
     &:hover {
       background-color: #22222210;
       // font-size: 1.1rem;
-      text-decoration: underline;
+      // text-decoration: underline;
     }
   }
   
@@ -54,5 +55,12 @@
   }
 
   .has-events {
+  }
+
+  .event {
+    border-radius: 1rem;
+    :hover {
+      text-decoration: underline;
+    }
   }
 }

@@ -7,9 +7,14 @@ class Meeting < ApplicationRecord
   validate :start_time_cannot_be_greater_than_end_time
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
+  scope :morning_shifts, -> { where("#{start_time.hour} < ?", '15:00') }
 
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
+  end
+
+  def self.sort_by_start_time
+    order(start_time: :asc)
   end
 
   def user_name
@@ -30,6 +35,18 @@ class Meeting < ApplicationRecord
     elsif time.instance_of? Date
       time
     end
+  end
+
+  def morning_shift?
+    start_time.hour < 15
+  end
+
+  def evening_shift?
+    start_time.hour >= 15
+  end
+
+  def self.morning_shifts
+    
   end
 
   # display work time from to end

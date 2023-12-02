@@ -12,7 +12,7 @@
 
 user_id_array = User.all.pluck(:id)
 
-10.times do |i|
+5.times do |i|
   starting_time = Time.now + i.days
   Meeting.create(
     name: "Meeting #{i}",
@@ -20,4 +20,16 @@ user_id_array = User.all.pluck(:id)
     start_time: starting_time,
     end_time: starting_time + 1.hour
   )
+
+  starting_time = Time.now - i.days
+  Meeting.create(
+    name: "Meeting #{i}",
+    user_id: user_id_array.sample,
+    start_time: starting_time,
+    end_time: starting_time + 1.hour
+  )
+end
+
+if user_id_array.length < 4
+
 end

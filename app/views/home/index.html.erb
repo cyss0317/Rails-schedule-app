@@ -1,16 +1,27 @@
 
-
 <% if current_user %>
   <h1>Welcome, <%= current_user.full_name %></h1>
   <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
   <div class="m-6 text-center">
     <%= month_calendar(events: @meetings) do |date, meetings| %>
+      <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
+      <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
+
       <%= date.day %>
       <% if !meetings.empty? %>
-        <div>
-          <% meetings.each do |meeting| %>
+        <div class="flex-col">
+          <%# meetings.each do |meeting| %>
+          <div class="morning-shift">
+            <% morning_shifts.each do |meeting| %>
               <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-          <% end %>
+            <% end %>
+          </div>
+          <div class="evening-shift">
+            <% evening_shifts.each do |meeting| %>
+              <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+            <% end %>
+          </div>
+          <%# end %>
         </div>
       <% end  %>
       
