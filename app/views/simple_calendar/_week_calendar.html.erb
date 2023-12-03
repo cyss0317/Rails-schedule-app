@@ -34,12 +34,13 @@
           <% week.each do |day| %>
 
             <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
-              <%= link_to "TEST", new_meeting_path( start_date: day ) %>
+              <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
+              <div class="flex flex-col">
                 <% (8..21).each do |time| %>
-                  <div class="hour-cell <%= time < 12 ? "#{time}" : "#{time - 12}" %>'o-clock" data-time=<% time %> >
+                  <div class="hour-cell <%= idx_to_time(time) %>'o-clock" data-time=<% time %> >
                   <%# passed_block.call day, sorted_events.fetch(day, []) %>
                     <% sorted_events.fetch(day, []).each do |event| %>
                     <%# debugger %>
@@ -49,6 +50,7 @@
                     <% end %>
                  </div>
                 <% end %>
+              </div>
               <% end %>
             <% end %>
           <% end %>

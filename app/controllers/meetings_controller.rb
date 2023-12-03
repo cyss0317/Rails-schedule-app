@@ -1,4 +1,6 @@
 class MeetingsController < ApplicationController
+  helper TimeHelper
+
   before_action :set_meeting, only: %i[show edit update destroy]
 
   # GET /meetings or /meetings.json
