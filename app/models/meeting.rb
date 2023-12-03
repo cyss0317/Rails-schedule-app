@@ -7,7 +7,6 @@ class Meeting < ApplicationRecord
   validate :start_time_cannot_be_greater_than_end_time
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
-  scope :morning_shifts, -> { where("#{start_time.hour} < ?", '15:00') }
 
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
@@ -15,6 +14,15 @@ class Meeting < ApplicationRecord
 
   def self.sort_by_start_time
     order(start_time: :asc)
+  end
+
+  def date_range
+    Meeting.where(start_time: start_time.beginning_of_week..start_time.end_of_week)
+  end
+
+  # write a method to get all the meetings with given start_time and end_time
+  def self.find_all_by_start_time_and_end_time(start_time, end_time)
+    Meeting.where(start_time: start_time.beginning_of_week..end_time.end_of_week)
   end
 
   def user_name
@@ -54,15 +62,6 @@ class Meeting < ApplicationRecord
   # display work time from to end
   def work_time
     "#{start_time.strftime('%l:%M %p')}-#{end_time.strftime('%l:%M %p')}"
-  end
-
-  def date_range
-    Meeting.where(start_time: start_time.beginning_of_week..start_time.end_of_week)
-  end
-
-  # write a method to get all the meetings with given start_time and end_time
-  def self.find_all_by_start_time_and_end_time(start_time, end_time)
-    Meeting.where(start_time: start_time.beginning_of_week..end_time.end_of_week)
   end
 
   private
