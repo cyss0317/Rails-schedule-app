@@ -6,12 +6,28 @@ tr#weekly {
     overflow: auto;
   }
 
-  #time-column {
+  .time-column {
     height: 100dvh;
     min-height: 60dvh;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: space-between;
+    // gap:1rem;
+  }
+
+  .hour-column {
+    // height: 100dvh;
+    // min-height: 60dvh;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-evenly;
+    // gap: 1rem;
+    // align-items: flex-start;
+  }
+
+  .hour-cell {
+    height: 3rem;
   }
 
   .mh1 {

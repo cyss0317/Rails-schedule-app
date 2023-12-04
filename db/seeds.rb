@@ -13,20 +13,32 @@
 user_id_array = User.all.pluck(:id)
 
 5.times do |i|
-  starting_time = Time.now + i.days
+  starting_time = Time.now.noon + i.days
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time,
-    end_time: starting_time + 1.hour
+    end_time: starting_time + (4 + i).hour
+  )
+  Meeting.create(
+    name: "Meeting #{i}",
+    user_id: user_id_array.sample,
+    start_time: starting_time + 4.hour,
+    end_time: starting_time + (4 + i).hour
   )
 
-  starting_time = Time.now - i.days
+  starting_time = Time.now.noon - 3.hour - i.days
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time,
-    end_time: starting_time + 1.hour
+    end_time: starting_time + i.hour
+  )
+  Meeting.create(
+    name: "Meeting #{i}",
+    user_id: user_id_array.sample,
+    start_time: starting_time + 3.hour,
+    end_time: starting_time + i.hour
   )
 end
 

@@ -5,7 +5,6 @@ class MeetingsController < ApplicationController
 
   # GET /meetings or /meetings.json
   def index
-    debugger
     @meetings = Meeting.all.sort_by_start_time
   end
 
@@ -18,6 +17,7 @@ class MeetingsController < ApplicationController
       @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week : DateTime.now.end_of_week
       # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
     end
+    # debugger
     @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
   end
 

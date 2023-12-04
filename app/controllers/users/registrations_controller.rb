@@ -11,7 +11,6 @@ module Users
     # POST /resource
     def create
       user = User.new(sign_up_params)
-      debugger
       user.save!
     end
 
