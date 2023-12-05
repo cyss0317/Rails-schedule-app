@@ -1,1 +1,19 @@
-  <%= link_to "#{meeting.user_name}", meeting_path(meeting), {  class: "no-underline", style: "background-color:#{meeting.user_color}"} %>
+  <%= link_to "#{meeting.user_name}", meeting_path(meeting), {  class: "no-underline text-transparent weekly-meeting #{classes}", style: "background-color:#{meeting.user_color}"} %>
+
+  <script>
+    // make border line appear on blocks of time that belongs to a meeting
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll(".<%= classes %>").forEach(meeting => {
+        meeting.addEventListener("mouseover", (e) => {
+          document.querySelectorAll(".<%= classes %>").forEach(meeting => {
+            meeting.style.outline = "2px solid blue"
+          })
+        })
+        meeting.addEventListener("mouseout", (e) => {
+          document.querySelectorAll(".<%= classes %>").forEach(meeting => {
+            meeting.style.outline = "none"
+          })
+        })
+      })
+    })
+  </script>

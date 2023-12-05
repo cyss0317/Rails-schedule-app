@@ -1,45 +1,41 @@
-tr#weekly {
-  td {
-    padding: 0;
+.week-calendar {
+  .calendar-heading {
+    text-align: center;
   }
-  .day {
-    height: 100dvh;
-    min-height: 60dvh;
-    width: calc(100dvw / 7);
-    overflow: auto;
-  }
+  tr#weekly {
+    td {
+      padding: 0;
+    }
+    .day {
+      height: 100dvh;
+      min-height: 60dvh;
+      width: calc(100dvw / 7);
+      overflow: auto;
+    }
 
-  .time-column {
-    height: 100dvh;
-    min-height: 60dvh;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: space-between;
-    // gap:1rem;
-  }
+    .time-column {
+      height: 100dvh;
+      min-height: 60dvh;
+    }
 
-  .hour-column {
-    // height: 100dvh;
-    // min-height: 60dvh;
+    .hour-column {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
 
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    // gap: 1rem;
-    // align-items: flex-start;
-  }
+    .hour-cell {
+      height: 3rem;
+    }
 
-  .hour-cell {
-    height: 3rem;
-  }
+    .mh1 {
+      min-height: 1rem;
+    }
 
-  .mh1 {
-    min-height: 1rem;
-  }
-
-  .time-column {
-    :nth-child(2n) {
-      background-color: #22222210;
+    .time-column {
+      :nth-child(2n) {
+        background-color: #22222210;
+      }
     }
   }
 }

@@ -1,9 +1,9 @@
-<div class="simple-calendar">
+<div class="simple-calendar week-calendar">
   <div class="calendar-heading">
-    <%= link_to t('simple_calendar.previous', default: 'Previous'), calendar.url_for_previous_view %>
+    <%= link_to t('simple_calendar.previous', default: 'Previous week'), calendar.url_for_previous_view %>
       <span class="calendar-title"><%= "#{number_month_to_string(date_range[0].to_date.mon)} " %></span>
         <%# debugger %>
-    <%= link_to t('simple_calendar.next', default: 'Next'), calendar.url_for_next_view %>
+    <%= link_to t('simple_calendar.next', default: 'Next week'), calendar.url_for_next_view %>
   </div>
 
   <table class="table table-striped">
@@ -37,11 +37,9 @@
               <div class="time-column">
                 <% (8..21).each do |time| %>
                   <div class="hour-cell hour-column <%= idx_to_time(time) %>'o-clock" data-time=<% time %> >
-                  
-                  <%# passed_block.call day, sorted_events.fetch(day, []) %>
                     <% sorted_events.fetch(day, []).each do |event| %>
                       <% if event.shift_belongs_to_hour?(time) %>
-                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event} %>
+                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, classes: "weekly-meeting-#{event.id}"} %>
                       <% end %>
                     <% end %>
                  </div>
