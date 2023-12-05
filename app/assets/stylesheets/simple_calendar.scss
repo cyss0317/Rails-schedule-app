@@ -9,7 +9,7 @@
     cursor: pointer;
     transition: all 0.15s ease-in-out;
     &:hover {
-      background-color: #22222210;
+      // background-color: #22222210;
       // font-size: 1.1rem;
       // text-decoration: underline;
     }
@@ -20,6 +20,7 @@
   }
 
   .wday-0 {
+    color: red;
   }
   .wday-1 {
   }
@@ -32,6 +33,7 @@
   .wday-5 {
   }
   .wday-6 {
+    color: red;
   }
 
   .today {
@@ -58,7 +60,7 @@
   }
 
   .event {
-    border-radius: 1rem;
+    // border-radius: 1rem;
     :hover {
       text-decoration: underline;
     }

@@ -1,4 +1,4 @@
 <li class="event">
   <%# TODO: add color to user and display the background of their meeting with it %>
-  <%= link_to "#{meeting.user_name_month} #{meeting.work_time} ", meeting_path(meeting), { style: "color:#{meeting.user_color}"} %>
+  <%= link_to "#{meeting.user_full_name}", meeting_path(meeting) %>
 </li>

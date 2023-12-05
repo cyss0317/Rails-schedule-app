@@ -1,4 +1,6 @@
 class Meeting < ApplicationRecord
+  include DateHelper
+
   belongs_to :user
 
   validates :name, presence: true
@@ -25,8 +27,12 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: start_time.beginning_of_week..end_time.end_of_week)
   end
 
-  def user_name
+  def user_full_name
     user.full_name
+  end
+
+  def user_name
+    user.first_name
   end
 
   def user_name_month
@@ -43,6 +49,10 @@ class Meeting < ApplicationRecord
     elsif time.instance_of? Date
       time
     end
+  end
+
+  def shift_from_to
+    time_from_to(start_time, end_time)
   end
 
   # target time = 12
@@ -65,7 +75,7 @@ class Meeting < ApplicationRecord
 
   # display work time from to end
   def work_time
-    "#{start_time.strftime('%l:%M %p')}-#{end_time.strftime('%l:%M %p')}"
+    "#{format_date(start_time)}-#{format_date(end_time)}"
   end
 
   private

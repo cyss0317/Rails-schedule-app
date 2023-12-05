@@ -9,20 +9,25 @@
 
       <%= date.day %>
       <% if !meetings.empty? %>
-        <div class="flex-col">
-          <%# meetings.each do |meeting| %>
-          <div class="morning-shift">
-            <% morning_shifts.each do |meeting| %>
-              <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-            <% end %>
+        <%= link_to meetings_weekly_path(start_date: date), class: "HELLO" do %>
+
+
+          <div class="flex-col">
+            <%# meetings.each do |meeting| %>
+            <div class="morning-shift">
+              <% morning_shifts.each do |meeting| %>
+                <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+              <% end %>
+            </div>
+            <div class="evening-shift">
+              <% evening_shifts.each do |meeting| %>
+                <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+              <% end %>
+            </div>
+            <%# end %>
           </div>
-          <div class="evening-shift">
-            <% evening_shifts.each do |meeting| %>
-              <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-            <% end %>
-          </div>
-          <%# end %>
-        </div>
+
+        <% end %>
       <% end  %>
       
     <% end %>

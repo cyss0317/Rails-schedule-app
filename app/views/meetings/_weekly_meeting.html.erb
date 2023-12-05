@@ -1,6 +1,1 @@
-
-<li class="event" style="background-color: <%# meeting.user_color %>">
-  <%# TODO: add color to user and display the background of their meeting with it %>
-  <%= link_to "1", meeting_path(meeting), {  class: "no-underline", style: "background-color:#{meeting.user_color}"} %>
-
-</li>
+  <%= link_to "#{meeting.user_name}", meeting_path(meeting), {  class: "no-underline", style: "background-color:#{meeting.user_color}"} %>
