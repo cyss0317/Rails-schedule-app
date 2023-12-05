@@ -1,4 +1,7 @@
 tr#weekly {
+  td {
+    padding: 0;
+  }
   .day {
     height: 100dvh;
     min-height: 60dvh;
@@ -31,8 +34,12 @@ tr#weekly {
   }
 
   .mh1 {
-    min-height: 1rem
+    min-height: 1rem;
   }
 
-
+  .time-column {
+    :nth-child(2n) {
+      background-color: #22222210;
+    }
+  }
 }
