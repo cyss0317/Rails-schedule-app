@@ -1,0 +1,9 @@
+<div class="dropdown">
+  <div class="dropdown-title"><%= current %></div>
+  <div class="dropdown-list">
+    <% options.each do |k, v| %>
+      <%= link_to k, v, class: current == k.to_s ? "selected-item" : "item" %>
+    <% end %>
+  </div>
+</div>
+<%= yield %>

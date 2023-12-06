@@ -1,6 +1,7 @@
 @use "meetings/meeting.scss";
 @use "meetings/weekly.scss";
 @use "meetings/monthly.scss";
+@use "shared/tooltip.scss";
 
 .simple-calendar {
   .day {
@@ -67,4 +68,11 @@
   }
 
 
+}
+
+a {
+  text-decoration: none;
+  :hover {
+    
+  }
 }
