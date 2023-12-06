@@ -60,7 +60,7 @@ class Meeting < ApplicationRecord
 
   def shift_belongs_to_hour?(hour)
     # (start_time.hour <= hour && end_time.hour >= hour) && (end_time.hour <= hour && start_time.hour >= hour) ? true : false
-    start_time.hour <= hour && hour <= end_time.hour
+    start_time.hour <= hour && hour < end_time.hour
   end
 
   def morning_shift?

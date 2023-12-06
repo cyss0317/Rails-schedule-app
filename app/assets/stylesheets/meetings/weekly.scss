@@ -21,7 +21,8 @@
     .hour-column {
       display: flex;
       flex-direction: row;
-      justify-content: space-evenly;
+      gap: 0.5rem;
+      // justify-content: space-evenly;
     }
 
     .hour-cell {

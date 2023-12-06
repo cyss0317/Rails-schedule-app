@@ -11,8 +11,11 @@
   </head>
 
   <body>
-    <p class="text-center mt-5 notice"><%= notice %></p>
-    <p class="text-center mt-5 alert"><%= alert %></p>
+    <%= render layout: "shared/modal", locals: { modal_title: "Notification", display: notice || alert ? true : false }  do %>
+      <p class="text-center notice"><%= notice %></p>
+      <p class="text-center alert"><%= alert %></p>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>

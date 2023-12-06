@@ -1,4 +1,5 @@
-<div class="fade-in" id="myModal" style="display:none;">
+<% display ||= false %>
+<div class="fade-in" id="myModal" style="display:<%= display ? "block" : "none"%>">
   <div class="modal_background fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
       <div class="mt-3 text-center">
