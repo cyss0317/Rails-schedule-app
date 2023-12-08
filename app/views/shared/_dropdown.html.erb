@@ -1,9 +1,14 @@
-<div class="dropdown">
-  <div class="dropdown-title"><%= current %></div>
-  <div class="dropdown-list">
-    <% options.each do |k, v| %>
-      <%= link_to k, v, class: current == k.to_s ? "selected-item" : "item" %>
-    <% end %>
-  </div>
-</div>
-<%= yield %>
+<select name="select" class="select-dropdown">
+  <% options.each do |key,val| %>
+    <option class="view-option" value="<%= current == key.to_s ? options[key] : val %>" <%= 'selected' if current == key.to_s %>  data-link=<%= val %>><%= key.to_s %></option>
+  <% end %>
+</select>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".select-dropdown").addEventListener("change", (e) => {
+      console.log(e.target.getAttribute("data-link"))
+      window.location.href = e.target.value
+    });
+  });
+</script>

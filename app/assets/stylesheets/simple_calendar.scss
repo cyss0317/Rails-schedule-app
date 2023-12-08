@@ -2,6 +2,7 @@
 @use "meetings/weekly.scss";
 @use "meetings/monthly.scss";
 @use "shared/tooltip.scss";
+@use "shared/dropdown.scss";
 
 .simple-calendar {
   .day {
