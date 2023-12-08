@@ -9,7 +9,6 @@
       <% end %>
       <span class="calendar-title"><%= "#{number_month_to_string(date_range[0].to_date.mon)} " %></span>
       <%= render partial: "shared/dropdown", locals: { current: "Week", options: { "Week": meetings_weekly_path, "Month": root_path} } %>
-
     <% end %>
   </div>
 
