@@ -17,7 +17,10 @@
       <tr class="text-center">
         <th class="table-header-hour"></th>
         <% date_range.slice(0, 7).each do |day| %>
-          <th><%= "#{t('date.abbr_day_names')[day.wday]}(#{day.mday})" %></th>
+          <th>
+            <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
+            <h4><%= "#{day.mday}" %></h4>
+          </th>
         <% end %>
       </tr>
     </thead>

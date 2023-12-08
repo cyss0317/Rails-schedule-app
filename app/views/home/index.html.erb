@@ -1,7 +1,5 @@
 
 <% if current_user %>
-  <h1>Welcome, <%= current_user.full_name %></h1>
-  <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
   <div class="m-6 text-center">
     <%= month_calendar(events: @meetings) do |date, meetings| %>
       <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
@@ -10,10 +8,7 @@
       <%= date.day %>
       <% if !meetings.empty? %>
         <%= link_to meetings_weekly_path(start_date: date), class: "HELLO" do %>
-
-
           <div class="flex-col">
-            <%# meetings.each do |meeting| %>
             <div class="morning-shift">
               <% morning_shifts.each do |meeting| %>
                 <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
@@ -24,14 +19,12 @@
                 <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
               <% end %>
             </div>
-            <%# end %>
           </div>
 
         <% end %>
       <% end  %>
       
     <% end %>
-     <%#= render partial: "simple_calendar/calendar" %>
   </div>
 <% else %>
   <%= link_to "Sign Up", new_user_registration_path %>
@@ -40,7 +33,6 @@
 
 
 
-<%# document.querySelector(".calendar-title").innerHTML.split(" ").join(",11,") %>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
    // document.querySelectorAll(".day").forEach(day => {

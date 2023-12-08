@@ -5,6 +5,12 @@
 @use "shared/dropdown.scss";
 
 .simple-calendar {
+  .calendar-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
   .day {
     height: 8rem;
     border: 1px solid #22222260;

@@ -2,13 +2,11 @@
 <% new_start_date ="18 Nov 2023" %>
 <%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
   <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
-   
 <% end %>
+
 
 <div class="simple-calendar">
   <div class="calendar-heading">
-    <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
-    <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
     <%= render layout: "shared/header" do %>
       <%= render layout: "shared/tooltip", locals: { text: "Previous month"} do %>
         <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
@@ -19,6 +17,9 @@
       <span class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></span>
       <%= render partial: "shared/dropdown", locals: { current: "Month", options: { "Week": meetings_weekly_path, "Month": root_path} } %>
     <% end %>
+    <div><%= current_user.full_name %></div>
+    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
+    <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
   </div>
 
   <table class="table table-striped">
