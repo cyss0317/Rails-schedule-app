@@ -2,19 +2,28 @@
   .calendar-heading {
     text-align: center;
   }
-
-  
+  .weekly-date {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+    p {
+      margin: 0;
+    }
+  }
   
   tr#weekly {
     td {
       padding: 0;
     }
     .day {
-      height: 100dvh;
-      min-height: 60dvh;
+      height: 100svh;
+      min-height: 60svh;
       width: calc(100dvw / 7);
       overflow: auto;
     }
+
 
     .time-column {
       height: 100dvh;

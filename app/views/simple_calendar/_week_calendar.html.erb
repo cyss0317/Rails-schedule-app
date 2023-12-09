@@ -18,9 +18,12 @@
         <th class="table-header-hour"></th>
         <% date_range.slice(0, 7).each do |day| %>
           <th>
-            # TODO: give class "today" to current day and add a border
-            <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
-            <h4><%= "#{day.mday}" %></h4>
+            <div class="weekly-date">
+              <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
+              <%# if day.today? %>
+              <%# end %>
+              <h4 class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></h4>
+            </div>
           </th>
         <% end %>
       </tr>

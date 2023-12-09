@@ -4,6 +4,9 @@
 @use "shared/tooltip.scss";
 @use "shared/dropdown.scss";
 
+* {
+  border: 1px solid green;
+}
 .simple-calendar {
   .calendar-heading {
     display: flex;
@@ -24,7 +27,7 @@
   }
   
   table.table thead tr th {
-    width: 5rem;
+    // width: 5rem;
   }
 
   .wday-0 {
@@ -45,7 +48,28 @@
   }
 
   .today {
-    border: 5px solid #22222280;
+  }
+  .date {
+    cursor: pointer;
+    border-radius: 10rem;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      background-color: #22222210;
+    }
+  }
+
+  .today-date {
+    background-color: #0b57d0;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #054ec4;
+    }
   }
   .past {
   }
