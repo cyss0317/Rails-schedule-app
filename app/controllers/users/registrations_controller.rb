@@ -2,19 +2,19 @@
 
 module Users
   class RegistrationsController < Devise::RegistrationsController
+    layout 'application'
+
     before_action :configure_sign_up_params, only: %i[new create]
     before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
-    def new
+    def new; end
+
+    # POST /resource
+    def create
       user = User.new(sign_up_params)
       user.save!
     end
-
-    # POST /resource
-    # def create
-    #   super
-    # end
 
     # GET /resource/edit
     # def edit
@@ -55,7 +55,8 @@ module Users
     end
 
     def sign_up_params
-      params.require(:user).permit(:last_name, :first_name, :middle_name, :email, :password, :password_confirmation)
+      attributes = %i[last_name first_name middle_name color email password password_confirmation]
+      params.require(:user).permit(attributes)
     end
 
     # The path used after sign up.

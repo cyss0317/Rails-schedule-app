@@ -1,0 +1,17 @@
+.morning-shift {
+  border-radius: 0.5rem;
+  background-color: rgba(121, 202, 246, 0.558);
+}
+
+.evening-shift {
+  border-radius: 0.5rem;
+  background-color: rgba(42, 30, 43, 0.451);
+}
+
+table > tbody > tr[class^="week-"]:hover {
+  border: 5px solid green !important;
+}
+
+table {
+  // border-collapse: collapse;
+}

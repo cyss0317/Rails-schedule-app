@@ -1,32 +1,63 @@
-<div class="simple-calendar">
+<div class="simple-calendar week-calendar">
   <div class="calendar-heading">
-    <%= link_to t('simple_calendar.previous', default: 'Previous'), calendar.url_for_previous_view %>
-    <% if calendar.number_of_weeks == 1 %>
-      <span class="calendar-title"><%= t('simple_calendar.week', default: 'Week') %> <%= calendar.week_number %></span>
-    <% else %>
-      <span class="calendar-title"><%= t('simple_calendar.week', default: 'Week') %> <%= calendar.week_number %> - <%= calendar.end_week %></span>
+    <%= render layout: "shared/header" do %>
+      <%= render layout: "shared/tooltip", locals: { text: "Previous week"} do %>
+        <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
+      <% end %>
+      <%= render layout: "shared/tooltip", locals: { text: "Next week"} do %>
+        <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
+      <% end %>
+      <span class="calendar-title"><%= "#{number_month_to_string(date_range[0].to_date.mon)} " %></span>
+      <%= render partial: "shared/dropdown", locals: { current: "Week", options: { "Week": meetings_weekly_path, "Month": root_path} } %>
     <% end %>
-    <%= link_to t('simple_calendar.next', default: 'Next'), calendar.url_for_next_view %>
   </div>
 
   <table class="table table-striped">
     <thead>
-      <tr>
+      <tr class="text-center">
+        <th class="table-header-hour"></th>
         <% date_range.slice(0, 7).each do |day| %>
-          <th><%= t('date.abbr_day_names')[day.wday] %></th>
+          <th>
+            <div class="weekly-date">
+              <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
+              <%# if day.today? %>
+              <%# end %>
+              <h4 class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></h4>
+            </div>
+          </th>
         <% end %>
       </tr>
     </thead>
 
     <tbody>
       <% date_range.each_slice(7) do |week| %>
-        <tr>
+        <tr id="weekly">
+          <td class="text-center" >
+            <div class="time-column">
+              <% (8..21).each do |hour| %>
+                <div class="hour-cell"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+              <% end %>
+            </div>
+          </td>
+
           <% week.each do |day| %>
-            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+
+            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
+              <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-                <% passed_block.call day, sorted_events.fetch(day, []) %>
+              <div class="time-column">
+                <% (8..21).each do |time| %>
+                  <div class="hour-cell hour-column <%= idx_to_time(time) %>'o-clock" data-time=<% time %> >
+                    <% sorted_events.fetch(day, []).each do |event| %>
+                      <% if event.shift_belongs_to_hour?(time) %>
+                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, classes: "weekly-meeting-#{event.id}"} %>
+                      <% end %>
+                    <% end %>
+                 </div>
+                <% end %>
+              </div>
               <% end %>
             <% end %>
           <% end %>
@@ -35,3 +66,4 @@
     </tbody>
   </table>
 </div>
+

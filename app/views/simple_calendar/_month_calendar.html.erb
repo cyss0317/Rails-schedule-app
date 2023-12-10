@@ -1,8 +1,25 @@
+<% target_date_range = [] %>
+<% new_start_date ="18 Nov 2023" %>
+<%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
+  <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
+<% end %>
+
+
 <div class="simple-calendar">
   <div class="calendar-heading">
-    <%= link_to t('simple_calendar.previous', default: 'Previous'), calendar.url_for_previous_view %>
-    <span class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></span>
-    <%= link_to t('simple_calendar.next', default: 'Next'), calendar.url_for_next_view %>
+    <%= render layout: "shared/header" do %>
+      <%= render layout: "shared/tooltip", locals: { text: "Previous month"} do %>
+        <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
+      <% end %>
+      <%= render layout: "shared/tooltip", locals: { text: "Next month"} do %>
+        <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
+      <% end %>
+      <span class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></span>
+      <%= render partial: "shared/dropdown", locals: { current: "Month", options: { "Week": meetings_weekly_path, "Month": root_path} } %>
+    <% end %>
+    <div><%= current_user.full_name %></div>
+    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
+    <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
   </div>
 
   <table class="table table-striped">
@@ -15,19 +32,39 @@
     </thead>
 
     <tbody>
-      <% date_range.each_slice(7) do |week| %>
-        <tr>
-          <% week.each do |day| %>
-            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-              <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
-                <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
-              <% else %>
-                <% passed_block.call day, sorted_events.fetch(day, []) %>
+      <% date_range.each_slice(7).with_index do |week, idx| %>
+        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
+            <% week.each do |day| %>
+                <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
+                  <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                    <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+                  <% else %>
+                    <% passed_block.call day, sorted_events.fetch(day, []) %>
+                  <% end %>
               <% end %>
             <% end %>
-          <% end %>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll("tr[class^='week-']").forEach(week => {
+      week.addEventListener("click", (e) => {
+        window.location = e.currentTarget.getAttribute("data-link")
+        <%#
+        document.querySelector("#myModal").style.display = "block"
+          %>
+      })
+    })
+
+    document.querySelectorAll(".day").forEach(day => {
+      day.addEventListener("click", (e) => {
+        window.startDate = new Date(e.target.getAttribute("data-date"))
+      })
+
+    })
+  })
+</script>

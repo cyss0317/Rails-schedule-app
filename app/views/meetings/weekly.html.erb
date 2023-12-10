@@ -1,0 +1,24 @@
+<%= week_calendar(events: @meetings) do |day, day_events| %>
+  <p class="text-center"> <%= day.day %> </p>
+
+  <% if !day_events.empty? %>
+    <div class="flex">
+      <% day_events.each do |event| %>
+        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event} %>
+      <% end %>
+    </div>
+  <% end %>
+  
+<% end %>
+
+//<script>
+//  document.addEventListener('DOMContentLoaded', () => {
+//    document.querySelectorAll(".day").forEach(day => {
+//      day.addEventListener("click", (e) => {
+//        e.stopPropagation();
+//        console.log("<%= @start_time %>")
+//        document.querySelector("#myModal").style.display = "block";
+//      })
+//    })
+//  })
+//</script>
