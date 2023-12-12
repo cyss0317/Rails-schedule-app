@@ -19,7 +19,7 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config curl
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -27,6 +27,22 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
+    # Optionally, if you need to install a specific version of Yarn
+# You can add the Yarn package repository and install from there
+# Install JavaScript dependencies
+ARG NODE_VERSION=16.14.0
+ARG YARN_VERSION=1.22.19
+ENV PATH=/usr/local/node/bin:$PATH
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    npm install -g yarn@$YARN_VERSION && \
+    rm -rf /tmp/node-build-master
+
+RUN apt-get update && apt-get install -y nodejs yarn 
+# RUN apt-get update && apt-get install -y yarn
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production 
 # Copy application code
 COPY . .
 
