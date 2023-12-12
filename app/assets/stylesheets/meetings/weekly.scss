@@ -1,7 +1,6 @@
+@use "../calendar/header.scss";
+
 .week-calendar {
-  .calendar-heading {
-    text-align: center;
-  }
   .weekly-date {
     display: flex;
     flex-direction: column;

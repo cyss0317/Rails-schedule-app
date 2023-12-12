@@ -1,3 +1,6 @@
+@import "../variables.scss";
+@import "../calendar/header.scss";
+
 .morning-shift {
   border-radius: 0.5rem;
   background-color: rgba(121, 202, 246, 0.558);
@@ -9,7 +12,7 @@
 }
 
 table > tbody > tr[class^="week-"]:hover {
-  outline: 1px solid green !important;
+  outline: 2px solid $today-date-color !important;
 }
 
 table {
