@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="hamburger relative font-normal w-10 l-10 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+</svg>
+
+<div id="hamburger-menu" class="absolute  top-55 rounded-xl bg-gray-100 w-40 p-1">
+  <%= yield %>
+  <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "hover:text-gray-400", data: {confirm: "are you sure"} %>
+  <%= button_to "Edit Profile", edit_user_registration_path, method: :get, class: "hover:text-gray-400" %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector(".hamburger").addEventListener("click", (e) => {
+      e.stopPropagation()
+      document.querySelector("#hamburger-menu").classList.toggle("hidden")
+    })
+    document.querySelector("#hamburger-menu").addEventListener("mouseout", (e) => {
+      e.stopPropagation()
+      document.querySelector("#hamburger-menu").classList.toggle("hidden")
+    })
+  })
+</script>

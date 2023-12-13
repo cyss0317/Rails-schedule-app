@@ -11,6 +11,6 @@
       <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": meetings_weekly_path, "Month": root_path} } %>
     <% end %>
     <div><%= current_user.full_name %></div>
-    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
-    <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
+
+    <%= render partial: "shared/icons/hamburger" %>
   </div>

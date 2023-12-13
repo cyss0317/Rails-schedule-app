@@ -3,16 +3,35 @@
 
 .morning-shift {
   border-radius: 0.5rem;
-  background-color: rgba(121, 202, 246, 0.558);
+  background-color: $theme-yellow-faded;
+
+  li {
+    a {
+      color: $title-color;
+    }
+  }
+  li:not(:last-child) {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $theme-navy-faded;
+  }
 }
 
 .evening-shift {
   border-radius: 0.5rem;
-  background-color: rgba(42, 30, 43, 0.451);
+  background-color: $theme-navy-faded;
+
+  li > a {
+    color: $theme-white;
+  }
+
+  li:not(:last-child) {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $theme-white;
+  }
 }
 
 table > tbody > tr[class^="week-"]:hover {
-  outline: 2px solid $today-date-color !important;
+  outline: 2px solid $theme-navy-faded !important;
 }
 
 table {
