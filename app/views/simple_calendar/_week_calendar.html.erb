@@ -25,7 +25,7 @@
           <td class="text-center" >
             <div class="time-column">
               <% (8..21).each do |hour| %>
-                <div class="hour-cell"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+                <div class="time-cell"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
               <% end %>
             </div>
           </td>

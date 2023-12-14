@@ -1,4 +1,4 @@
-  <%= link_to "#{meeting.user_name}", meeting_path(meeting), {  class: "no-underline text-transparent weekly-meeting #{classes}", style: "background-color:#{meeting.user_color}"} %>
+  <%= link_to "#{meeting.user_initials}", meeting_path(meeting), {  class: "no-underline text-transparent weekly-meeting #{classes}", style: "background-color:#{meeting.user_color}"} %>
 
   <script>
     // make border line appear on blocks of time that belongs to a meeting

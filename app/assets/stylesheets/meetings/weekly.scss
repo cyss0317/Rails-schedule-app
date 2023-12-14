@@ -6,12 +6,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-   
+
     p {
       margin: 0;
     }
   }
-  
+
   tr#weekly {
     td {
       padding: 0;
@@ -23,31 +23,34 @@
       overflow: auto;
     }
 
-
     .time-column {
       height: 100dvh;
       min-height: 60dvh;
+      :nth-child(2n) {
+        background-color: #22222210;
+      }
     }
 
     .hour-column {
       display: flex;
       flex-direction: row;
       gap: 0.5rem;
+      width: 100px;
       // justify-content: space-evenly;
     }
 
-    .hour-cell {
+    .hour-cell,
+    .time-cell {
       height: 3rem;
+    }
+
+    .hour-cell {
+      width: 130px;
     }
 
     .mh1 {
       min-height: 1rem;
     }
 
-    .time-column {
-      :nth-child(2n) {
-        background-color: #22222210;
-      }
-    }
   }
 }
