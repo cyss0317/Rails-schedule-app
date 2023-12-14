@@ -9,7 +9,7 @@
             meeting.style.outline = "2px solid blue"
           })
         })
-        meeting.addEventListener("mouseout", (e) => {
+        meeting.addEventListener("mouseleave", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
             meeting.style.outline = "none"
           })

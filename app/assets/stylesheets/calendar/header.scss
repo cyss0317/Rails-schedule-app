@@ -4,3 +4,15 @@
   color: $title-color;
   font-size: $header-heading-font-size
 }
+
+#hamburger-menu {
+  top: 59px;
+  right: 60px;
+  background-color: $theme-gray;
+  button {
+    color: $theme-navy-faded;
+    &:hover {
+      color: $theme-navy;
+    }
+  }
+}
