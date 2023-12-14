@@ -19,7 +19,7 @@
     .day {
       height: 100svh;
       min-height: 60svh;
-      width: calc(100dvw / 7);
+      max-width: calc(95dvw / 7);
       overflow: auto;
     }
 
