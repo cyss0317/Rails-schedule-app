@@ -1,6 +1,5 @@
 <%= week_calendar(events: @meetings) do |day, day_events| %>
   <p class="text-center"> <%= day.day %> </p>
-
   <% if !day_events.empty? %>
     <div class="flex">
       <% day_events.each do |event| %>

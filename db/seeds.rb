@@ -20,7 +20,7 @@ user_id_array << FactoryBot.create(:user, color: Faker::Color.hex_color) until u
 
 5.times do |i|
   # morning shift
-  starting_time = Time.new.noon + i.days - 4.hour
+  starting_time = Time.new.in_time_zone.noon + i.days - 4.hour
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
@@ -34,7 +34,7 @@ user_id_array << FactoryBot.create(:user, color: Faker::Color.hex_color) until u
     end_time: starting_time + (4 + i).hour
   )
   # dinner shift
-  starting_time = Time.now.noon + i.days + 3.hour
+  starting_time = Time.new.in_time_zone.noon + i.days + 3.hour
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
