@@ -1,18 +1,17 @@
+@use "../calendar/header.scss";
+
 .week-calendar {
-  .calendar-heading {
-    text-align: center;
-  }
   .weekly-date {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-   
+
     p {
       margin: 0;
     }
   }
-  
+
   tr#weekly {
     td {
       padding: 0;
@@ -20,35 +19,38 @@
     .day {
       height: 100svh;
       min-height: 60svh;
-      width: calc(100dvw / 7);
+      max-width: calc(95dvw / 7);
       overflow: auto;
     }
-
 
     .time-column {
       height: 100dvh;
       min-height: 60dvh;
+      :nth-child(2n) {
+        background-color: #22222210;
+      }
     }
 
     .hour-column {
       display: flex;
       flex-direction: row;
       gap: 0.5rem;
+      width: 100px;
       // justify-content: space-evenly;
     }
 
-    .hour-cell {
+    .hour-cell,
+    .time-cell {
       height: 3rem;
+    }
+
+    .hour-cell {
+      width: 100%
     }
 
     .mh1 {
       min-height: 1rem;
     }
 
-    .time-column {
-      :nth-child(2n) {
-        background-color: #22222210;
-      }
-    }
   }
 }

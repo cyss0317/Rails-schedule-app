@@ -43,6 +43,10 @@ class Meeting < ApplicationRecord
     user.color
   end
 
+  def user_initials
+    user[:first_name][0] + user[:last_name][0]
+  end
+
   def str_time_to_date(time)
     if time.is_a? String
       time.to_date

@@ -1,0 +1,26 @@
+
+  <div class="calendar-heading">
+    <%= render layout: "shared/header" do %>
+      <%= render layout: "shared/tooltip", locals: { text: "Previous month"} do %>
+        <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
+      <% end %>
+      <%= render layout: "shared/tooltip", locals: { text: "Next month"} do %>
+        <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
+      <% end %>
+      <div class="calendar-title"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></div>
+    <% end %>
+    <button type="button" class="today-btn">Today</button>
+    <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": meetings_weekly_path, "Month": root_path} } %>
+    <div><%= current_user.full_name %></div>
+
+    <%= render partial: "shared/icons/hamburger" %>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".today-btn").addEventListener("click", (e) => {
+        e.target.scrollIntoView({block: "start", behavior: "smooth"})
+        window.hello = e
+      })
+    })
+  </script>

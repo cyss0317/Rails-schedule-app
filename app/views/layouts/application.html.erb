@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsScheduleAp</title>
+    <title>RailsScheduleApp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -16,6 +16,8 @@
       <p class="text-center alert"><%= alert %></p>
     <% end %>
 
-    <%= yield %>
+    <div class="m-6 text-center">
+      <%= yield %>
+    </div>
   </body>
 </html>
