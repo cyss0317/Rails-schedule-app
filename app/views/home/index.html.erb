@@ -6,7 +6,7 @@
 
       <span> <%= date.day %> </span>
       <% if !meetings.empty? %>
-        <%= link_to meetings_weekly_path(start_date: date), class: "HELLO" do %>
+        <%= link_to meetings_weekly_path(start_date: date) do %>
           <div class="flex-col">
             <div class="morning-shift">
               <% morning_shifts.each do |meeting| %>

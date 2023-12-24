@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MeetingsController < ApplicationController
   helper TimeHelper
   helper DateHelper

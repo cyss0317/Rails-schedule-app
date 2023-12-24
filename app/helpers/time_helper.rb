@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TimeHelper
   def idx_to_time(idx)
     if idx < 12

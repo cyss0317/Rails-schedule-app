@@ -1,13 +1,10 @@
 <% target_date_range = [] %>
-<% new_start_date ="18 Nov 2023" %>
 <%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
   <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
 <% end %>
 
-
 <div class="simple-calendar">
-  <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Month"} %>
-
+  <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: Time.now, current: "Month"} %>
   <table class="table table-striped">
     <thead>
       <tr>

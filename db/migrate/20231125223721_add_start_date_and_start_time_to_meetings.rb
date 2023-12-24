@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddStartDateAndStartTimeToMeetings < ActiveRecord::Migration[7.1]
   def change
     add_column :meetings, :start_date, :datetime

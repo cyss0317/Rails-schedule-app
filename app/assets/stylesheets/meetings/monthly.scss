@@ -9,10 +9,11 @@
     a {
       color: $title-color;
     }
-  }
-  li:not(:last-child) {
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid $theme-navy-faded;
+
+    &:not(:last-child) {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid $theme-navy-faded;
+    }
   }
 }
 
@@ -30,10 +31,16 @@
   }
 }
 
+table > tbody {
+  z-index: -2;
+}
+
 table > tbody > tr[class^="week-"]:hover {
   outline: 2px solid $theme-navy-faded !important;
 }
 
-table {
-  // border-collapse: collapse;
+table > thead {
+  position: sticky;
+  top: 35px;
+  z-index: 0;
 }

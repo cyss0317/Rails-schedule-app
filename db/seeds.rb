@@ -12,11 +12,17 @@ require 'factory_bot_rails'
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf', color: Faker::Color.hex_color) unless User.find_by(email: 'test@test.com')
+unless User.find_by(email: 'test@test.com')
+  FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
+                           color: Faker::Color.hex_color)
+end
 
 user_id_array = User.all.pluck(:id)
 
-user_id_array << FactoryBot.create(:user, color: Faker::Color.hex_color) until user_id_array.length == 4 if user_id_array.length < 4
+if user_id_array.length < 4
+  user_id_array << FactoryBot.create(:user,
+                                     color: Faker::Color.hex_color) until user_id_array.length == 4
+end
 
 5.times do |i|
   # morning shift

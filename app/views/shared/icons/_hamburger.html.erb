@@ -2,19 +2,24 @@
   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
 </svg>
 
-<div id="hamburger-menu" class="absolute hidden top-55 rounded-xl w-40 p-1">
-  <%= yield %>
-  <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
-  <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
+<div class="hamburger-background hidden">
+  <div id="hamburger-menu" class="">
+    <%= yield %>
+    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
+    <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
+  </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelector(".hamburger").addEventListener("click", (e) => {
-      document.querySelector("#hamburger-menu").classList.toggle("hidden")
+      document.querySelector(".hamburger-background").classList.toggle("hidden")
+    })
+    document.querySelector(".hamburger-background").addEventListener("click", (e) => {
+      document.querySelector(".hamburger-background").classList.toggle("hidden")
     })
     document.querySelector("#hamburger-menu").addEventListener("mouseleave", (e) => {
-      document.querySelector("#hamburger-menu").classList.toggle("hidden")
+      document.querySelector(".hamburger-background").classList.toggle("hidden")
     })
   })
 </script>

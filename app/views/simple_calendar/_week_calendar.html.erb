@@ -1,59 +1,43 @@
-<div class="simple-calendar week-calendar">
+<div class="week-calendar">
 
   <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
 
-  <table class="table table-striped">
-    <thead>
-      <tr class="text-center">
-        <th class="table-header-hour"></th>
-        <% date_range.slice(0, 7).each do |day| %>
-          <th>
-            <div class="weekly-date">
-              <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
-              <%# if day.today? %>
-              <%# end %>
-              <h4 class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></h4>
-            </div>
-          </th>
-        <% end %>
-      </tr>
-    </thead>
+  <div class="table flex flex-col justify-center">
+    <div class="table-header">
+      <div class="empty-tr"></div>
+      <% date_range.slice(0, 7).each do |day| %>
+        <div class="weekly-date">
+          <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
+          <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
+        </div>
+      <% end %>
+    </div>
 
-    <tbody>
+    <div class="table-body" >
       <% date_range.each_slice(7) do |week| %>
-        <tr id="weekly">
-          <td class="text-center" >
-            <div class="time-column">
-              <% (8..21).each do |hour| %>
-                <div class="time-cell"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
-              <% end %>
-            </div>
-          </td>
+          <div class="hours">
+            <% (8..24).each do |hour| %>
+              <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+              <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
+            <% end %>
+          </div>
 
           <% week.each do |day| %>
-
             <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-              <div class="time-column">
-                <% (8..21).each do |time| %>
-                  <div class="hour-cell hour-column <%= idx_to_time(time) %>'o-clock" data-time=<% time %> >
-                    <% sorted_events.fetch(day, []).each do |event| %>
-                      <% if event.shift_belongs_to_hour?(time) %>
-                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, classes: "weekly-meeting-#{event.id}"} %>
-                      <% end %>
-                    <% end %>
-                 </div>
+              <div class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
+                <% sorted_events.fetch(day, []).each_with_index do |event, idx| %>
+                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
                 <% end %>
               </div>
               <% end %>
             <% end %>
           <% end %>
-        </tr>
       <% end %>
-    </tbody>
-  </table>
+    </div>
+  </div>
 </div>
 

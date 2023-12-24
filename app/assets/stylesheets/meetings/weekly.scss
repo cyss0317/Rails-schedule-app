@@ -1,56 +1,185 @@
-@use "../calendar/header.scss";
+@import "../variables.scss";
+@import "../calendar/header.scss";
+
+$empty-tr-width-small: 47px;
+$empty-tr-width-medium: 69px;
+// $table-row-width: 150px;
+$table-row-width-small: calc(
+  ($main-width-medium - #{$empty-tr-width-small}) / 7
+);
+$table-row-width-medium: calc(
+  ($main-width-medium - #{$empty-tr-width-medium}) / 7
+);
+$table-body-row-height: 100px;
+$table-border-color: rgb(218, 220, 224);
+$number-of-hour-cells: 17;
 
 .week-calendar {
-  .weekly-date {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  tr#weekly {
-    td {
-      padding: 0;
-    }
-    .day {
-      height: 100svh;
-      min-height: 60svh;
-      max-width: calc(95dvw / 7);
-      overflow: auto;
-    }
-
-    .time-column {
-      height: 100dvh;
-      min-height: 60dvh;
-      :nth-child(2n) {
-        background-color: #22222210;
+  .table {
+    .empty-tr {
+      @media (min-width: 368px) and (max-width: 768px) {
+        width: $empty-tr-width-small;
+      }
+      @media (min-width: 768px) {
+        width: $empty-tr-width-medium;
       }
     }
 
-    .hour-column {
+    .hours {
+      border-right: 1px solid $table-border-color;
+      padding-right: 8px;
+      position: relative;
+
+      @media (min-width: 368px) and (max-width: 768px) {
+        width: calc($empty-tr-width-small + 1px);
+      }
+
+      @media (min-width: 768px) {
+        width: calc($empty-tr-width-medium + 1px);
+      }
+
+      .hour-cell {
+        height: $table-body-row-height;
+        position: absolute;
+
+        &:nth-child(1) {
+          border-top: 1px solid $table-border-color;
+        }
+
+        @media (min-width: 368px) and (max-width: 768px) {
+          width: $empty-tr-width-small;
+          padding: 0;
+        }
+
+        @media (min-width: 768px) {
+          width: $empty-tr-width-medium;
+        }
+      }
+    }
+
+    .table-header {
       display: flex;
       flex-direction: row;
-      gap: 0.5rem;
-      width: 100px;
-      // justify-content: space-evenly;
-    }
+      background-color: $theme-white;
+      position: sticky;
+      top: -7px;
+      z-index: 1;
 
-    .hour-cell,
-    .time-cell {
-      height: 3rem;
-    }
+      @media (min-width: 368px) and (max-width: 768px) {
+        width: $main-width-medium;
+      }
 
-    .hour-cell {
-      width: 100%
-    }
+      @media (min-width: 768px) {
+        width: $main-width-medium;
+        top: 0px;
+      }
 
-    .mh1 {
-      min-height: 1rem;
-    }
+      .date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
+        border: none;
+      }
 
+      .weekly-date {
+        border-bottom: 1px solid $table-border-color;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        @media (min-width: 368px) and (max-width: 768px) {
+          width: $table-row-width-small;
+        }
+
+        @media (min-width: 768px) {
+          width: $table-row-width-medium;
+        }
+
+        p {
+          border: none;
+          margin-bottom: 0.25rem;
+        }
+      }
+
+      .today-date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10rem;
+        padding: 9px;
+        background-color: $today-date-color;
+        color: $white;
+
+        &:hover {
+          background-color: $today-date-hover-color;
+        }
+      }
+    }
+    .table-body {
+      display: flex;
+      border-bottom: 1px solid $table-border-color;
+      width: $main-width-medium;
+      position: relative;
+
+      @media (min-width: 368px) and (max-width: 768px) {
+        width: $main-width-medium;
+      }
+
+      @media (min-width: 768px) {
+        width: $main-width-medium;
+      }
+
+      .hours {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .current-time {
+        border-top: 1px solid $theme-red;
+      }
+
+      .hour-cell-row-separator {
+        padding: none !important;
+        position: absolute;
+        width: $main-width-medium;
+        border-bottom: 1px solid $table-border-color;
+        z-index: -3;
+      }
+
+      .meetings {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        border-right: 1px solid $table-border-color;
+        height: calc($number-of-hour-cells * 100px);
+
+        .weekly-meeting {
+          position: absolute;
+          text-decoration: transparent;
+        }
+        @media (min-width: 368px) and (max-width: 768px) {
+          width: $table-row-width-small;
+          padding: 2px;
+        }
+
+        @media (min-width: 768px) {
+          padding: 8px;
+          width: $table-row-width-medium;
+        }
+      }
+
+      .prev-month {
+        background-color: #22222230;
+        border-right: 1px solid white;
+      }
+
+      .next-month {
+        background-color: #22222230;
+        border-left: 1px solid white;
+      }
+    }
   }
 }

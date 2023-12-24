@@ -2,7 +2,7 @@
 
 class HomeController < ApplicationController
   def index
-    start_date = params.fetch(:start_date, Date.today).to_date
+    params.fetch(:start_date, Date.today).to_date
     @meetings = Meeting.default
     current_user ? render : (redirect_to new_user_registration_path)
   end

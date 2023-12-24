@@ -1,4 +1,6 @@
-// define variables here
+$main-width-small: 85dvw;
+$main-width-medium: 95dvw;
+
 $primary-color: #f2e8cf;
 $today-date-color: #0b57d0;
 $today-date-hover-color: #054ec4;
@@ -7,14 +9,14 @@ $off-white: #ffffff80;
 $black: #000000;
 $text-color: #70757a;
 $red: #f4511e;
-$title-color: rgb(60,64,67);
-$header-color: rgb(95,99,104);
+$title-color: rgb(60, 64, 67);
+$header-color: rgb(95, 99, 104);
 
 $tooltip-text-color: #e8eaed;
-$tooltip-background-color: #3C4043;
+$tooltip-background-color: #3c4043;
 
-$header-heading-font-size: 22px;
-$header-font-size: 1rem;
+$header-heading-font-size-medium: 22px;
+$header-font-size-medium: 1rem;
 
 // main theme color
 $theme-yellow: #fca311;
