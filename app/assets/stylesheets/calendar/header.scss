@@ -1,18 +1,96 @@
 @import "../variables.scss";
 
-.calendar-title {
-  color: $title-color;
-  font-size: $header-heading-font-size
+.calendar-heading {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+  position: sticky;
+  z-index: 2;
+  width: $main-width-medium;
+  margin-bottom: 0.25rem;
+  background-color: $theme-white;
+
+  .hamburger-background {
+    width: 100%;
+    z-index: 5;
+    height: 100%;
+    position: fixed;
+    inset: 0;
+  }
+
+  #hamburger-menu {
+    background-color: $theme-gray;
+    position: absolute;
+    width: 10rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+    padding-top: 10px;
+    z-index: 5;
+
+    button {
+      color: $theme-navy-faded;
+      &:hover {
+        color: $theme-navy;
+      }
+    }
+  }
+
+  .calendar-title {
+    color: $title-color;
+    font-size: $header-heading-font-size-medium;
+  }
 }
 
-#hamburger-menu {
-  top: 59px;
-  right: 60px;
-  background-color: $theme-gray;
-  button {
-    color: $theme-navy-faded;
-    &:hover {
-      color: $theme-navy;
+@media (min-width: 368px) and (max-width: 768px) {
+  body {
+    width: 98dvw;
+  }
+
+  .week-calendar {
+    .table-header {
+      top: 11px;
+    }
+    .calendar-heading.week {
+      #hamburger-menu {
+        top: 40px;
+        right: 9px;
+      }
+    }
+
+    .calendar-heading.month {
+      #hamburger-menu {
+        top: 72px;
+        right: 236px;
+      }
+    }
+  }
+
+  .user-name,
+  .today-btn {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .simple-calendar {
+    margin: 1.5rem;
+  }
+
+  .week-calendar {
+    margin: 1.5rem;
+  }
+
+  .calendar-heading.week {
+    #hamburger-menu {
+      top: 65px;
+      right: 34px;
+    }
+  }
+  .calendar-heading.month {
+    #hamburger-menu {
+      top: 65px;
+      right: 14px;
     }
   }
 }

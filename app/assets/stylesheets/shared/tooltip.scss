@@ -1,11 +1,13 @@
 @import "../variables.scss";
 
-
 .tool-tip {
   position: relative;
-  display: inline-block;
+  display: flex;
   font-size: inherit;
+  align-items: center;
+  justify-content: center;
   border-radius: 10rem;
+  font-size: 1.5rem;
   width: 2rem;
   height: 2rem;
   transition: 0.15s ease-in-out;

@@ -9,16 +9,11 @@
 }
 
 .simple-calendar {
-  .calendar-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-  }
   .day {
     color: $text-color;
     height: 8rem;
     border: 1px solid #22222260;
+    min-width: calc(100% / 7);
     cursor: pointer;
     transition: all 0.15s ease-in-out;
     &:hover {

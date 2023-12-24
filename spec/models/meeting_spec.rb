@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Meeting, type: :model do
@@ -45,7 +47,8 @@ RSpec.describe Meeting, type: :model do
     end
 
     it '#shift_belongs_to_hour?' do
-      meeting = create(:meeting, user_id: user.id, start_time: Time.zone.parse('2023-01-01 10:00:00'), end_time: Time.zone.parse('2023-01-01 13:00:00'))
+      meeting = create(:meeting, user_id: user.id, start_time: Time.zone.parse('2023-01-01 10:00:00'),
+                                 end_time: Time.zone.parse('2023-01-01 13:00:00'))
 
       expect(meeting.shift_belongs_to_hour?(9)).to eq(false)
       expect(meeting.shift_belongs_to_hour?(10)).to eq(true)

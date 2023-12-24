@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MeetingsController < ApplicationController
   helper TimeHelper
   helper DateHelper
@@ -10,6 +12,10 @@ class MeetingsController < ApplicationController
   end
 
   def weekly
+    Rails.logger.info "ip: #{request.remote_ip}}"
+    Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
+
+    Rails.logger.info "CHOI: #{request.remote_ip == " 72.133.102.178"}}"
     if params[:start_date]
       @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
       @end_time = params[:start_date].to_date.end_of_week.at_end_of_day

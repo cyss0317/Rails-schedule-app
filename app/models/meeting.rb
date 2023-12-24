@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 class Meeting < ApplicationRecord
+  include ApplicationHelper
   include DateHelper
 
   belongs_to :user
@@ -74,6 +77,18 @@ class Meeting < ApplicationRecord
   def evening_shift?
     start_time.hour >= 15
   end
+
+  def table_row_height
+    (end_time.hour - start_time.hour) * 100 + (end_time.min / 60.00).round(2) * 100
+  end
+
+  def table_row_top_shift
+    table_row_top(start_time.hour)
+  end
+
+  # def self.current_time_class
+  #   DateHelper.current_time_hour
+  # end
 
   def self.morning_shifts; end
 

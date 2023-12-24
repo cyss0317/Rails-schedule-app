@@ -71,8 +71,8 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
-  gem 'shoulda-matchers', '~> 5.0'
   gem 'selenium-webdriver'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 
 gem 'devise', '~> 4.9'
@@ -83,10 +83,10 @@ gem 'cssbundling-rails', '~> 1.3'
 
 gem 'jsbundling-rails', '~> 1.2'
 
-gem "byebug", "~> 11.1", :groups => [:development, :test]
+gem 'byebug', '~> 11.1', groups: %i[development test]
 
-gem "dockerfile-rails", ">= 1.5", :group => :development
+gem 'dockerfile-rails', '>= 1.5', group: :development
 
-gem "sentry-ruby", "~> 5.15"
+gem 'sentry-ruby', '~> 5.15'
 
-gem "sentry-rails", "~> 5.15"
+gem 'sentry-rails', '~> 5.15'
