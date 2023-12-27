@@ -4,7 +4,7 @@
         <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
         <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
 
-        <span> <%= date.day %> </span>
+        <span class="monthly-date"> <%= date.day %> </span>
         <% if !meetings.empty? %>
           <%= link_to meetings_weekly_path(start_date: date) do %>
             <div class="flex-col">
