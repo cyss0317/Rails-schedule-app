@@ -20,7 +20,7 @@
     color: $text-color;
     height: 8rem;
     border: 1px solid #22222260;
-    min-width: calc(100% / 7);
+    width: max(calc(100% / 7), 100px);
     padding: 12px;
     cursor: pointer;
     transition: all 0.15s ease-in-out;

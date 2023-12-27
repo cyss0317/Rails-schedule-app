@@ -1,5 +1,12 @@
 @import "../variables.scss";
 
+.calendar-heading.month {
+  width: max(780px, 100%);
+}
+
+.claendar-heading.week {
+  width: 100%;
+}
 .calendar-heading {
   display: flex;
   justify-content: space-around;
@@ -7,12 +14,12 @@
   gap: 0.5rem;
   position: sticky;
   z-index: 2;
-  // width: $main-width-medium;
   width: 100%;
   margin-bottom: 0.25rem;
   background-color: $theme-white;
   position: sticky;
   top:0;
+
 
   .hamburger-main {
     position: relative;
