@@ -13,6 +13,7 @@
 @media (max-width: 380px) {
   /* Styles for small devices */
   body {
+    min-width: 380px;
     width: 95dvw;
     margin: 0;
   }

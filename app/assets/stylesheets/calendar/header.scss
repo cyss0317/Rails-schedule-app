@@ -7,9 +7,16 @@
   gap: 0.5rem;
   position: sticky;
   z-index: 2;
-  width: $main-width-medium;
+  // width: $main-width-medium;
+  width: 100%;
   margin-bottom: 0.25rem;
   background-color: $theme-white;
+  position: sticky;
+  top:0;
+
+  .hamburger-main {
+    position: relative;
+  }
 
   .hamburger-background {
     width: 100%;
@@ -42,26 +49,19 @@
   }
 }
 
-@media (min-width: 368px) and (max-width: 768px) {
+@media (min-width: 0px) and (max-width: 768px) {
   body {
     width: 98dvw;
   }
 
   .week-calendar {
-    .table-header {
-      top: 11px;
-    }
+    // .table-header {
+    //   top: 11px;
+    // }
     .calendar-heading.week {
       #hamburger-menu {
-        top: 40px;
+        top: 47px;
         right: 9px;
-      }
-    }
-
-    .calendar-heading.month {
-      #hamburger-menu {
-        top: 72px;
-        right: 236px;
       }
     }
   }
@@ -69,6 +69,13 @@
   .user-name,
   .today-btn {
     display: none;
+  }
+
+  .calendar-heading.month {
+    #hamburger-menu {
+      top: 40px;
+      right: 9px;
+    }
   }
 }
 
@@ -87,10 +94,12 @@
       right: 34px;
     }
   }
+
   .calendar-heading.month {
+    // top: 0px;
     #hamburger-menu {
       top: 65px;
-      right: 14px;
+      right: 34px;
     }
   }
 }
