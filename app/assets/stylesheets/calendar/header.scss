@@ -1,11 +1,11 @@
 @import "../variables.scss";
 
 .calendar-heading.month {
-  width: max($monthly-table-body-column-min-width * 7, 100dvw);
+  width: $monthly-table-body-column-width;
 }
 
 .claendar-heading.week {
-  width: 100%;
+  width: $monthly-table-body-column-width
 }
 .calendar-heading {
   display: flex;

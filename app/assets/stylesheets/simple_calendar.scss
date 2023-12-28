@@ -9,7 +9,10 @@
 }
 
 .monthly-calendar {
-  margin: 1.5rem;
+  // margin: 1.5rem;
+  table.table-header {
+    width: $main-width-medium;
+  }
 
   .day-name-container {
     background-color: $theme-white;
@@ -21,6 +24,7 @@
     height: 8rem;
     border: 1px solid #22222260;
     // width: max(60px, calc(100% / 7));
+    width: calc($monthly-table-body-column-width / 7);
     padding: 12px;
     cursor: pointer;
     transition: all 0.15s ease-in-out;
@@ -34,7 +38,7 @@
   .day-name {
     color: $text-color;
     font-size: 20px;
-    width: calc(100% / 7);
+    width: calc($monthly-table-body-column-width / 7);
   }
 
   .wday-0 {
