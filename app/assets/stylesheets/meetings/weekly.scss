@@ -14,7 +14,7 @@ $table-body-row-height: 100px;
 $table-border-color: rgb(218, 220, 224);
 $number-of-hour-cells: 17;
 
-.week-calendar {
+.weekly-calendar {
   .table {
     .empty-tr {
       @media (min-width: 368px) and (max-width: 768px) {

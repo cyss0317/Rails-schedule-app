@@ -1,11 +1,11 @@
 @import "../variables.scss";
 
 .calendar-heading.month {
-  width: $monthly-table-body-column-width;
+  width: $main-width-medium;
 }
 
 .claendar-heading.week {
-  width: $monthly-table-body-column-width
+  width: $main-width-medium;
 }
 .calendar-heading {
   display: flex;
@@ -14,12 +14,11 @@
   gap: 0.5rem;
   position: sticky;
   z-index: 2;
-  width: 100%;
+  width: $main-width-medium;
   margin-bottom: 0.25rem;
   background-color: $theme-white;
   position: sticky;
-  top:0;
-
+  top: 0;
 
   .hamburger-main {
     position: relative;
@@ -61,7 +60,7 @@
     width: 98dvw;
   }
 
-  .week-calendar {
+  .weekly-calendar {
     // .table-header {
     //   top: 11px;
     // }
@@ -87,12 +86,12 @@
 }
 
 @media (min-width: 768px) {
-  .simple-calendar {
-    margin: 1.5rem;
+  .monthly-calendar {
+    margin: auto;
   }
 
-  .week-calendar {
-    margin: 1.5rem;
+  .weekly-calendar {
+    margin: auto;
   }
 
   .calendar-heading.week {
