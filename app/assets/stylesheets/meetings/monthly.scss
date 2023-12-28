@@ -39,6 +39,12 @@ table > tbody > tr[class^="week-"]:hover {
   outline: 2px solid $theme-navy-faded !important;
 }
 
+.monthly-calendar {
+  table > tbody > tr > td {
+    // min-width: $monthly-table-body-column-min-width;
+    // max-width: calc($monthly-table-body-column-width / 7);
+  }
+}
 table > thead {
   position: sticky;
   top: 35px;

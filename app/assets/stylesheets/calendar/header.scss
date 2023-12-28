@@ -1,5 +1,12 @@
 @import "../variables.scss";
 
+.calendar-heading.month {
+  width: $main-width-medium;
+}
+
+.claendar-heading.week {
+  width: $main-width-medium;
+}
 .calendar-heading {
   display: flex;
   justify-content: space-around;
@@ -10,6 +17,12 @@
   width: $main-width-medium;
   margin-bottom: 0.25rem;
   background-color: $theme-white;
+  position: sticky;
+  top: 0;
+
+  .hamburger-main {
+    position: relative;
+  }
 
   .hamburger-background {
     width: 100%;
@@ -42,26 +55,19 @@
   }
 }
 
-@media (min-width: 368px) and (max-width: 768px) {
+@media (min-width: 0px) and (max-width: 768px) {
   body {
     width: 98dvw;
   }
 
-  .week-calendar {
-    .table-header {
-      top: 11px;
-    }
+  .weekly-calendar {
+    // .table-header {
+    //   top: 11px;
+    // }
     .calendar-heading.week {
       #hamburger-menu {
-        top: 40px;
+        top: 47px;
         right: 9px;
-      }
-    }
-
-    .calendar-heading.month {
-      #hamburger-menu {
-        top: 72px;
-        right: 236px;
       }
     }
   }
@@ -70,15 +76,22 @@
   .today-btn {
     display: none;
   }
+
+  .calendar-heading.month {
+    #hamburger-menu {
+      top: 40px;
+      right: 9px;
+    }
+  }
 }
 
 @media (min-width: 768px) {
-  .simple-calendar {
-    margin: 1.5rem;
+  .monthly-calendar {
+    margin: auto;
   }
 
-  .week-calendar {
-    margin: 1.5rem;
+  .weekly-calendar {
+    margin: auto;
   }
 
   .calendar-heading.week {
@@ -87,10 +100,12 @@
       right: 34px;
     }
   }
+
   .calendar-heading.month {
+    // top: 0px;
     #hamburger-menu {
       top: 65px;
-      right: 14px;
+      right: 34px;
     }
   }
 }

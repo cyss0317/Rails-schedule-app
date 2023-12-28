@@ -13,6 +13,7 @@
 @media (max-width: 380px) {
   /* Styles for small devices */
   body {
+    min-width: 380px;
     width: 95dvw;
     margin: 0;
   }
@@ -27,9 +28,9 @@
 
 @media (min-width: 768px) {
   /* Styles for medium devices */
-  body {
-    margin: 0 2rem 1rem 2rem;
-  }
+  // body {
+  //   margin: 0 2rem 1rem 2rem;
+  // }
 }
 
 @media (min-width: 992px) {

@@ -1,15 +1,15 @@
-<% target_date_range = [] %>
-<%= render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
+<%# render layout: "shared/modal", locals: { modal_title: "Create a schdule for " }  do %>
   <%# render partial: "meetings/form", locals: { meeting: Meeting.new} %>
-<% end %>
+<%# end %>
 
-<div class="simple-calendar">
+<div class="monthly-calendar">
   <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: Time.now, current: "Month"} %>
-  <table class="table table-striped">
+
+  <table class="table-header table-striped">
     <thead>
-      <tr>
+      <tr class="day-name-container">
         <% date_range.slice(0, 7).each do |day| %>
-          <th><%= t('date.abbr_day_names')[day.wday] %></th>
+          <th class="day-name"><%= t('date.abbr_day_names')[day.wday] %></th>
         <% end %>
       </tr>
     </thead>
@@ -17,6 +17,8 @@
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
         <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
+          <div>
+            
             <% week.each do |day| %>
                 <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
                   <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
@@ -26,6 +28,7 @@
                   <% end %>
               <% end %>
             <% end %>
+          </div>
         </tr>
       <% end %>
     </tbody>

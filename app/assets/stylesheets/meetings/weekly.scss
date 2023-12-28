@@ -14,7 +14,7 @@ $table-body-row-height: 100px;
 $table-border-color: rgb(218, 220, 224);
 $number-of-hour-cells: 17;
 
-.week-calendar {
+.weekly-calendar {
   .table {
     .empty-tr {
       @media (min-width: 368px) and (max-width: 768px) {
@@ -62,16 +62,16 @@ $number-of-hour-cells: 17;
       flex-direction: row;
       background-color: $theme-white;
       position: sticky;
-      top: -7px;
       z-index: 1;
-
+      
       @media (min-width: 368px) and (max-width: 768px) {
         width: $main-width-medium;
+        top: 40px;
       }
 
       @media (min-width: 768px) {
         width: $main-width-medium;
-        top: -7px;
+        top: 42px;
       }
 
       .date {

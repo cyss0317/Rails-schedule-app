@@ -8,12 +8,24 @@
   color: $text-color;
 }
 
-.simple-calendar {
+.monthly-calendar {
+  // margin: 1.5rem;
+  table.table-header {
+    width: $main-width-medium;
+  }
+
+  .day-name-container {
+    background-color: $theme-white;
+  }
+
   .day {
+    vertical-align: top;
     color: $text-color;
     height: 8rem;
     border: 1px solid #22222260;
-    min-width: calc(100% / 7);
+    // width: max(60px, calc(100% / 7));
+    width: calc($monthly-table-body-column-width / 7);
+    padding: 12px;
     cursor: pointer;
     transition: all 0.15s ease-in-out;
     &:hover {
@@ -23,9 +35,10 @@
     }
   }
 
-  table.table thead tr th {
-    // width: 5rem;
+  .day-name {
     color: $text-color;
+    font-size: 20px;
+    width: calc($monthly-table-body-column-width / 7);
   }
 
   .wday-0 {
@@ -57,6 +70,7 @@
       }
     }
   }
+
   .date {
     border-radius: 10rem;
     width: 46px;
