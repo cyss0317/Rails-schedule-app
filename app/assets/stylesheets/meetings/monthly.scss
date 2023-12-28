@@ -41,7 +41,8 @@ table > tbody > tr[class^="week-"]:hover {
 
 .monthly-calendar {
   table > tbody > tr > td {
-    min-width: 100px;
+    // min-width: $monthly-table-body-column-min-width;
+    // max-width: calc($monthly-table-body-column-width / 7);
   }
 }
 table > thead {

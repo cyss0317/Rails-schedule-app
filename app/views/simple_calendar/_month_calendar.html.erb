@@ -17,6 +17,8 @@
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
         <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
+          <div>
+            
             <% week.each do |day| %>
                 <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
                   <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
@@ -26,6 +28,7 @@
                   <% end %>
               <% end %>
             <% end %>
+          </div>
         </tr>
       <% end %>
     </tbody>

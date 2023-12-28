@@ -8,6 +8,6 @@ class HomeController < ApplicationController
 
     params.fetch(:start_date, Date.today).to_date
     @meetings = Meeting.default
-    current_user ? render : (redirect_to new_user_registration_path)
+    current_user ? render : (redirect_to new_user_session_path)
   end
 end
