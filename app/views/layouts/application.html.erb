@@ -8,6 +8,30 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("click", (e) => {
+          //time configuration
+          window.target = e
+          console.log(e.target.className)
+          console.log( e.clientY)
+
+          clicked_el = e.target.getClientRects()[0]
+          table_cell_height = clicked_el.height / 17
+          y_axis = e.clientY - clicked_el.top
+
+          total_hours = y_axis / table_cell_height
+          clicked_spot_into_hour = Math.floor(total_hours)
+          minutes = Math.round((total_hours - clicked_spot_into_hour) * 60)
+          clicked_time_in_hour = `${(8 + clicked_spot_into_hour)}:${minutes}`
+
+          //date configuration
+          date = e.target.getAttribute("data-date")
+          date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
+          console.log(date_and_time)
+        })
+      })
+    </script>
   </head>
 
   <body>
