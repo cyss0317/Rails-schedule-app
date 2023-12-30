@@ -4,7 +4,7 @@
   <div class="table flex flex-col justify-center">
     <div class="table-header">
       <div class="empty-tr"></div>
-      <% date_range.slice(0, 7).each do |day| %>
+      <% date_range.slice(0, 7).each_with_index do |day, idx| %>
         <div class="weekly-date">
           <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
           <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
@@ -22,12 +22,12 @@
           </div>
 
           <% week.each do |day| %>
-            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
+            <%= content_tag :td, data: { date: day.to_s }, class: calendar.td_classes_for(day) do %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-              <div class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
+              <div data-date=<%= day %> class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
                 <% sorted_events.fetch(day, []).each_with_index do |event, idx| %>
                   <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
                 <% end %>
