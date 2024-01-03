@@ -50,9 +50,9 @@ RSpec.describe Location, type: :model do
   end
 
   describe 'associations' do
-    it 'has many users' do
+    it 'belongs to a company' do
       location = create(:location)
-      
+
       expect(location).to respond_to(:users)
     end
   end
