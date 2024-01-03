@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :user do
+    company
     email { Faker::Internet.email }
     first_name { Faker::Name.first_name }
     middle_name { Faker::Name.middle_name }

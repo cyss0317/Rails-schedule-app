@@ -6,6 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  belongs_to :company
   has_many :meetings, dependent: :destroy
 
   # before_action :authenticate_user!

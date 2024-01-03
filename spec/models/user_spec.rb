@@ -12,9 +12,16 @@ RSpec.describe User, type: :model do
     end
 
     it 'ensures email presence' do
-      user = User.new(first_name: 'First', middle_name: 'Middle', last_name: 'Last', email: '',
-                      password: '12341234').save
+      user = User.new(
+        first_name: 'First', middle_name: 'Middle', last_name: 'Last', email: '',
+        password: '12341234'
+      ).save
+
       expect(user).to eq(false)
     end
+  end
+
+  describe 'associations' do
+    it { should belong_to(:company) }
   end
 end
