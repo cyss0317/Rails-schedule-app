@@ -1,5 +1,8 @@
 FactoryBot.define do
   factory :location do
+    company_id { create(:company).id }
+    user_id { create(:user).id }
+
     name { Faker::Address.city }
     address { Faker::Address.street_address }
     phone_number { Faker::PhoneNumber.phone_number }
