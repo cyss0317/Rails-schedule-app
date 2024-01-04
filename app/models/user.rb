@@ -7,6 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   belongs_to :company
+  belongs_to :location
   has_many :meetings, dependent: :destroy
 
   # before_action :authenticate_user!
