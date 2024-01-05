@@ -71,6 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_044548) do
     t.string "color"
     t.integer "company_id"
     t.integer "location_id"
+    t.string "phone_number"
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["location_id"], name: "index_users_on_location_id"

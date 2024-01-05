@@ -9,5 +9,11 @@ FactoryBot.define do
     middle_name { Faker::Name.middle_name }
     last_name { Faker::Name.last_name }
     password { Faker::Internet.password }
+    color { Faker::Color.hex_color }
+
+    trait :under_texas_central_connection do
+      company { Company.find_by(name: 'Central Texas Connection') }
+      # location { Location.find_by(name: 'Cricket Wireless') }
+    end
   end
 end

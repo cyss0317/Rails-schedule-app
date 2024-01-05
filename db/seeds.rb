@@ -12,16 +12,25 @@ require 'factory_bot_rails'
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-unless User.find_by(email: 'test@test.com')
-  FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
-                           color: Faker::Color.hex_color)
-end
+User.delete_all
+Company.delete_all
+Location.delete_all
+Meeting.delete_all
+
+require_relative './seeds/company_seeder'
+require_relative './seeds/location_seeder'
+require_relative './seeds/user_seeder'
+
+CompanySeeder.seed!
+LocationSeeder.seed!
+UserSeeder.seed!
+FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
+                         color: Faker::Color.hex_color)
 
 user_id_array = User.all.pluck(:id)
 
 if user_id_array.length < 4
-  user_id_array << FactoryBot.create(:user,
-                                     color: Faker::Color.hex_color) until user_id_array.length == 4
+  user_id_array << FactoryBot.create(:user, :under_texas_central_connection) until user_id_array.length == 4
 end
 
 5.times do |i|
