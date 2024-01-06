@@ -4,6 +4,7 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     layout 'application'
 
+    before_action :trim_params, only: %i[create update]
     before_action :configure_sign_up_params, only: %i[new create]
     before_action :configure_account_update_params, only: [:update]
 
@@ -42,19 +43,29 @@ module Users
 
     protected
 
+    def trim_params(params)
+      require_trim_list = %i[first_name middle_name last_name email phone_number color]
+      require_trim_list.each do |key|
+        params[key] = params[key].strip
+      end
+    end
+
     # If you have extra params to permit, append them to the sanitizer.
     def configure_sign_up_params
+      trim_params(params[:user])
       attributes = %i[last_name first_name middle_name]
       devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
     end
 
     # If you have extra params to permit, append them to the sanitizer.
     def configure_account_update_params
+      trim_params(params[:user])
       attributes = %i[last_name first_name middle_name]
       devise_parameter_sanitizer.permit(:account_update, keys: attributes)
     end
 
     def sign_up_params
+      trim_params(params[:user])
       attributes = %i[last_name first_name middle_name color email password password_confirmation]
       params.require(:user).permit(attributes)
     end

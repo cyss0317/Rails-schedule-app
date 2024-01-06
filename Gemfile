@@ -39,23 +39,32 @@ gem 'simple_calendar', '~> 2.4'
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
+gem 'cssbundling-rails', '~> 1.3'
+gem 'devise', '~> 4.9'
+gem 'dockerfile-rails', '>= 1.5', group: :development
 gem 'faker'
+gem 'jsbundling-rails', '~> 1.2'
+
+gem 'sentry-rails', '~> 5.15'
+gem 'sentry-ruby', '~> 5.15'
+gem 'tailwindcss-rails', '~> 2.0'
+gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-
+  gem 'byebug', '~> 11.1'
   gem 'factory_bot_rails'
   gem 'rspec-rails'
 end
 
 group :development do
+  gem 'annotate', '~> 3.2'
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
@@ -74,19 +83,3 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 5.0'
 end
-
-gem 'devise', '~> 4.9'
-
-gem 'tailwindcss-rails', '~> 2.0'
-
-gem 'cssbundling-rails', '~> 1.3'
-
-gem 'jsbundling-rails', '~> 1.2'
-
-gem 'byebug', '~> 11.1', groups: %i[development test]
-
-gem 'dockerfile-rails', '>= 1.5', group: :development
-
-gem 'sentry-ruby', '~> 5.15'
-
-gem 'sentry-rails', '~> 5.15'

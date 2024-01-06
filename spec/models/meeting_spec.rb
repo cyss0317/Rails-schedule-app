@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: meetings
+#
+#  id         :bigint           not null, primary key
+#  name       :string
+#  start_time :datetime
+#  end_time   :datetime
+#  user_id    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  start_date :datetime
+#  time       :time
+#
 require 'rails_helper'
 
 RSpec.describe Meeting, type: :model do

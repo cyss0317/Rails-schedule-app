@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: locations
+#
+#  id           :bigint           not null, primary key
+#  name         :string           not null
+#  address      :string           not null
+#  phone_number :string           not null
+#  ip_address   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  company_id   :integer
+#
 require 'rails_helper'
 
 RSpec.describe Location, type: :model do # rubocop:disable Metrics/BlockLength
