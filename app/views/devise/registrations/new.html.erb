@@ -17,7 +17,8 @@
       <%= render partial: "shared/text_field", locals: { form: f, lable: "middle_name", field: "middle_name" } %>
       <%= render partial: "shared/text_field", locals: { form: f, lable: "last_name", field: "last_name" } %>
       <%= render partial: "shared/color_field", locals: { form: f, lable: "personal_color", field: "color" } %>
-
+      <%= f.select_tag "company", options_for_select(Company.all.pluck(:name, :id)) %>
+      <%= f.select_tag "company", options_for_select(@locations) %>
       <%= render partial: "shared/button", locals: { display_text: "Sign Up" } %>
     </form>
 

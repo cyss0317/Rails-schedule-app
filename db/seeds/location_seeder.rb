@@ -4,6 +4,7 @@ class LocationSeeder
       name: 'Cricket Wireless',
       address: '2030 E Oltorf St Ste 104B, Austin, TX 78741',
       phone_number: '512-912-9479',
+      ip_address: '66.241.125.18',
       company_id: Company.find_by(name: 'Central Texas Connection').id
     )
   end
