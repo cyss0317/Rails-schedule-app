@@ -9,12 +9,12 @@ module Users
     before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
-    def new
+    # def new
 
-      @companies = Company.all.pluck(:id, :name)
-      debugger
-      @locations = Location.all.pluck(:id, :name)
-    end
+    #   @companies = Company.all.pluck(:id, :name)
+    #   debugger
+    #   @locations = Location.all.pluck(:id, :name)
+    # end
 
     # POST /resource
     def create
