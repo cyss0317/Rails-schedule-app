@@ -13,13 +13,11 @@
         <%= f.label :password_confirmation %><br />
         <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  %>
       </div>
-      <%= render partial: "shared/text_field", locals: { form: f, lable: "first_name" , field: "first_name"  } %>
-      <%= render partial: "shared/text_field", locals: { form: f, lable: "middle_name", field: "middle_name" } %>
-      <%= render partial: "shared/text_field", locals: { form: f, lable: "last_name", field: "last_name" } %>
-      <%= render partial: "shared/color_field", locals: { form: f, lable: "personal_color", field: "color" } %>
-      <%# f.select("company", options_for_select(Company.all.pluck(:name, :id))) %>
-      <%= f.select :company_id, Company.all.pluck(:name, :id) %>
-      <%# f.select_tag "company", options_for_select(@locations) %>
+      <%= render partial: "shared/text_field", locals: { form: f, label: :first_name , field: :first_name  } %>
+      <%= render partial: "shared/text_field", locals: { form: f, label: :middle_name, field: :middle_name } %>
+      <%= render partial: "shared/text_field", locals: { form: f, label: :last_name, field: :last_name } %>
+      <%= render partial: "shared/color_field", locals: { form: f, label: :personal_color, field: :color } %>
+      <%= render partial: "shared/select_field", locals: { form: f, label: :company_id, field: :company_id } %>
       <%= render partial: "shared/button", locals: { display_text: "Sign Up" } %>
     </form>
 
