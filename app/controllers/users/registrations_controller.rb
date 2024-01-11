@@ -9,12 +9,10 @@ module Users
     before_action :configure_account_update_params, only: [:update]
 
     # GET /resource/sign_up
-    # def new
-
-    #   @companies = Company.all.pluck(:id, :name)
-    #   debugger
-    #   @locations = Location.all.pluck(:id, :name)
-    # end
+    def new
+      @companies = Company.all.pluck(:id, :name)
+      @locations = Location.all.pluck(:id, :name)
+    end
 
     # POST /resource
     def create
@@ -57,9 +55,7 @@ module Users
 
     # If you have extra params to permit, append them to the sanitizer.
     def configure_sign_up_params
-      debugger
       trim_params(params[:user])
-      debugger
       attributes = %i[last_name first_name middle_name]
       devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
     end
@@ -73,6 +69,7 @@ module Users
 
     def sign_up_params
       trim_params(params[:user])
+      debugger
       attributes = %i[last_name first_name middle_name color email password password_confirmation]
       params.require(:user).permit(attributes)
     end

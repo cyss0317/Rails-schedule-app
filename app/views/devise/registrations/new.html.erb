@@ -4,7 +4,6 @@
     <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign up your account</h2>
     <%= render "devise/shared/error_messages", resource: resource %>
   </div>
-
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <form class="space-y-6" action="#" method="POST">
       <%= render partial: "shared/email_field", locals: { form: f } %>
@@ -17,7 +16,8 @@
       <%= render partial: "shared/text_field", locals: { form: f, label: :middle_name, field: :middle_name } %>
       <%= render partial: "shared/text_field", locals: { form: f, label: :last_name, field: :last_name } %>
       <%= render partial: "shared/color_field", locals: { form: f, label: :personal_color, field: :color } %>
-      <%= render partial: "shared/select_field", locals: { form: f, label: :company_id, field: :company_id } %>
+      <%= render partial: "shared/select_field", locals: { form: f, label: :location_id, field: :location_id, options: Location.all.pluck(:name, :id)} %>
+      <%= f.hidden_field :company_id, value: Location.find(resource.location_id).company.id  %>
       <%= render partial: "shared/button", locals: { display_text: "Sign Up" } %>
     </form>
 
@@ -29,3 +29,6 @@
 </div>
 
 <% end %>
+<script>
+  console.log(<%= resource.location_id %>)
+</script>

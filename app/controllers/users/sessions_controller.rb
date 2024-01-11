@@ -6,7 +6,6 @@ module Users
 
     # GET /resource/sign_in
     def new
-      debugger
       super
     end
 
