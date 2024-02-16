@@ -83,6 +83,8 @@ class MeetingsController < ApplicationController
 
   def seed
     Rails.application.load_seed
+
+    redirect_to request.referer
   end
 
   private

@@ -42,11 +42,10 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    document.addEventListener("click", (e) => {
+    table_body = document.querySelector(".table-body")
+    table_body.addEventListener("click", (e) => {
       //time configuration
       window.target = e
-      console.log(e.target.className)
-      console.log( e.clientY)
 
       clicked_el = e.target.getClientRects()[0]
       table_cell_height = clicked_el.height / 17
