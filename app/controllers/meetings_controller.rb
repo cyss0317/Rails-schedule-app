@@ -81,6 +81,10 @@ class MeetingsController < ApplicationController
     end
   end
 
+  def seed
+    Rails.application.load_seed
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

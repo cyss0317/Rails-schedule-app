@@ -129,4 +129,12 @@ RSpec.describe '/meetings', type: :request do
       expect(response).to redirect_to(meetings_url)
     end
   end
+
+  describe 'POST /seed' do
+    it 'seed the meetings' do
+      expect do
+        post seed_meetings_url
+      end.to change(Meeting, :count)
+    end
+  end
 end

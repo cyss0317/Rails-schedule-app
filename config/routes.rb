@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   resources :meetings
   get 'meetings_weekly', to: 'meetings#weekly'
+  post 'seed_meetings', to: 'meetings#seed'
   root to: 'home#index'
   devise_for :users
   # devise_for :registrations
