@@ -15,7 +15,7 @@ class MeetingsController < ApplicationController
     Rails.logger.info "ip: #{request.remote_ip}}"
     Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
 
-    Rails.logger.info "CHOI: #{request.remote_ip == " 72.133.102.178"}}"
+    Rails.logger.info "CHOI: #{request.remote_ip == ' 72.133.102.178'}}"
     if params[:start_date]
       @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
       @end_time = params[:start_date].to_date.end_of_week.at_end_of_day
@@ -74,9 +74,17 @@ class MeetingsController < ApplicationController
     @meeting.destroy!
 
     respond_to do |format|
-      format.html { redirect_to meetings_url, notice: 'Meeting was successfully destroyed.' }
+      format.html { redirect_to params[:redirect_url], notice: 'Meeting was successfully destroyed.' }
+      # format.html { redirect_back fallback_location: meetings_weekly_path }
+      # format.html { redirect_to meetings_url, notice: 'Meeting was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def seed
+    Rails.application.load_seed
+
+    redirect_to request.referer
   end
 
   private
@@ -89,6 +97,7 @@ class MeetingsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def meeting_params
     # deserialize_params
-    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id)
+    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id, :redirect_url)
+    params.require(:redirect_url)
   end
 end

@@ -22,12 +22,12 @@
           </div>
 
           <% week.each do |day| %>
-            <%= content_tag :td, data: { date: day.to_s },class: calendar.td_classes_for(day).push("flex-col")  do %>
+            <%= content_tag :div, data: { date: day.to_s }, class: calendar.td_classes_for(day).push("flex-col")  do %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-              <div class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
+              <div data-date=<%= day.to_s %> class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
                 <% sorted_events.fetch(day, []).each_with_index do |event, idx| %>
                   <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
                 <% end %>
@@ -40,3 +40,26 @@
   </div>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    table_body = document.querySelector(".table-body")
+    table_body.addEventListener("click", (e) => {
+      //time configuration
+      window.target = e
+
+      clicked_el = e.target.getClientRects()[0]
+      table_cell_height = clicked_el.height / 17
+      y_axis = e.clientY - clicked_el.top
+
+      total_hours = y_axis / table_cell_height
+      clicked_spot_into_hour = Math.floor(total_hours)
+      minutes = Math.round((total_hours - clicked_spot_into_hour) * 60)
+      clicked_time_in_hour = `${(8 + clicked_spot_into_hour)}:${minutes}`
+
+      //date configuration
+      date = e.target.getAttribute("data-date")
+      date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
+      console.log(date_and_time)
+    })
+  })
+</script>
