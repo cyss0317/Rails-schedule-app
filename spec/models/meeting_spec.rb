@@ -58,5 +58,33 @@ RSpec.describe Meeting, type: :model do
       expect(meeting.shift_belongs_to_hour?(14)).to eq(false)
       expect(meeting.shift_belongs_to_hour?(15)).to eq(false)
     end
+
+    describe '#table_row_left_shift' do
+      let(:meeting) { create(:meeting) }
+      it 'returns 0 when idx is 0 and meetings_count is 4' do
+        idx = 0
+        meetings_count = 4
+
+        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(0)
+      end
+      it 'returns 40 when idx is 1 and meetings_count is 4' do
+        idx = 1
+        meetings_count = 4
+
+        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(40)
+      end
+      it 'returns 120 when idx is 5 and meetings_count is 4' do
+        idx = 5
+        meetings_count = 4
+
+        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(65)
+      end
+      it 'returns 40 when idx is 9 and meetings_count is 4' do
+        idx = 9
+        meetings_count = 4
+
+        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(90)
+      end
+    end
   end
 end

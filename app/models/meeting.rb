@@ -87,7 +87,7 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_left_shift(idx, meetings_count)
-    (idx.to_i % (meetings_count / 2)) * 40
+    (idx.to_i % (meetings_count / 2)) * 40 + (idx.to_i / meetings_count * 25)
   end
 
   # def self.current_time_class

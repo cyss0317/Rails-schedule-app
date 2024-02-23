@@ -1,7 +1,7 @@
   <%= link_to "#{meeting.user_initials}", meeting_path(meeting),
     {  
       class: "weekly-meeting #{classes}",
-      style: "background-color:#{meeting.user_color}; width: 2rem; height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px; left: #{meeting.table_row}px;"
+      style: "background-color:#{meeting.user_color}; width: 2rem; height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px; left: #{meeting.table_row_left_shift(idx, meetings_count)}px;"
     } 
   %>
   <script>
