@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     trait(:dinner_shift) do
-      start_time { Time.zone.now.beginning_of_day + 15.hours }
+      start_time { Time.zone.now.beginning_of_day + 16.hours }
       end_time { Time.zone.now.beginning_of_day + 21.hours }
     end
   end
