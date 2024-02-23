@@ -13,6 +13,10 @@ class Meeting < ApplicationRecord
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
+  def initializer
+    super
+  end
+
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
   end
@@ -87,7 +91,11 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_left_shift(idx, meetings_count)
-    (idx.to_i % (meetings_count / 2)) * 40 + (idx.to_i / meetings_count * 25)
+    (idx.to_i % meetings_count) * 40 + (idx.to_i / meetings_count * 25) + 5
+  end
+
+  def table_row_width
+    nil unless morning_shift?
   end
 
   # def self.current_time_class

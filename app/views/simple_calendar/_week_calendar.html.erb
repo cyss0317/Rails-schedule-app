@@ -24,11 +24,14 @@
           <% week.each do |day| %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
               <div data-date=<%= day.to_s %> class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
-              <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
-                <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
-              <% else %>
+                <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                  <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+                <% else %>
+                <%# debugger %>
+                <% morning_shift_count = morning_shift_count(sorted_events.fetch(day, []))%>
+                <% evening_shift_count = evening_shift_count(sorted_events.fetch(day, []))%>
                 <% sorted_events.fetch(day, []).each_with_index do |event, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
+                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, morning_shift_count: morning_shift_count, evening_shift_count: evening_shift_count,  classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
                 <% end %>
               </div>
             <% end %>
@@ -41,7 +44,6 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     table_body = document.querySelector(".table-body")
-    debugger
     table_body.addEventListener("dblclick", (e) => {
       //time configuration
       window.target = e
