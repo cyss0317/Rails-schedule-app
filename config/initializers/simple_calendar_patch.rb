@@ -11,6 +11,12 @@ module SimpleCalendar
     def current_month_in_string
       Date::MONTHNAMES[date_range[3].month]
     end
+
+    def render_shifts_by_hour(shifts)
+      hours = (8..24).to_a
+
+      shifts.count
+    end
   end
 
   class MonthCalendar

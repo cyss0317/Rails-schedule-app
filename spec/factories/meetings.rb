@@ -17,5 +17,10 @@ FactoryBot.define do
       start_time { Time.zone.now.beginning_of_day + 16.hours }
       end_time { Time.zone.now.beginning_of_day + 21.hours }
     end
+
+    trait(:hour_from) do
+      start_time { start_time }
+      end_time { start_time + 1.hour }
+    end
   end
 end

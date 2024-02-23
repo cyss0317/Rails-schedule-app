@@ -86,5 +86,7 @@ RSpec.describe Meeting, type: :model do
         expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(90)
       end
     end
+
+    describe ''
   end
 end
