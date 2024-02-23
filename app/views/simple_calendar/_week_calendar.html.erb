@@ -28,11 +28,16 @@
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
                 <%# debugger %>
-                <% morning_shift_count = morning_shift_count(sorted_events.fetch(day, []))%>
-                <% evening_shift_count = evening_shift_count(sorted_events.fetch(day, []))%>
-                <% sorted_events.fetch(day, []).each_with_index do |event, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, morning_shift_count: morning_shift_count, evening_shift_count: evening_shift_count,  classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
+                <% morning_shifts(sorted_events.fetch(day, [])).each_with_index do |event, idx| %>
+                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
                 <% end %>
+                <% dinner_shifts(sorted_events.fetch(day, [])).each_with_index do |event, idx| %>
+                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
+                <% end %>
+
+                <%# sorted_events.fetch(day, []).each_with_index do |event, idx| %>
+                  <%# render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, morning_shift_count: morning_shift_count, evening_shift_count: evening_shift_count,  classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
+                <%# end %>
               </div>
             <% end %>
           <% end %>
