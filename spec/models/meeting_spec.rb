@@ -87,6 +87,24 @@ RSpec.describe Meeting, type: :model do
       end
     end
 
-    describe ''
+    # describe '#filter_by_hour' do
+    #   it 'takes integer as an argument and returns an array of meetings that belong to the hour' do
+    #     create(
+    #       :meeting,
+    #       user_id: user.id,
+    #       start_time: Time.zone.parse('2023-01-01 10:00:00'),
+    #       end_time: Time.zone.parse('2023-01-01 13:00:00')
+    #     )
+    #     create(
+    #       :meeting,
+    #       user_id: user.id,
+    #       start_time: Time.zone.parse('2023-01-01 14:00:00'),
+    #       end_time: Time.zone.parse('2023-01-01 17:00:00')
+    #     )
+
+    #     expect(Meeting.filter_by_hour(10).count).to eq(1)
+    #     expect(Meeting.filter_by_hour(14).count).to eq(1)
+    #   end
+    # end
   end
 end

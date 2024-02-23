@@ -66,9 +66,6 @@ class Meeting < ApplicationRecord
     time_from_to(start_time, end_time)
   end
 
-  # target time = 12
-  # start_time <= 12 <= end_time
-
   def shift_belongs_to_hour?(hour)
     # (start_time.hour <= hour && end_time.hour >= hour) && (end_time.hour <= hour && start_time.hour >= hour) ? true : false
     start_time.hour <= hour && hour < end_time.hour

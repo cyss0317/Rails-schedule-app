@@ -15,7 +15,9 @@ module SimpleCalendar
     def render_shifts_by_hour(shifts)
       hours = (8..24).to_a
 
-      shifts.count
+      hours.map do |hour|
+        shifts.select { |shift| shift.shift_belongs_to_hour?(hour) }
+      end
     end
   end
 
