@@ -86,6 +86,10 @@ class Meeting < ApplicationRecord
     table_row_top(start_time.hour)
   end
 
+  def table_row_left_shift(idx, meetings_count)
+    (idx.to_i % (meetings_count / 2)) * 40
+  end
+
   # def self.current_time_class
   #   DateHelper.current_time_hour
   # end

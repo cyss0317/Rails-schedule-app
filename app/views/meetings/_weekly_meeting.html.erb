@@ -1,9 +1,15 @@
-  <%= link_to "#{meeting.user_initials}", meeting_path(meeting), {  class: "weekly-meeting #{classes}", style: "background-color:#{meeting.user_color}; height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px; left: #{(idx.to_i) * 40}px;"} %>
-
+  <%= link_to "#{meeting.user_initials}", meeting_path(meeting),
+    {  
+      class: "weekly-meeting #{classes}",
+      style: "background-color:#{meeting.user_color}; width: 2rem; height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px; left: #{meeting.table_row}px;"
+    } 
+  %>
   <script>
     // make border line appear on blocks of time that belongs to a meeting
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll(".<%= classes %>").forEach(meeting => {
+        meeting.getBoundingClientRect();
+        meeting.style.left = 
         meeting.addEventListener("mouseover", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
             meeting.style.outline = "2px solid blue"
