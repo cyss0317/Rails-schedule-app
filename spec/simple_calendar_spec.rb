@@ -6,12 +6,11 @@ RSpec.describe 'SimpleCalendar' do
     it 'renders shifts by hour' do
       today = Time.zone.now
       week_calendar = SimpleCalendar::WeekCalendar.new(self)
-      meetings = (8..24).to_a.map do |hour|
+      meetings = (8...24).to_a.map do |hour|
         create(:meeting, :hour_from, start_time: Time.new(today.year, today.month, today.day, hour))
       end
       meetings_order_by_start_time = week_calendar.render_shifts_by_hour(meetings)
 
-      debugger
       expect(meetings_order_by_start_time[0].count).to eq(1)
       expect(meetings_order_by_start_time[1].count).to eq(1)
       expect(meetings_order_by_start_time[2].count).to eq(1)
@@ -28,8 +27,6 @@ RSpec.describe 'SimpleCalendar' do
       expect(meetings_order_by_start_time[13].count).to eq(1)
       expect(meetings_order_by_start_time[14].count).to eq(1)
       expect(meetings_order_by_start_time[15].count).to eq(1)
-      # expect(meetings_order_by_start_time[16].count).to eq(1)
-      # expect(meetings_order_by_start_time[17].count).to eq(1)
     end
   end
 end
