@@ -20,7 +20,7 @@ FactoryBot.define do
 
     trait(:hour_from) do
       start_time { start_time }
-      end_time { start_time + 1.hour }
+      end_time { start_time + 2.hour }
     end
   end
 end

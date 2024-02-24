@@ -20,22 +20,21 @@
               <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
             <% end %>
           </div>
-
           <% week.each do |day| %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
+
               <div data-date=<%= day.to_s %> class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
                 <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
+                <%# TODO: now need to use `calendar.render_shifts_by_hour(meetings)` and render meetings          %>
+                <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each do |shifts_by_hour| %>
+                  <% shifts_by_hour.each_with_index do |shift, idx| %>
+                    <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
+                  <% end %>
+                <% end %>
                 <%# debugger %>
-                <% morning_shifts = morning_shifts(sorted_events.fetch(day, []))%>
-                <% morning_shifts.each_with_index do |event, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: morning_shifts.count, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
-                <% end %>
-                <% dinner_shifts = dinner_shifts(sorted_events.fetch(day, [])) %>
-                <% dinner_shifts.each_with_index do |event, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: dinner_shifts.count, classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
-                <% end %>
+
 
                 <%# sorted_events.fetch(day, []).each_with_index do |event, idx| %>
                   <%# render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, morning_shift_count: morning_shift_count, evening_shift_count: evening_shift_count,  classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
