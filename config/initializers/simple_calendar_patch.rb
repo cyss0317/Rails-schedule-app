@@ -16,7 +16,7 @@ module SimpleCalendar
       hours = (8..24).to_a
 
       hours.map do |hour|
-        shifts.select { |shift| shift.shift_belongs_to_hour?(hour) }
+        shifts.select { |shift| shift.shift_start_from?(hour) }
       end
     end
   end

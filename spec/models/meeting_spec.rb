@@ -87,6 +87,19 @@ RSpec.describe Meeting, type: :model do
       end
     end
 
+    describe '#shift_start_from?' do
+      it 'takes a integer as hour and returns true if the start time is before the hour' do
+        meeting = create(:meeting, user_id: user.id, start_time: Time.zone.parse('2023-01-01 10:00:00'),
+                                   end_time: Time.zone.parse('2023-01-01 13:00:00'))
+
+        expect(meeting.shift_start_from?(9)).to eq(false)
+        expect(meeting.shift_start_from?(10)).to eq(true)
+        expect(meeting.shift_start_from?(11)).to eq(false)
+        expect(meeting.shift_start_from?(12)).to eq(false)
+        expect(meeting.shift_start_from?(13)).to eq(false)
+        expect(meeting.shift_start_from?(14)).to eq(false)
+      end
+    end
     # describe '#filter_by_hour' do
     #   it 'takes integer as an argument and returns an array of meetings that belong to the hour' do
     #     create(
