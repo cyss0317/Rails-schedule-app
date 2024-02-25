@@ -1,9 +1,9 @@
   <%= link_to "#{meeting.user_initials}", meeting_path(meeting),
     {  
       class: "weekly-meeting #{classes}",
-      style: "background-color:#{meeting.user_color}; width: #{100 / meetings_count}%;
+      style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count)}%;
         height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
-        left: #{meeting.table_row_left_shift(idx, meetings_count)}px;"
+        left: #{meeting.table_row_left_shift(idx, meetings_count)}%;"
     } 
   %>
   <script>

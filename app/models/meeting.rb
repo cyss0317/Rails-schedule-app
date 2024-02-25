@@ -93,11 +93,11 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_left_shift(idx, meetings_count)
-    (idx.to_i % meetings_count) * 40 + (idx.to_i / meetings_count * 25) + 5
+    (idx.to_i % meetings_count) * table_row_width(meetings_count) + (idx.to_i / meetings_count * 25) + 5
   end
 
-  def table_row_width
-    nil unless morning_shift?
+  def table_row_width(meetings_count)
+    100 / (meetings_count + 1)
   end
 
   # def self.current_time_class
