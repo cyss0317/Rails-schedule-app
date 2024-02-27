@@ -28,13 +28,9 @@
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
                 <%# TODO: now need to use `calendar.render_shifts_by_hour(meetings)` and render meetings          %>
-                <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each do |shifts_by_hour| %>
-                  <% if shifts_by_hour.present? %>
-                    <div class="flex flex-row">
-                      <% shifts_by_hour.each_with_index do |shift, idx| %>
-                        <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
-                      <% end %>
-                    </div>
+                <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each_with_index do |shifts_by_hour, hour_idx| %>
+                  <% shifts_by_hour.each_with_index do |shift, idx| %>
+                    <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, hour_idx: hour_idx, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
                   <% end %>
                 <% end %>
                 <%# debugger %>
