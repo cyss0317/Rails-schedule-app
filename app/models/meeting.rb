@@ -92,14 +92,14 @@ class Meeting < ApplicationRecord
     table_row_top(start_time.hour)
   end
 
-  def table_row_left_shift(idx, meetings_count)
-    (idx.to_i % meetings_count) * table_row_width(meetings_count) + 2 + table_row_right_spacing(
+  def table_row_left_shift(idx, meetings_count, hour_idx)
+    (idx.to_i % meetings_count) * table_row_width(meetings_count) + table_row_right_spacing(
       meetings_count, idx
-    )
+    ) + avoid_overlap(hour_idx)
   end
 
   def avoid_overlap(hour_idx)
-    hour_idx * 3
+    (hour_idx + 1) % 3 * 2
   end
 
   def table_row_right_spacing(meetings_count, idx)

@@ -3,7 +3,7 @@
       class: "weekly-meeting #{classes}",
       style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count)}%;
         height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
-        left: #{meeting.table_row_left_shift(idx, meetings_count)}%;"
+        left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
     } 
   %>
   <script>
