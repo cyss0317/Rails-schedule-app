@@ -1,7 +1,7 @@
   <%= link_to "#{meeting.user_initials}", meeting_path(meeting),
     {  
       class: "weekly-meeting #{classes}",
-      style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count)}%;
+      style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
         height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
         left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
     } 
@@ -14,12 +14,14 @@
         // meeting.style.left = 
         meeting.addEventListener("mouseover", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
-            meeting.style.outline = "2px solid blue"
+            meeting.style.outline = "2px solid blue";
+            meeting.style.zIndex = "1";
           })
         })
         meeting.addEventListener("mouseleave", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
             meeting.style.outline = "none"
+            meeting.style.zIndex = "0";
           })
         })
       })

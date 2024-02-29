@@ -68,5 +68,31 @@
       date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
       console.log(date_and_time)
     })
+
+      const dragElement = document.getElementById('dragElement');
+
+    let startY;
+    let currentY;
+
+    dragElement.addEventListener('mousedown', startDrag);
+    dragElement.addEventListener('mousemove', drag);
+    dragElement.addEventListener('mouseup', endDrag);
+
+    function startDrag(event) {
+      startY = event.clientY;
+      currentY = dragElement.offsetTop;
+    }
+
+    function drag(event) {
+      if (startY) {
+        const deltaY = event.clientY - startY;
+        dragElement.style.top = currentY + deltaY + 'px';
+      }
+    }
+
+    function endDrag() {
+      startY = null;
+    }
+
   })
 </script>

@@ -22,5 +22,9 @@ FactoryBot.define do
       start_time { start_time }
       end_time { start_time + 2.hour }
     end
+
+    trait(:create_test_case) do
+      
+    end
   end
 end
