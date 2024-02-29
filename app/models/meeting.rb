@@ -42,6 +42,10 @@ class Meeting < ApplicationRecord
     user.name_and_last_name
   end
 
+  def user_weekly_name
+    user.name_and_initials
+  end
+
   def user_color
     user.color
   end
@@ -62,11 +66,13 @@ class Meeting < ApplicationRecord
     time_from_to(start_time, end_time)
   end
 
-  # target time = 12
-  # start_time <= 12 <= end_time
+  def shift_start_from?(hour)
+    start_time.hour == hour
+  end
 
   def shift_belongs_to_hour?(hour)
-    # (start_time.hour <= hour && end_time.hour >= hour) && (end_time.hour <= hour && start_time.hour >= hour) ? true : false
+    return start_time.hour <= hour && start_time.day < end_time.day if end_time.hour.zero?
+
     start_time.hour <= hour && hour < end_time.hour
   end
 
@@ -84,6 +90,28 @@ class Meeting < ApplicationRecord
 
   def table_row_top_shift
     table_row_top(start_time.hour)
+  end
+
+  def table_row_left_shift(idx, meetings_count, hour_idx)
+    (idx.to_i % meetings_count) * table_row_width(meetings_count, hour_idx) + table_row_right_spacing(
+      meetings_count, idx, hour_idx
+    )
+  end
+
+  def avoid_overlap(hour_idx, _meetings_count)
+    avoid_width_by = 8
+    (hour_idx % 3) * avoid_width_by
+    # + (meetings_count - 1) * avoid_width_by
+  end
+
+  def table_row_right_spacing(meetings_count, idx, hour_idx)
+    max_width = 90
+    ((max_width - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
+  end
+
+  def table_row_width(meetings_count, hour_idx)
+    max_width = 90
+    max_width / meetings_count - avoid_overlap(hour_idx, meetings_count)
   end
 
   # def self.current_time_class

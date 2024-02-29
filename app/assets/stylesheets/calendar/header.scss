@@ -13,22 +13,18 @@
   align-items: center;
   gap: 0.5rem;
   position: sticky;
-  z-index: 2;
+  z-index: 3;
   width: $main-width-medium;
   margin-bottom: 0.25rem;
   background-color: $theme-white;
   position: sticky;
   top: 0;
 
-  .hamburger-main {
-    position: relative;
-  }
-
   .hamburger-background {
-    width: 100%;
-    z-index: 5;
-    height: 100%;
-    position: fixed;
+    width: 100dvw;
+    z-index: 3;
+    height: 100dvh;
+    position: absolute;
     inset: 0;
   }
 
@@ -36,10 +32,8 @@
     background-color: $theme-gray;
     position: absolute;
     width: 10rem;
-    height: 4rem;
     border-radius: 0.75rem;
-    padding-top: 10px;
-    z-index: 5;
+    z-index: 3;
 
     button {
       color: $theme-navy-faded;

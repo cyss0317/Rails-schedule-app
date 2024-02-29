@@ -8,7 +8,9 @@
     <% end %>
     <div class="calendar-title"><%= calendar.current_month_in_string %> <%= calendar.year%></div>
   <% end %>
-  <button type="button" class="today-btn">Today</button>
+
+  <%= link_to "Today", current.downcase == "month" ? root_path : meetings_weekly_path, class: "today-btn" %>
+
   <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": meetings_weekly_path, "Month": root_path} } %>
   <div class="user-name"><%= current_user.full_name %></div>
   
@@ -17,9 +19,6 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".today-btn").addEventListener("click", (e) => {
-      e.target.scrollIntoView({block: "start", behavior: "smooth"})
-      window.hello = e
-    })
+
   })
 </script>
