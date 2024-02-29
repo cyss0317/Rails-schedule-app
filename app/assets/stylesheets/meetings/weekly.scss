@@ -165,13 +165,14 @@ $number-of-hour-cells: 17;
 
         .weekly-meeting {
           position: absolute;
-          border: 1px solid white;
+          border: 3px solid white;
           border-radius: 10px;
           text-decoration: transparent;
-          writing-mode: vertical-lr;
+          writing-mode: vertical-rl;
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          outline: 1px solid $theme-gray;
         }
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;

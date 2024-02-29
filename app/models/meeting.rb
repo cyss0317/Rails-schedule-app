@@ -58,8 +58,6 @@ class Meeting < ApplicationRecord
     user[:first_name][0] + user[:last_name][0]
   end
 
-
-
   def str_time_to_date(time)
     if time.is_a? String
       time.to_date
@@ -104,16 +102,20 @@ class Meeting < ApplicationRecord
     )
   end
 
-  def avoid_overlap(hour_idx)
-    (hour_idx + 1) % 3 * 4
+  def avoid_overlap(hour_idx, meetings_count)
+    avoid_width_by = 8
+   (hour_idx % 3) * avoid_width_by
+  # + (meetings_count - 1) * avoid_width_by
   end
 
   def table_row_right_spacing(meetings_count, idx, hour_idx)
-    ((100 - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
+    max_width = 90
+    ((max_width - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
   end
 
   def table_row_width(meetings_count, hour_idx)
-    100 / (meetings_count + 1)
+    max_width = 90
+    max_width / meetings_count - avoid_overlap(hour_idx, meetings_count)
   end
 
   # def self.current_time_class
