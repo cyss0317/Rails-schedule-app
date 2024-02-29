@@ -36,6 +36,9 @@ $number-of-hour-cells: 17;
       }
     }
 
+    .today {
+      border: 1px solid #0b57d0;
+    }
     .hours {
       border-right: 1px solid $table-border-color;
       padding-right: 8px;
@@ -164,7 +167,7 @@ $number-of-hour-cells: 17;
         display: flex;
         flex-direction: column;
         position: relative;
-        border-right: 1px solid $table-border-color;
+        // border-right: 1px solid $table-border-color;
         height: calc($number-of-hour-cells * 100px);
 
         .weekly-meeting {
@@ -172,6 +175,10 @@ $number-of-hour-cells: 17;
           border: 1px solid white;
           border-radius: 10px;
           text-decoration: transparent;
+          writing-mode: vertical-lr;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
         }
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;
