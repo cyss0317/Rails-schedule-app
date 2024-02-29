@@ -24,7 +24,6 @@ FactoryBot.define do
     end
 
     trait(:create_test_case) do
-      
     end
   end
 end

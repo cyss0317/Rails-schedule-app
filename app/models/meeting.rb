@@ -13,10 +13,6 @@ class Meeting < ApplicationRecord
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
-  def initializer
-    super
-  end
-
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
   end
@@ -102,10 +98,10 @@ class Meeting < ApplicationRecord
     )
   end
 
-  def avoid_overlap(hour_idx, meetings_count)
+  def avoid_overlap(hour_idx, _meetings_count)
     avoid_width_by = 8
-   (hour_idx % 3) * avoid_width_by
-  # + (meetings_count - 1) * avoid_width_by
+    (hour_idx % 3) * avoid_width_by
+    # + (meetings_count - 1) * avoid_width_by
   end
 
   def table_row_right_spacing(meetings_count, idx, hour_idx)

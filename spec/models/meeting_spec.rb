@@ -124,7 +124,7 @@ RSpec.describe Meeting, type: :model do
       it 'returns first name and first letter of middle name first letter of last name ' do
         meeting = create(:meeting)
 
-        expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name] + ' ' + meeting.user[:middle_name][0].capitalize + '. ' + meeting.user[:last_name][0].capitalize}")
+        expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name]} #{meeting.user[:middle_name][0].capitalize}. #{meeting.user[:last_name][0].capitalize}".to_s)
       end
     end
   end
