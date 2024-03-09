@@ -18,20 +18,29 @@ RSpec.describe TimeHelper, type: :helper do
   end
 
   describe '#am_pm' do
+    it 'returns AM for 01:00' do
+      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 01:00:00'))).to eq('AM')
+    end
+    it 'returns AM for 13:00' do
+      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 13:00:00'))).to eq('PM')
+    end
+  end
+
+  describe '#time_in_am_pm' do
     it 'returns 12:00AM for 00:00' do
-      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 00:00:00'))).to eq('12:00AM')
+      expect(helper.time_in_am_pm(Time.zone.parse('2023-01-01 - 00:00:00'))).to eq('12:00AM')
     end
 
     it 'returns 12:00PM for 12:00' do
-      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 12:00:00'))).to eq('12:00PM')
+      expect(helper.time_in_am_pm(Time.zone.parse('2023-01-01 - 12:00:00'))).to eq('12:00PM')
     end
 
     it 'returns 1:00AM for 01:00' do
-      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 01:00:00'))).to eq('1:00AM')
+      expect(helper.time_in_am_pm(Time.zone.parse('2023-01-01 - 01:00:00'))).to eq('1:00AM')
     end
 
     it 'returns 1:00PM for 13:00' do
-      expect(helper.am_pm(Time.zone.parse('2023-01-01 - 13:00:00'))).to eq('1:00PM')
+      expect(helper.time_in_am_pm(Time.zone.parse('2023-01-01 - 13:00:00'))).to eq('1:00PM')
     end
   end
 

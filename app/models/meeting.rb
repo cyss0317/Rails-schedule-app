@@ -63,6 +63,14 @@ class Meeting < ApplicationRecord
     end
   end
 
+  def monthly_shift_hours
+    "#{idx_to_time(start_time.hour)}" + (start_time.min.zero? ? '' : ":#{start_time.min}") + "#{am_pm(start_time)}" + ' - ' + "#{idx_to_time(end_time.hour)}" + (end_time.min.zero? ? '' : ":#{end_time.min}") + "#{am_pm(end_time)}"
+  end
+
+  def am_pm(time)
+    time.hour < 12 ? 'AM' : 'PM'
+  end
+
   def shift_from_to
     time_from_to(start_time, end_time)
   end
@@ -77,7 +85,7 @@ class Meeting < ApplicationRecord
     start_time.hour <= hour && hour < end_time.hour
   end
 
-  def am_pm(time)
+  def time_in_am_pm(time)
     "#{time}time.hour < 12 ? 'AM' : 'PM'"
   end
 

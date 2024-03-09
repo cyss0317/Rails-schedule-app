@@ -18,10 +18,14 @@ module TimeHelper
   end
 
   def am_pm(time)
+    time.hour < 12 ? "AM" : "PM"
+  end
+
+  def time_in_am_pm(time)
     time.hour < 12 ? "#{idx_to_time(time.hour)}:#{correct_minute(time.min)}AM" : "#{idx_to_time(time.hour)}:#{correct_minute(time.min)}PM"
   end
 
   def time_from_to(start_time, end_time)
-    "#{am_pm(start_time)} - #{am_pm(end_time)}"
+    "#{time_in_am_pm(start_time)} - #{time_in_am_pm(end_time)}"
   end
 end
