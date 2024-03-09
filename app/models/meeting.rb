@@ -3,6 +3,7 @@
 class Meeting < ApplicationRecord
   include ApplicationHelper
   include DateHelper
+  include TimeHelper
 
   belongs_to :user
 
@@ -74,6 +75,10 @@ class Meeting < ApplicationRecord
     return start_time.hour <= hour && start_time.day < end_time.day if end_time.hour.zero?
 
     start_time.hour <= hour && hour < end_time.hour
+  end
+
+  def am_pm(time)
+    "#{time}time.hour < 12 ? 'AM' : 'PM'"
   end
 
   def morning_shift?

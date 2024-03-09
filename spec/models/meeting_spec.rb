@@ -38,8 +38,12 @@ RSpec.describe Meeting, type: :model do
     let(:user) { create(:user, first_name: 'Yun', middle_name: 'Sung', last_name: 'Choi') }
     let(:meeting) { create(:meeting, user_id: user.id) }
 
+    it '#user_full_name' do
+      expect(meeting.user_full_name).to eq('Yun Sung Choi')
+    end
+
     it '#user_name' do
-      expect(meeting.user_name).to eq('Yun Sung Choi')
+      expect(meeting.user_name).to eq('Yun')
     end
 
     it '#user_name_month' do
@@ -54,36 +58,40 @@ RSpec.describe Meeting, type: :model do
       expect(meeting.shift_belongs_to_hour?(10)).to eq(true)
       expect(meeting.shift_belongs_to_hour?(11)).to eq(true)
       expect(meeting.shift_belongs_to_hour?(12)).to eq(true)
-      expect(meeting.shift_belongs_to_hour?(13)).to eq(true)
+      expect(meeting.shift_belongs_to_hour?(13)).to eq(false)
       expect(meeting.shift_belongs_to_hour?(14)).to eq(false)
       expect(meeting.shift_belongs_to_hour?(15)).to eq(false)
     end
 
     describe '#table_row_left_shift' do
       let(:meeting) { create(:meeting) }
-      it 'returns 0 when idx is 0 and meetings_count is 4' do
+      it 'returns 0 when idx is 0 and meetings_count is 4 and hour_idx is 0' do
         idx = 0
         meetings_count = 4
+        hour_idx = 0
 
-        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(0)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(0)
       end
-      it 'returns 40 when idx is 1 and meetings_count is 4' do
+      it 'returns 22 when idx is 1 and meetings_count is 4 and hour_idx is 1' do
         idx = 1
         meetings_count = 4
+        hour_idx = 1
 
-        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(40)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(22)
       end
-      it 'returns 120 when idx is 5 and meetings_count is 4' do
+      it 'returns 86 when idx is 5 and meetings_count is 4 and hour_idx is 2' do
         idx = 5
         meetings_count = 4
+        hour_idx = 2
 
-        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(65)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(86)
       end
-      it 'returns 40 when idx is 9 and meetings_count is 4' do
+      it 'returns 22 when idx is 9 and meetings_count is 4 and hour_idx is 3' do
         idx = 9
         meetings_count = 4
+        hour_idx = 3
 
-        expect(meeting.table_row_left_shift(idx, meetings_count)).to eq(90)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(22)
       end
     end
 
@@ -125,6 +133,15 @@ RSpec.describe Meeting, type: :model do
         meeting = create(:meeting)
 
         expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name]} #{meeting.user[:middle_name][0].capitalize}. #{meeting.user[:last_name][0].capitalize}".to_s)
+      end
+    end
+
+    describe '#shift_from_to' do
+      it 'returns a string of start time and end time' do
+        meeting = create(:meeting, start_time: Time.zone.parse('2023-01-01 10:23:00'),
+                                   end_time: Time.zone.parse('2023-01-01 13:30:00'))
+
+        expect(meeting.shift_from_to).to eq('10:23-1:30PM')
       end
     end
   end

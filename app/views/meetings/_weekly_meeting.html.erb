@@ -1,4 +1,4 @@
-  <%= link_to "#{meeting.user_weekly_name}", meeting_path(meeting),
+  <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", meeting_path(meeting),
     {  
       class: "weekly-meeting #{classes}",
       style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
