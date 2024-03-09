@@ -6,6 +6,7 @@
   background-color: $theme-yellow-faded;
 
   li {
+    position: relative;
     a {
       color: $title-color;
     }
@@ -15,19 +16,52 @@
       border-bottom: 1px solid $theme-navy-faded;
     }
   }
+
+  li.current-user-shift > a {
+    // color: $theme-yellow;
+    font-weight: bold;
+
+    &::before {
+      content: "Shift";
+      color: $red;
+      display: block;
+      position: absolute;
+      transform: rotate(-45deg);
+      top: -6px;
+      left: -18px;
+    }
+  }
 }
 
 .evening-shift {
   border-radius: 0.5rem;
   background-color: $theme-navy-faded;
 
-  li > a {
-    color: $theme-white;
+  li {
+    position: relative;
+    a {
+      color: $theme-white;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid $theme-white;
+    }
   }
 
-  li:not(:last-child) {
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid $theme-white;
+  li.current-user-shift > a {
+    // color: $theme-yellow;
+    font-weight: bold;
+
+    &::before {
+      content: "Shift";
+      color: $red;
+      display: block;
+      position: absolute;
+      transform: rotate(-45deg);
+      top: -6px;
+      left: -18px;
+    }
   }
 }
 
