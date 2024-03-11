@@ -3,6 +3,7 @@
 class Meeting < ApplicationRecord
   include ApplicationHelper
   include DateHelper
+  include TimeHelper
 
   belongs_to :user
 
@@ -62,6 +63,14 @@ class Meeting < ApplicationRecord
     end
   end
 
+  def monthly_shift_hours
+    "#{idx_to_time(start_time.hour)}#{start_time.min.zero? ? '' : ":#{start_time.min}"}#{am_pm(start_time)} - #{idx_to_time(end_time.hour)}#{end_time.min.zero? ? '' : ":#{end_time.min}"}#{am_pm(end_time)}"
+  end
+
+  def am_pm(time)
+    time.hour < 12 ? 'AM' : 'PM'
+  end
+
   def shift_from_to
     time_from_to(start_time, end_time)
   end
@@ -74,6 +83,10 @@ class Meeting < ApplicationRecord
     return start_time.hour <= hour && start_time.day < end_time.day if end_time.hour.zero?
 
     start_time.hour <= hour && hour < end_time.hour
+  end
+
+  def time_in_am_pm(time)
+    "#{time}time.hour < 12 ? 'AM' : 'PM'"
   end
 
   def morning_shift?

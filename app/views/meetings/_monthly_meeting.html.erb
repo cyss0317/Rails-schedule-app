@@ -1,4 +1,10 @@
-<li class="event">
   <%# TODO: add color to user and display the background of their meeting with it %>
-  <%= link_to "#{meeting.user_full_name}", meeting_path(meeting) %>
-</li>
+  <% if current_user.email == meeting.user.email  %>
+      <li class="event current-user-shift">
+        <%= link_to "#{meeting.user_name} #{meeting.monthly_shift_hours}", meeting_path(meeting) %>
+      </li>
+  <% else %>
+      <li class="event">
+        <%= link_to "#{meeting.user_name} #{meeting.monthly_shift_hours}", meeting_path(meeting) %>
+      </li>
+  <% end %>

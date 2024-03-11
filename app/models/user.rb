@@ -18,7 +18,7 @@ class User < ApplicationRecord
   end
 
   def name_and_initials
-    "#{first_name.capitalize} #{middle_name[0].capitalize}. #{last_name[0].capitalize}"
+    "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
   end
 
   def time_zone
