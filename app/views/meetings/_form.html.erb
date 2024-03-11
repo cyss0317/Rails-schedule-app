@@ -1,6 +1,7 @@
+<%= debugger %>
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
 
-<%= form_with(model: meeting, url: meeting_path(start_time: @start_time), html: { method: method}, class: "contents") do |form| %>
+<%= form_with(model: meeting, url: meetings_path(start_time: @start_time), html: { method: method}, class: "contents") do |form| %>
   <% if meeting.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>

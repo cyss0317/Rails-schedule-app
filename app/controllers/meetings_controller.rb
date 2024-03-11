@@ -33,6 +33,7 @@ class MeetingsController < ApplicationController
   # GET /meetings/new
   def new
     @meeting = Meeting.new
+    debugger
     @start_time = params[:start_time]
   end
 
@@ -97,7 +98,6 @@ class MeetingsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def meeting_params
     # deserialize_params
-    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id, :redirect_url)
-    params.require(:redirect_url)
+    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id)
   end
 end

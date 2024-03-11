@@ -67,6 +67,8 @@
       date = e.target.getAttribute("data-date")
       date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
       console.log(date_and_time)
+
+      window.location.href = "/meetings/new?start_date=" + date_and_time.toISOString()
     })
 
       const dragElement = document.getElementById('dragElement');
