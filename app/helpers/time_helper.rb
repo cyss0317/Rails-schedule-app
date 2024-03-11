@@ -18,7 +18,7 @@ module TimeHelper
   end
 
   def am_pm(time)
-    time.hour < 12 ? "AM" : "PM"
+    time.hour < 12 ? 'AM' : 'PM'
   end
 
   def time_in_am_pm(time)
