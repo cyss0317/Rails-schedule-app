@@ -1,4 +1,3 @@
-<%= debugger %>
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
 
 <%= form_with(model: meeting, url: meetings_path(start_time: @start_time), html: { method: method}, class: "contents") do |form| %>

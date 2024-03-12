@@ -33,7 +33,6 @@ class MeetingsController < ApplicationController
   # GET /meetings/new
   def new
     @meeting = Meeting.new
-    debugger
     @start_time = params[:start_time]
   end
 
