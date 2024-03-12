@@ -32,6 +32,7 @@ class MeetingsController < ApplicationController
 
   # GET /meetings/new
   def new
+    @users = User.all.pluck(:first_name, :last_name).map { |first_name, last_name| "#{first_name} #{last_name}" }
     @meeting = Meeting.new
     @start_time = params[:start_time]
   end
@@ -40,7 +41,7 @@ class MeetingsController < ApplicationController
   def edit; end
 
   # POST /meetings or /meetings.json
-  def create
+  def create # rubocop:disable Metrics/MethodLength
     @meeting = Meeting.new(meeting_params)
     respond_to do |format|
       if @meeting.save
