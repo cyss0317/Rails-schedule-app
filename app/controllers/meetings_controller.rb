@@ -32,7 +32,9 @@ class MeetingsController < ApplicationController
 
   # GET /meetings/new
   def new
-    @users = User.all.pluck(:first_name, :last_name).map { |first_name, last_name| "#{first_name} #{last_name}" }
+    @users = User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+      ["#{first_name} #{last_name}", id]
+    end
     @meeting = Meeting.new
     @start_time = params[:start_time]
   end
