@@ -45,4 +45,16 @@
 <% end %>
 
 <script>
+  // TODO: NOT WORKING YET
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".contents").addEventListener("keydown", (e) => {
+      debugger
+      if (e.keyCode == 27) {
+        console.log("ESC")
+
+      }
+      console.log(<%= request.referer %>)
+      window.location.href = <%= request.referer %>
+    })
+  })
 </script>

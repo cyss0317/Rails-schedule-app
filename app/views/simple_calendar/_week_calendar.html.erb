@@ -23,7 +23,10 @@
           <% week.each do |day| %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
 
-              <div data-date=<%= day.to_s %> class="meetings <%= calendar.td_classes_for(day).join(" ") %>">
+              <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %>">
+                <div class="meeting-form display" style="display: none" data-dateTime="" >
+                  <%= render partial: "meetings/form", locals: { meeting: @meeting, method: :POST } %>
+                </div>
                 <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
@@ -50,7 +53,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     table_body = document.querySelector(".table-body")
-    table_body.addEventListener("onclick", (e) => {
+    table_body.addEventListener("click", (e) => {
       //time configuration
       window.target = e
 
@@ -67,9 +70,9 @@
       date = e.target.getAttribute("data-date")
       date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
       console.log(date_and_time)
-      window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
-
-      
+       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
+      //table_body.querySelector(".meeting-form").style.display = "block"
+    
     })
 
       const dragElement = document.getElementById('dragElement');

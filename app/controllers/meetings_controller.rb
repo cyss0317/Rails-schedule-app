@@ -5,6 +5,7 @@ class MeetingsController < ApplicationController
   helper DateHelper
 
   before_action :set_meeting, only: %i[show edit update destroy]
+  before_action :select_options_for_users, only: %i[weekly new]
 
   # GET /meetings or /meetings.json
   def index
@@ -12,6 +13,7 @@ class MeetingsController < ApplicationController
   end
 
   def weekly
+    @meeting = Meeting.new
     Rails.logger.info "ip: #{request.remote_ip}}"
     Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
 
@@ -32,9 +34,6 @@ class MeetingsController < ApplicationController
 
   # GET /meetings/new
   def new
-    @users = User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
-      ["#{first_name} #{last_name}", id]
-    end
     @meeting = Meeting.new
     @start_time = params[:start_time]
   end
@@ -95,6 +94,12 @@ class MeetingsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_meeting
     @meeting = Meeting.find(params[:id])
+  end
+
+  def select_options_for_users
+    @users = User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+      ["#{first_name} #{last_name}", id]
+    end
   end
 
   # Only allow a list of trusted parameters through.
