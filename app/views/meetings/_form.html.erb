@@ -1,10 +1,8 @@
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
-
-<%= form_with(model: meeting, url: meeting_path(start_time: @start_time), html: { method: method}, class: "contents") do |form| %>
+<%= form_with(model: meeting, url: method == :PATCH ? meeting_path(meeting) : meetings_path(start_date: @start_time), html: { method: method}, class: "contents") do |form| %>
   <% if meeting.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>
-
+      <h2><%= pluralize(meeting.errors.count, "error") %> Prohibited this shift from being saved:</h2>
       <ul>
         <% meeting.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -12,18 +10,19 @@
       </ul>
     </div>
   <% end %>
+
   <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :employee %>
+    <%= form.select :user_id, options_for_select(@users, meeting.user ? meeting.user.id : @users[0]), {}, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
     <%= form.label :start_time %>
-    <%= form.datetime_field :start_time, value: start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.datetime_field :start_time, value: meeting.start_time || start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
   <div class="my-5">
     <%= form.label :end_time %>
-    <%= form.datetime_field :end_time, value: start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.datetime_field :end_time, value: meeting.end_time || start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
     <%# form.hidden_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%d")%>
@@ -31,12 +30,22 @@
     <%# form.time_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-    <%= form.hidden_field :user_id, value: current_user.id, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>
 
 <script>
+  // TODO: NOT WORKING YET
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".contents").addEventListener("keydown", (e) => {
+      debugger
+      if (e.keyCode == 27) {
+        console.log("ESC")
+
+      }
+      console.log(<%= request.referer %>)
+      window.location.href = <%= request.referer %>
+    })
+  })
 </script>

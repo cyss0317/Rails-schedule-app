@@ -4,7 +4,8 @@ class MeetingsController < ApplicationController
   helper TimeHelper
   helper DateHelper
 
-  before_action :set_meeting, only: %i[show edit update destroy]
+  before_action :load_meeting, only: %i[show edit update destroy]
+  before_action :select_options_for_users, only: %i[weekly new]
 
   # GET /meetings or /meetings.json
   def index
@@ -12,6 +13,7 @@ class MeetingsController < ApplicationController
   end
 
   def weekly
+    @meeting = Meeting.new
     Rails.logger.info "ip: #{request.remote_ip}}"
     Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
 
@@ -37,10 +39,12 @@ class MeetingsController < ApplicationController
   end
 
   # GET /meetings/1/edit
-  def edit; end
+  def edit
+    select_options_for_users(true)
+  end
 
   # POST /meetings or /meetings.json
-  def create
+  def create # rubocop:disable Metrics/MethodLength
     @meeting = Meeting.new(meeting_params)
     respond_to do |format|
       if @meeting.save
@@ -60,7 +64,9 @@ class MeetingsController < ApplicationController
   def update
     respond_to do |format|
       if @meeting.update(meeting_params)
-        format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully updated.' }
+        format.html do
+          redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: 'Meeting was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @meeting }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -90,14 +96,25 @@ class MeetingsController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
-  def set_meeting
+  def load_meeting
     @meeting = Meeting.find(params[:id])
+  end
+
+  def select_options_for_users(for_edit = false)
+    @users = if for_edit
+               user = @meeting.user
+               [["#{user.first_name} #{user.last_name}",
+                 user.id]]
+             else
+               User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+                 ["#{first_name} #{last_name}", id]
+               end
+             end
   end
 
   # Only allow a list of trusted parameters through.
   def meeting_params
     # deserialize_params
-    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id, :redirect_url)
-    params.require(:redirect_url)
+    params.require(:meeting).permit(:name, :start_time, :end_time, :user_id)
   end
 end
