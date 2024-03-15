@@ -15,12 +15,10 @@
     <%= form.label :employee %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
-  <% if @users.present? %>
-    <div class="my-5">
-      <%= form.label :employee %>
-      <%= form.select :user_id, options_for_select(@users), selected:  @users[0] %>
-    </div>
-  <% end %>
+  <div class="my-5">
+    <%= form.label :employee %>
+    <%= form.select :user_id, options_for_select(@users, meeting.user ? meeting.user.id : @users[0]) %>
+  </div>
   <div class="my-5">
     <%= form.label :start_time %>
     <%= form.datetime_field :start_time, value: meeting.start_time || start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
@@ -37,7 +35,6 @@
   </div>
 
     <%# form.hidden_field :user_id, value: current_user.id, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
