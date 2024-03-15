@@ -4,8 +4,8 @@ class MeetingsController < ApplicationController
   helper TimeHelper
   helper DateHelper
 
-  before_action :set_meeting, only: %i[show edit update destroy]
-  before_action :select_options_for_users, only: %i[weekly new]
+  before_action :load_meeting, only: %i[show edit update destroy]
+  before_action :select_options_for_users, only: %i[weekly new edit]
 
   # GET /meetings or /meetings.json
   def index
@@ -62,7 +62,7 @@ class MeetingsController < ApplicationController
   def update
     respond_to do |format|
       if @meeting.update(meeting_params)
-        format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully updated.' }
+        format.html { redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: 'Meeting was successfully updated.' }
         format.json { render :show, status: :ok, location: @meeting }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -92,7 +92,7 @@ class MeetingsController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
-  def set_meeting
+  def load_meeting
     @meeting = Meeting.find(params[:id])
   end
 
