@@ -120,6 +120,11 @@ GEM
       railties (>= 5.0.0)
     faker (3.2.2)
       i18n (>= 1.8.11, < 2)
+    flipper (1.2.2)
+      concurrent-ruby (< 2)
+    flipper-active_record (1.2.2)
+      activerecord (>= 4.2, < 8)
+      flipper (~> 1.2.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -309,6 +314,8 @@ DEPENDENCIES
   error_highlight (>= 0.4.0)
   factory_bot_rails
   faker
+  flipper
+  flipper-active_record
   importmap-rails
   jbuilder
   jsbundling-rails (~> 1.2)
