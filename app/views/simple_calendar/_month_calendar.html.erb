@@ -16,20 +16,35 @@
 
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
-        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
-          <div>
-            
-            <% week.each do |day| %>
-                <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
-                  <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
-                    <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
-                  <% else %>
-                    <% passed_block.call day, sorted_events.fetch(day, []) %>
-                  <% end %>
+        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email))  %>
+          <tr class="admin-week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
+            <div>
+              <% week.each do |day| %>
+                  <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
+                    <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                      <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+                    <% else %>
+                      <% passed_block.call day, sorted_events.fetch(day, []) %>
+                    <% end %>
+                <% end %>
               <% end %>
-            <% end %>
-          </div>
-        </tr>
+            </div>
+          </tr>
+        <% else %>
+          <tr class="week-<%= idx %>" >
+            <div>
+              <% week.each do |day| %>
+                  <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
+                    <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                      <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+                    <% else %>
+                      <% passed_block.call day, sorted_events.fetch(day, []) %>
+                    <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>
@@ -37,7 +52,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll("tr[class^='week-']").forEach(week => {
+    document.querySelectorAll("tr[class^='admin-week-']").forEach(week => {
       week.addEventListener("click", (e) => {
         window.location = e.currentTarget.getAttribute("data-link")
         <%#

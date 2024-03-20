@@ -6,7 +6,22 @@
 
         <span class="monthly-date"> <%= date.day %> </span>
         <% if !meetings.empty? %>
-          <%= link_to meetings_weekly_path(start_date: date) do %>
+          <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
+            <%= link_to meetings_weekly_path(start_date: date) do %>
+              <div class="flex-col">
+                <div class="morning-shift">
+                  <% morning_shifts.each do |meeting| %>
+                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+                  <% end %>
+                </div>
+                <div class="evening-shift">
+                  <% evening_shifts.each do |meeting| %>
+                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
             <div class="flex-col">
               <div class="morning-shift">
                 <% morning_shifts.each do |meeting| %>
@@ -19,8 +34,8 @@
                 <% end %>
               </div>
             </div>
-
           <% end %>
+
         <% end  %>
         
       <% end %>

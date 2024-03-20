@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
+def set_up_flipper
+  flipper_app = Flipper::UI.app(Flipper.instance) do |builder|
+    builder.use Rack::Auth::Basic do |username, password|
+      username == ENV["FLIPPER_USERNAME"] && password == ENV["FLIPPER_PASSWORD"]
+    end
+  end
+  mount flipper_app, at: "/flipper"
+end
+
 Rails.application.routes.draw do
+  set_up_flipper
+
   resources :meetings
   get 'meetings_weekly', to: 'meetings#weekly'
   post 'seed_meetings', to: 'meetings#seed'

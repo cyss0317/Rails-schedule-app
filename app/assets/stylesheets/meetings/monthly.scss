@@ -7,6 +7,7 @@
 
   li {
     position: relative;
+    color: $title-color;
     a {
       color: $title-color;
     }
@@ -17,8 +18,7 @@
     }
   }
 
-  li.current-user-shift > a {
-    // color: $theme-yellow;
+  li.current-user-shift {
     font-weight: bold;
 
     &::before {
@@ -29,6 +29,20 @@
       transform: rotate(-45deg);
       top: -6px;
       left: -18px;
+    }
+    a {
+      // color: $theme-yellow;
+      font-weight: bold;
+
+      &::before {
+        content: "Shift";
+        color: $red;
+        display: block;
+        position: absolute;
+        transform: rotate(-45deg);
+        top: -6px;
+        left: -18px;
+      }
     }
   }
 }
@@ -39,6 +53,7 @@
 
   li {
     position: relative;
+    color: $theme-white;
     a {
       color: $theme-white;
     }
@@ -49,8 +64,7 @@
     }
   }
 
-  li.current-user-shift > a {
-    // color: $theme-yellow;
+  li.current-user-shift {
     font-weight: bold;
 
     &::before {
@@ -61,6 +75,20 @@
       transform: rotate(-45deg);
       top: -6px;
       left: -18px;
+    }
+    a {
+      // color: $theme-yellow;
+      font-weight: bold;
+
+      &::before {
+        content: "Shift";
+        color: $red;
+        display: block;
+        position: absolute;
+        transform: rotate(-45deg);
+        top: -6px;
+        left: -18px;
+      }
     }
   }
 }

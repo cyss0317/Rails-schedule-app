@@ -26,9 +26,10 @@
     // width: max(60px, calc(100% / 7));
     width: calc($monthly-table-body-column-width / 7);
     padding: 12px;
-    cursor: pointer;
+    
     transition: all 0.15s ease-in-out;
-    &:hover {
+    a:hover {
+      cursor: pointer;
       // background-color: #22222210;
       // font-size: 1.1rem;
       // text-decoration: underline;
