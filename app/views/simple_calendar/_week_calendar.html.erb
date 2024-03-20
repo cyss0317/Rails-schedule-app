@@ -24,9 +24,6 @@
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
 
               <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %>">
-                <div class="meeting-form display" style="display: none" data-dateTime="" >
-                  <%= render partial: "meetings/form", locals: { meeting: @meeting, method: :POST } %>
-                </div>
                 <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
