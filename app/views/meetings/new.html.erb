@@ -5,3 +5,13 @@
   <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("body").addEventListener("keydown", (e) => {
+      if (e.keyCode == 27) {
+        console.log("ESC")
+        window.location.href = "<%= request.referer %>"
+      }
+    })
+  })
+</script>

@@ -4,6 +4,8 @@ source 'https://rubygems.org'
 
 ruby '3.1.2'
 
+gem 'flipper'
+gem 'flipper-active_record'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.1.1'
 
@@ -90,3 +92,5 @@ gem 'dockerfile-rails', '>= 1.5', group: :development
 gem 'sentry-ruby', '~> 5.15'
 
 gem 'sentry-rails', '~> 5.15'
+
+gem "flipper-ui", "~> 1.2"

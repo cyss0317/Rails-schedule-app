@@ -12,6 +12,21 @@ require 'factory_bot_rails'
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# colors
+#
+color = ['#8C6E63',
+         '#546E7A',
+         '#7E57C2',
+         '#FFA726',
+         '#689F38',
+         '#FF4081',
+         '#4FC3F7',
+         '#E040FB',
+         '#9CCC65',
+         '#FF7043',
+         '#29B6F6',
+         '#FFD54F']
+
 unless User.find_by(email: 'test@test.com')
   FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
                            color: Faker::Color.hex_color)

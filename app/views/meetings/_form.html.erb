@@ -36,16 +36,9 @@
 <% end %>
 
 <script>
-  // TODO: NOT WORKING YET
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".contents").addEventListener("keydown", (e) => {
-      debugger
+    document.addEventListener("keydown", (e) => {
       if (e.keyCode == 27) {
-        console.log("ESC")
-
+        history.back();
       }
-      console.log(<%= request.referer %>)
-      window.location.href = <%= request.referer %>
     })
-  })
 </script>
