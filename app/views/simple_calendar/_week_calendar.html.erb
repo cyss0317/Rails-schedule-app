@@ -49,6 +49,36 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    // current time liner
+    current_time_liner = document.createElement("div")
+    current_time_liner.classList.add("current-time-liner", "relative")
+    current_time = new Date()
+    current_hour = current_time.getHours()
+    current_minutes = current_time.getMinutes()
+    //debugger
+    current_time_height_from_top = (current_hour - 8) * 100 + current_minutes /60 * 100
+    current_time_liner.style.top = `${current_time_height_from_top}px`
+    // add date attribute to the current time liner to be used in the click event
+
+    current_time_liner.addEventListener("click", (e) => {
+      debugger
+      window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
+      return;
+    })
+
+    // append the current time liner to the today column//
+    today_shift_column = document.querySelector(".today")
+    today_shift_column.appendChild(current_time_liner)
+
+    // onClick scroll down to the current time
+    document.querySelector(".today-date").addEventListener("click", (e) => {
+      current_time_liner = document.querySelector(".current-time-liner")
+      y = current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
+
+      window.scrollTo({top: y})
+    })
+
+
     table_body = document.querySelector(".admin-table")
     table_body.addEventListener("click", (e) => {
       //time configuration
@@ -68,6 +98,7 @@
       date = e.target.getAttribute("data-date")
       date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
       console.log(date_and_time)
+    debugger
        window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
       //table_body.querySelector(".meeting-form").style.display = "block"
     
