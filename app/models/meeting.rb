@@ -13,6 +13,8 @@ class Meeting < ApplicationRecord
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
+  MAX_WIDTH = 80
+
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
   end
@@ -117,13 +119,11 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_right_spacing(meetings_count, idx, hour_idx)
-    max_width = 90
-    ((max_width - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
+    ((MAX_WIDTH - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
   end
 
   def table_row_width(meetings_count, hour_idx)
-    max_width = 90
-    max_width / meetings_count - avoid_overlap(hour_idx, meetings_count)
+    MAX_WIDTH / meetings_count - avoid_overlap(hour_idx, meetings_count)
   end
 
   # def self.current_time_class
