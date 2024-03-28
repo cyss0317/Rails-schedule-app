@@ -9,7 +9,7 @@
 
     <%= render partial: "shared/password_field", locals: { form: f, label: "password", field: "password"  } %>
     <%= render partial: "shared/password_field", locals: { form: f, label: "password_confirmation", field: "password_confirmation"  } %>
-    <%= render partial: "shared/password_field", locals: { form: f, label: "current_password", field: "current_password"  } %>
+    <%= render partial: "shared/password_field", locals: { form: f, label: "current_password", field: "current_password"  } if method == "PUT" %>
 
     <div class="flex items-center justify-content-evenly">
           <%= render partial: "shared/button", locals: { display_text: method == "POST" ? "Sign Up" : "Update" } %>

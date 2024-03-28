@@ -61,7 +61,6 @@
     // add date attribute to the current time liner to be used in the click event
 
     current_time_liner.addEventListener("click", (e) => {
-      debugger
       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
       return;
     })
@@ -98,36 +97,9 @@
       date = e.target.getAttribute("data-date")
       date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
       console.log(date_and_time)
-    debugger
        window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
       //table_body.querySelector(".meeting-form").style.display = "block"
     
     })
-
-      const dragElement = document.getElementById('dragElement');
-
-    let startY;
-    let currentY;
-
-    dragElement.addEventListener('mousedown', startDrag);
-    dragElement.addEventListener('mousemove', drag);
-    dragElement.addEventListener('mouseup', endDrag);
-
-    function startDrag(event) {
-      startY = event.clientY;
-      currentY = dragElement.offsetTop;
-    }
-
-    function drag(event) {
-      if (startY) {
-        const deltaY = event.clientY - startY;
-        dragElement.style.top = currentY + deltaY + 'px';
-      }
-    }
-
-    function endDrag() {
-      startY = null;
-    }
-
   })
 </script>
