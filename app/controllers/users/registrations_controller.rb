@@ -21,9 +21,9 @@ module Users
               '#FFD54F']
 
     # GET /resource/sign_up
-    def new
-      super
-    end
+    # def new
+    #   super
+    # end
 
     # POST /resource
     # def create
@@ -80,7 +80,7 @@ module Users
       taken_colors = User.pluck(:color)
       available_colors = COLORS.map { |color| color unless taken_colors.include?(color) }.compact
 
-      params[:user][:color] = available_colors[0]
+      params[:user][:color] = available_colors[0] || Faker::Color.hex_color
     end
 
     # The path used after sign up.
