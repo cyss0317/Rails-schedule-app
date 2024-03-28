@@ -14,29 +14,31 @@ require 'factory_bot_rails'
 
 # colors
 #
-color = ['#8C6E63',
-         '#546E7A',
-         '#7E57C2',
-         '#FFA726',
-         '#689F38',
-         '#FF4081',
-         '#4FC3F7',
-         '#E040FB',
-         '#9CCC65',
-         '#FF7043',
-         '#29B6F6',
-         '#FFD54F']
+colors = [
+  '#546E7A',
+  '#7E57C2',
+  '#FFA726',
+  '#689F38',
+  '#FF4081',
+  '#4FC3F7',
+  '#E040FB',
+  '#9CCC65',
+  '#FF7043',
+  '#29B6F6',
+  '#FFD54F'
+]
 
 unless User.find_by(email: 'test@test.com')
   FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
-                           color: Faker::Color.hex_color)
+                           color: '#8C6E63')
 end
 
 user_id_array = User.all.pluck(:id)
 
 if user_id_array.length < 4
+  available_colors = colors - User.all.pluck(:color)
   user_id_array << FactoryBot.create(:user,
-                                     color: Faker::Color.hex_color) until user_id_array.length == 4
+                                     color: available_colors[0]) until user_id_array.length == 4
 end
 
 5.times do |i|
