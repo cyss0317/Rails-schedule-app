@@ -15,15 +15,15 @@ module Users
     # end
 
     # DELETE /resource/sign_out
-    def destroy
-      redirect_to home: :index
-    end
+    # def destroy
+    #   redirect_to home: :indee
+    # end
 
     # protected
 
     # If you have extra params to permit, append them to the sanitizer.
-    # def configure_sign_in_params
-    #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-    # end
+    def configure_sign_in_params
+      devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
+    end
   end
 end

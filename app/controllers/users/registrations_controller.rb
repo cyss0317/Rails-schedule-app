@@ -7,14 +7,28 @@ module Users
     before_action :configure_sign_up_params, only: %i[new create]
     before_action :configure_account_update_params, only: [:update]
 
+    COLORS = ['#8C6E63',
+              '#546E7A',
+              '#7E57C2',
+              '#FFA726',
+              '#689F38',
+              '#FF4081',
+              '#4FC3F7',
+              '#E040FB',
+              '#9CCC65',
+              '#FF7043',
+              '#29B6F6',
+              '#FFD54F']
+
     # GET /resource/sign_up
-    def new; end
+    # def new
+    #   super
+    # end
 
     # POST /resource
-    def create
-      user = User.new(sign_up_params)
-      user.save!
-    end
+    # def create
+    #   super
+    # end
 
     # GET /resource/edit
     # def edit
@@ -56,7 +70,17 @@ module Users
 
     def sign_up_params
       attributes = %i[last_name first_name middle_name color email password password_confirmation]
+
+      update_color
+
       params.require(:user).permit(attributes)
+    end
+
+    def update_color
+      taken_colors = User.pluck(:color)
+      available_colors = COLORS.map { |color| color unless taken_colors.include?(color) }.compact
+
+      params[:user][:color] = available_colors[0] || Faker::Color.hex_color
     end
 
     # The path used after sign up.

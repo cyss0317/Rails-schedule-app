@@ -3,10 +3,10 @@
 def set_up_flipper
   flipper_app = Flipper::UI.app(Flipper.instance) do |builder|
     builder.use Rack::Auth::Basic do |username, password|
-      username == ENV["FLIPPER_USERNAME"] && password == ENV["FLIPPER_PASSWORD"]
+      username == ENV['FLIPPER_USERNAME'] && password == ENV['FLIPPER_PASSWORD']
     end
   end
-  mount flipper_app, at: "/flipper"
+  mount flipper_app, at: '/flipper'
 end
 
 Rails.application.routes.draw do
@@ -16,7 +16,12 @@ Rails.application.routes.draw do
   get 'meetings_weekly', to: 'meetings#weekly'
   post 'seed_meetings', to: 'meetings#seed'
   root to: 'home#index'
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    sessions: 'users/sessions',
+    passwords: 'users/passwords',
+    confirmation: 'users/confirmations'
+  }
   # devise_for :registrations
   # namespace :users do
   #   resources :registrations, only: %i[new create]
