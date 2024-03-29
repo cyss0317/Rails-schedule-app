@@ -119,6 +119,7 @@ $number-of-hour-cells: 17;
         padding: 9px;
         background-color: $today-date-color;
         color: $white;
+        cursor: pointer;
 
         &:hover {
           background-color: $today-date-hover-color;
@@ -146,6 +147,24 @@ $number-of-hour-cells: 17;
 
       .current-time {
         border-top: 1px solid $theme-red;
+      }
+
+      .current-time-liner {
+        border-bottom: none;
+        border-top: 2px solid red;
+        position: relative;
+        z-index: 1;
+        background-color: transparent;
+        &::before {
+          content: "";
+          position: absolute;
+          width: 17px;
+          height: 17px;
+          background-color: #f4511e;
+          left: -10px;
+          top: -10px;
+          border-radius: 50%;
+        }
       }
 
       .hour-cell-row-separator {

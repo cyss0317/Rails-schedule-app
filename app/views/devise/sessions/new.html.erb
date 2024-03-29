@@ -5,7 +5,7 @@
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 
         <%= render partial: "shared/email_field", locals: { form: f } %>
-        <%= render partial: "shared/password_field", locals: { form: f } %>
+        <%= render partial: "shared/password_field", locals: { form: f, label: "password", field: "password" } %>
 
         <%= render partial: "shared/button", locals: { display_text: "Sign in" } %>
 
