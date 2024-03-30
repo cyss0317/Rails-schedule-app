@@ -3,7 +3,7 @@
 module ApplicationHelper
   def table_row_top(start_time)
     shift_start_time = 8
-    (start_time - shift_start_time) * 100
+    (start_time - shift_start_time) * Meeting::HOUR_HEIGHT_IN_PX
   end
 
   def morning_shift_count(meetings)

@@ -10,7 +10,7 @@ $table-row-width-small: calc(
 $table-row-width-medium: calc(
   ($main-width-medium - #{$empty-tr-width-medium}) / 7
 );
-$table-body-row-height: 100px;
+$table-body-row-height: 50px;
 $table-border-color: rgb(218, 220, 224);
 $number-of-hour-cells: 17;
 
@@ -141,6 +141,7 @@ $number-of-hour-cells: 17;
       }
 
       .hours {
+        height: calc($number-of-hour-cells * $table-body-row-height);
         display: flex;
         flex-direction: column;
       }
@@ -180,7 +181,7 @@ $number-of-hour-cells: 17;
         flex-direction: column;
         position: relative;
         border-right: 1px solid $table-border-color;
-        height: calc($number-of-hour-cells * 100px);
+        height: calc($number-of-hour-cells * $table-body-row-height);
 
         .weekly-meeting {
           position: absolute;
