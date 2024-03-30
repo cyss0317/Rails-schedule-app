@@ -49,6 +49,7 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
     // current time liner
     current_time_liner = document.createElement("div")
     current_time_liner.classList.add("current-time-liner", "relative")
@@ -56,7 +57,7 @@
     current_hour = current_time.getHours()
     current_minutes = current_time.getMinutes()
     //debugger
-    current_time_height_from_top = (current_hour - 8) * 100 + current_minutes /60 * 100
+    current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
     current_time_liner.style.top = `${current_time_height_from_top}px`
     // add date attribute to the current time liner to be used in the click event
 

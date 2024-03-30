@@ -14,7 +14,7 @@ class Meeting < ApplicationRecord
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
   MAX_WIDTH = 80
-  HOUR_HEIGHT_IN_PX = 100
+  HOUR_HEIGHT_IN_PX = 50
   def self.default
     where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
   end
@@ -99,11 +99,13 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_height
-    (end_time.hour - start_time.hour) * HOUR_HEIGHT_IN_PX + (end_time.min / 60.00).round(2) * HOUR_HEIGHT_IN_PX 
+    ((end_time.hour + end_time.min / 60.00) - (start_time.hour + start_time.min / 60.00)) * HOUR_HEIGHT_IN_PX
+    # (end_time.hour - start_time.hour) * HOUR_HEIGHT_IN_PX + ((start_time.min + end_time.min) / 60.00).round(2) * HOUR_HEIGHT_IN_PX
   end
 
   def table_row_top_shift
-    table_row_top(start_time.hour)
+    (start_time.hour - 8 + (start_time.min / 60.00).round(2)) * HOUR_HEIGHT_IN_PX
+    # table_row_top(start_time.hour)
   end
 
   def table_row_left_shift(idx, meetings_count, hour_idx)
