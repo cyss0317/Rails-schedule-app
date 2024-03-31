@@ -100,7 +100,7 @@ class MeetingsController < ApplicationController
 
   def select_options_for_users
     @users =
-      User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+      User.sort_by_first_name.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
         ["#{first_name} #{last_name}", id]
       end
   end

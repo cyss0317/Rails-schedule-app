@@ -11,6 +11,8 @@ class User < ApplicationRecord
 
   has_many :meetings, dependent: :destroy
 
+  scope :sort_by_first_name, -> { order(first_name: :asc) }
+
   # before_action :authenticate_user!
   def full_name
     "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"

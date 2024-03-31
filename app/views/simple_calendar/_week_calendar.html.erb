@@ -71,10 +71,10 @@
 
     // append the current time liner to the today column//
     today_shift_column = document.querySelector(".today")
-    today_shift_column.appendChild(current_time_liner)
+    today_shift_column?.appendChild(current_time_liner)
 
     // onClick scroll down to the current time
-    document.querySelector(".today-date").addEventListener("click", (e) => {
+    document.querySelector(".today-date")?.addEventListener("click", (e) => {
       current_time_liner = document.querySelector(".current-time-liner")
       y = current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
 
