@@ -6,7 +6,7 @@
     <%= render layout: "shared/tooltip", locals: { text: "Next month"} do %>
       <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
     <% end %>
-    <div class="calendar-title"><%= calendar.current_month_in_string %> <%= calendar.year%></div>
+    <%= link_to "#{calendar.current_month_in_string} #{calendar.year}", meetings_weekly_path, class: "calendar-title" %>
   <% end %>
 
   <%= link_to "Today", current.downcase == "month" ? root_path : meetings_weekly_path, class: "today-btn" %>

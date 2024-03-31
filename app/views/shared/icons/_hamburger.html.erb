@@ -5,8 +5,8 @@
 <div class="hamburger-background hidden">
   <div id="hamburger-menu" class="">
     <%= yield %>
-    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
     <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
+    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
   </div>
 </div>
 

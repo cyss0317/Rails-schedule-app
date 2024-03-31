@@ -34,6 +34,8 @@ class MeetingsController < ApplicationController
 
   # GET /meetings/new
   def new
+    Rails.logger.warn("WARNING: #{params[:start_time]}")
+    Rails.logger.warn("WARNING: #{params.inspect}")
     @meeting = Meeting.new
     @start_time = params[:start_time]
   end

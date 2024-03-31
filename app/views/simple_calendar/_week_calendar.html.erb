@@ -12,7 +12,7 @@
       <% end %>
     </div>
 
-    <div class="table-body <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>" >
+    <div class="table-body" >
       <% date_range.each_slice(7) do |week| %>
           <div class="hours">
             <% (8..24).each do |hour| %>
@@ -23,7 +23,7 @@
           <% week.each do |day| %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
 
-              <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %>">
+              <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>">
                 <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
@@ -66,7 +66,6 @@
     current_time_liner.addEventListener("click", (e) => {
       e.stopPropagation()
       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
-      return;
     })
 
     // append the current time liner to the today column//
@@ -82,14 +81,15 @@
     })
 
 
-    table_body = document.querySelector(".admin-table")
-    table_body.addEventListener("click", (e) => {
-      //time configuration
-      window.target = e
+    table_body = document.querySelectorAll(".admin-table")
+    table_body.forEach(el => {
+      el.addEventListener("click", (e) => {
+        //time configuration
+        window.target = e
 
-      clicked_el = e.target.getClientRects()[0]
-      table_cell_height = clicked_el.height / 17
-      y_axis = e.clientY - clicked_el.top
+        clicked_el = e.target.getClientRects()[0]
+        table_cell_height = clicked_el.height / 17
+        y_axis = e.clientY - clicked_el.top
 
       total_hours = y_axis / table_cell_height
       clicked_spot_into_hour = Math.floor(total_hours)
@@ -97,13 +97,15 @@
       rounded_down_minutes = Math.floor(exact_minutes / 15) * 15
       clicked_time_in_hour = `${(8 + clicked_spot_into_hour)}:00`
 
-      //date configuration
-      date = e.target.getAttribute("data-date")
-      date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
-      console.log(date_and_time)
-       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
-      //table_body.querySelector(".meeting-form").style.display = "block"
-    
+        //date configuration
+        date = e.target.getAttribute("data-date")
+        window.location.href =`/meetings/new?start_date=${date} ${clicked_time_in_hour}`
+        date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
+        console.log(date_and_time)
+        //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
+        //table_body.querySelector(".meeting-form").style.display = "block"
+      
+      })
     })
   })
 </script>

@@ -90,7 +90,23 @@
 
   #hamburger-menu {
     top: 45px;
-    right: 34px;
+    right: 61px;
+    padding: 3px;
+  }
+}
+
+@media (min-width: 1450px) {
+  .monthly-calendar {
+    margin: auto;
+  }
+
+  .weekly-calendar {
+    margin: auto;
+  }
+
+  #hamburger-menu {
+    top: 45px;
+    right: 110px;
     padding: 3px;
   }
 }
