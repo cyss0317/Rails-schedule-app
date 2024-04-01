@@ -3,10 +3,11 @@
 
   <div class="table flex flex-col justify-center">
     <div class="table-header">
-      <div class="empty-tr">
-        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
-          <% @users_total_hours_for_week.each do |user_name, hours|  %>
-            <div><%= "#{user_name}: #{hours}" %> </div>
+      <div class="empty-tr overflow-auto">
+        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
+          <div class="employee-hours">Total Hours:</div>
+          <% @users_total_hours_for_week.each do |user, hours|  %>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}: #{hours}" %> </div>
           <% end %>
         <% end %>
       </div>
@@ -112,6 +113,13 @@
         //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
         //table_body.querySelector(".meeting-form").style.display = "block"
       
+      })
+    })
+
+    employee_hours = document.querySelectorAll(".employee-hours")
+    employee_hours?.forEach(el => {
+      el.addEventListener("click", (e) => {
+        document.querySelector(".empty-tr")?.classList.toggle("overflow-auto")
       })
     })
   })

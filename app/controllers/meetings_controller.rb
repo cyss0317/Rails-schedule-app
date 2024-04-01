@@ -33,7 +33,7 @@ class MeetingsController < ApplicationController
       @meetings.each do |meeting|
         total_hours += (meeting.end_time - meeting.start_time) / 3600 if meeting.user == user
       end
-      [user.first_name, total_hours.round(2)]
+      [user, total_hours.round(1)]
     end
   end
 

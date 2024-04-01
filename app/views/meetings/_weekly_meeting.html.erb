@@ -26,12 +26,14 @@
         meeting.addEventListener("mouseover", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
             meeting.style.outline = "2px solid blue";
+            meeting.style.overflow = "visible";
             meeting.style.zIndex = "1";
           })
         })
         meeting.addEventListener("mouseleave", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {
             meeting.style.outline = "none"
+            meeting.style.overflow = "hidden"
             meeting.style.zIndex = "0";
           })
         })
