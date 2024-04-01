@@ -1,8 +1,5 @@
 <div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing meeting</h1>
+  <h1 class="font-bold text-4xl">Editing Shift</h1>
 
   <%= render "form", meeting: @meeting, method: :PATCH %>
-
-  <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-  <%= link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

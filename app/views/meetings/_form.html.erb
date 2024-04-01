@@ -30,8 +30,10 @@
     <%# form.time_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <div class="inline">
+  <div class="flex align-items-center justify-content-evenly">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 <% end %>
 

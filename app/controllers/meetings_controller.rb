@@ -5,7 +5,7 @@ class MeetingsController < ApplicationController
   helper DateHelper
 
   before_action :load_meeting, only: %i[show edit update destroy]
-  before_action :select_options_for_users, only: %i[weekly new]
+  before_action :select_options_for_users, only: %i[weekly new edit]
 
   # GET /meetings or /meetings.json
   def index
@@ -39,9 +39,7 @@ class MeetingsController < ApplicationController
   end
 
   # GET /meetings/1/edit
-  def edit
-    select_options_for_users(true)
-  end
+  def edit; end
 
   # POST /meetings or /meetings.json
   def create # rubocop:disable Metrics/MethodLength
@@ -100,16 +98,11 @@ class MeetingsController < ApplicationController
     @meeting = Meeting.find(params[:id])
   end
 
-  def select_options_for_users(for_edit = false)
-    @users = if for_edit
-               user = @meeting.user
-               [["#{user.first_name} #{user.last_name}",
-                 user.id]]
-             else
-               User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
-                 ["#{first_name} #{last_name}", id]
-               end
-             end
+  def select_options_for_users
+    @users =
+      User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+        ["#{first_name} #{last_name}", id]
+      end
   end
 
   # Only allow a list of trusted parameters through.
