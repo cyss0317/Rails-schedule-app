@@ -2,7 +2,9 @@
 @import "../calendar/header.scss";
 
 $empty-tr-width-small: 47px;
+// $empty-tr-width-small: 110px;
 $empty-tr-width-medium: 69px;
+// $empty-tr-width-medium: 110px;
 // $table-row-width: 150px;
 $table-row-width-small: calc(
   ($main-width-medium - #{$empty-tr-width-small}) / 7
@@ -28,6 +30,8 @@ $number-of-hour-cells: 17;
 .weekly-calendar {
   .table {
     .empty-tr {
+      cursor: pointer;
+      height: 90px;
       @media (min-width: 368px) and (max-width: 768px) {
         width: $empty-tr-width-small;
       }
@@ -71,9 +75,15 @@ $number-of-hour-cells: 17;
       }
     }
 
+    .employee-hours {
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
     .table-header {
       display: flex;
       flex-direction: row;
+      align-items: flex-end;
       background-color: $theme-white;
       position: sticky;
       z-index: 2;
@@ -193,6 +203,9 @@ $number-of-hour-cells: 17;
           justify-content: flex-start;
           align-items: center;
           outline: 1px solid $theme-gray;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;

@@ -88,18 +88,25 @@
     margin: auto;
   }
 
-  .calendar-heading.week {
-    #hamburger-menu {
-      top: 65px;
-      right: 34px;
-    }
+  #hamburger-menu {
+    top: 45px;
+    right: 61px;
+    padding: 3px;
+  }
+}
+
+@media (min-width: 1450px) {
+  .monthly-calendar {
+    margin: auto;
   }
 
-  .calendar-heading.month {
-    // top: 0px;
-    #hamburger-menu {
-      top: 65px;
-      right: 34px;
-    }
+  .weekly-calendar {
+    margin: auto;
+  }
+
+  #hamburger-menu {
+    top: 45px;
+    right: 110px;
+    padding: 3px;
   }
 }

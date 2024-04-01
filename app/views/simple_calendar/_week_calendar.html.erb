@@ -3,7 +3,14 @@
 
   <div class="table flex flex-col justify-center">
     <div class="table-header">
-      <div class="empty-tr"></div>
+      <div class="empty-tr overflow-auto">
+        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
+          <div class="employee-hours">Total Hours:</div>
+          <% @users_total_hours_for_week.each do |user, hours|  %>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}: #{hours}" %> </div>
+          <% end %>
+        <% end %>
+      </div>
       <% date_range.slice(0, 7).each do |day| %>
         <div class="weekly-date">
           <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
@@ -12,9 +19,10 @@
       <% end %>
     </div>
 
-    <div class="table-body <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>" >
+    <div class="table-body" >
       <% date_range.each_slice(7) do |week| %>
           <div class="hours">
+   
             <% (8..24).each do |hour| %>
               <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
               <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
@@ -23,7 +31,7 @@
           <% week.each do |day| %>
               <%# link_to "TEST", new_meeting_path( start_date: day ) %>
 
-              <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %>">
+              <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>">
                 <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                   <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
                 <% else %>
@@ -66,15 +74,14 @@
     current_time_liner.addEventListener("click", (e) => {
       e.stopPropagation()
       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
-      return;
     })
 
     // append the current time liner to the today column//
     today_shift_column = document.querySelector(".today")
-    today_shift_column.appendChild(current_time_liner)
+    today_shift_column?.appendChild(current_time_liner)
 
     // onClick scroll down to the current time
-    document.querySelector(".today-date").addEventListener("click", (e) => {
+    document.querySelector(".today-date")?.addEventListener("click", (e) => {
       current_time_liner = document.querySelector(".current-time-liner")
       y = current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
 
@@ -82,14 +89,15 @@
     })
 
 
-    table_body = document.querySelector(".admin-table")
-    table_body.addEventListener("click", (e) => {
-      //time configuration
-      window.target = e
+    table_body = document.querySelectorAll(".admin-table")
+    table_body.forEach(el => {
+      el.addEventListener("click", (e) => {
+        //time configuration
+        window.target = e
 
-      clicked_el = e.target.getClientRects()[0]
-      table_cell_height = clicked_el.height / 17
-      y_axis = e.clientY - clicked_el.top
+        clicked_el = e.target.getClientRects()[0]
+        table_cell_height = clicked_el.height / 17
+        y_axis = e.clientY - clicked_el.top
 
       total_hours = y_axis / table_cell_height
       clicked_spot_into_hour = Math.floor(total_hours)
@@ -97,13 +105,22 @@
       rounded_down_minutes = Math.floor(exact_minutes / 15) * 15
       clicked_time_in_hour = `${(8 + clicked_spot_into_hour)}:00`
 
-      //date configuration
-      date = e.target.getAttribute("data-date")
-      date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
-      console.log(date_and_time)
-       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
-      //table_body.querySelector(".meeting-form").style.display = "block"
-    
+        //date configuration
+        date = e.target.getAttribute("data-date")
+        window.location.href =`/meetings/new?start_date=${date} ${clicked_time_in_hour}`
+        date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
+        console.log(date_and_time)
+        //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
+        //table_body.querySelector(".meeting-form").style.display = "block"
+      
+      })
+    })
+
+    employee_hours = document.querySelectorAll(".employee-hours")
+    employee_hours?.forEach(el => {
+      el.addEventListener("click", (e) => {
+        document.querySelector(".empty-tr")?.classList.toggle("overflow-auto")
+      })
     })
   })
 </script>

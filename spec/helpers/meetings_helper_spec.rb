@@ -13,5 +13,9 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe MeetingsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#convert_time" do
+    it "converts a string to a DateTime object" do
+      
+    end
+  end
 end

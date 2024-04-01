@@ -27,6 +27,14 @@ class MeetingsController < ApplicationController
       # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
     end
     @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
+    @users = @meetings.map(&:user).uniq
+    @users_total_hours_for_week = @users.map do |user|
+      total_hours = 0
+      @meetings.each do |meeting|
+        total_hours += (meeting.end_time - meeting.start_time) / 3600 if meeting.user == user
+      end
+      [user, total_hours.round(1)]
+    end
   end
 
   # GET /meetings/1 or /meetings/1.json
@@ -34,6 +42,8 @@ class MeetingsController < ApplicationController
 
   # GET /meetings/new
   def new
+    Rails.logger.warn("WARNING: #{params[:start_time]}")
+    Rails.logger.warn("WARNING: #{params.inspect}")
     @meeting = Meeting.new
     @start_time = params[:start_time]
   end
@@ -100,7 +110,7 @@ class MeetingsController < ApplicationController
 
   def select_options_for_users
     @users =
-      User.all.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
+      User.sort_by_first_name.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
         ["#{first_name} #{last_name}", id]
       end
   end
