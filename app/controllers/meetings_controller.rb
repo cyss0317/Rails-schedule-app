@@ -27,6 +27,14 @@ class MeetingsController < ApplicationController
       # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
     end
     @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
+    @users = @meetings.map(&:user).uniq
+    @users_total_hours_for_week = @users.map do |user|
+      total_hours = 0
+      @meetings.each do |meeting|
+        total_hours += (meeting.end_time - meeting.start_time) / 3600 if meeting.user == user
+      end
+      [user.first_name, total_hours.round(2)]
+    end
   end
 
   # GET /meetings/1 or /meetings/1.json

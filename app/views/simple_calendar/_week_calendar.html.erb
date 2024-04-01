@@ -3,7 +3,13 @@
 
   <div class="table flex flex-col justify-center">
     <div class="table-header">
-      <div class="empty-tr"></div>
+      <div class="empty-tr">
+        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
+          <% @users_total_hours_for_week.each do |user_name, hours|  %>
+            <div><%= "#{user_name}: #{hours}" %> </div>
+          <% end %>
+        <% end %>
+      </div>
       <% date_range.slice(0, 7).each do |day| %>
         <div class="weekly-date">
           <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
@@ -15,6 +21,7 @@
     <div class="table-body" >
       <% date_range.each_slice(7) do |week| %>
           <div class="hours">
+   
             <% (8..24).each do |hour| %>
               <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
               <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
