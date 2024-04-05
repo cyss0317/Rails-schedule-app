@@ -1,21 +1,35 @@
-<%= form_for @day_off, url: day_offs_path, html: { method: :post} do |f| %>
-  <div class="my-5">
-    <%= f.label :start_time %>
-    <%= f.datetime_field :start_time, value: @day_off.start_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= f.label :end_time %>
-    <%= f.datetime_field :end_time, value: @day_off.end_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <% f.hidden_field :user_id, value: current_user.id %>
+<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+  <h1 class="font-bold text-4xl">Request Day Off</h1>
+  <% if @day_off.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(@day_off.errors.count, "error") %> Prohibited this day-off from being saved:</h2>
+      <ul>
+        <% @day_off.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  <div class="flex align-items-center justify-content-evenly">
-    <%= f.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-    <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%# if method == :PATCH %>
-      <%# button_to "Delete", meeting_path(@), method: :delete, params: { redirect_url: request.referer }, class: "rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-    <%# end %>
+  <%= form_for(@day_off, as: "day_offs", url: day_offs_path, html: { method: :post}) do |f| %>
+    <div class="my-5">
+      <%= f.label :start_time %>
+      <%= f.date_field :start_time, value: params[:start_time]&.to_date || @day_off.start_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= f.label :end_time %>
+      <%= f.date_field :end_time, value: params[:start_time]&.to_date || @day_off.end_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <%= f.hidden_field :user_id, value: current_user.id %>
 
-  </div>
-<% end %>
+    <div class="flex align-items-center justify-content-evenly">
+      <%= f.submit "Request Day Off", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+      <%= link_to "Cancel", meetings_weekly_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%# if method == :PATCH %>
+        <%# button_to "Delete", meeting_path(@), method: :delete, params: { redirect_url: request.referer }, class: "rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+      <%# end %>
+
+    </div>
+  <% end %>
+</div>

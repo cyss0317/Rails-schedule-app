@@ -94,3 +94,5 @@ gem 'sentry-ruby', '~> 5.15'
 gem 'sentry-rails', '~> 5.15'
 
 gem "flipper-ui", "~> 1.2"
+
+gem "date_validator", "~> 0.12.0"

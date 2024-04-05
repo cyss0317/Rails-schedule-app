@@ -21,8 +21,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_182908) do
   end
 
   create_table "day_offs", force: :cascade do |t|
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.date "start_time"
+    t.date "end_time"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
