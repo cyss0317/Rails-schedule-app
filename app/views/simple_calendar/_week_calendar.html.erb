@@ -131,6 +131,8 @@
     employee_hours?.forEach(el => {
       el.addEventListener("click", (e) => {
         document.querySelector(".empty-tr")?.classList.toggle("overflow-auto")
+        document.querySelector(".empty-tr")?.classList.toggle("z-20")
+
       })
     })
   })

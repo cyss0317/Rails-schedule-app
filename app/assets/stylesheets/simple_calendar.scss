@@ -63,11 +63,13 @@
     color: $theme-red;
   }
 
-  .today > span {
+  .today > div.monthly-date {
     border-radius: 10rem;
-    padding: 9px;
-    background-color: $today-date-color;
-    color: $white;
+    background-color: #0b57d0;
+    color: #ffffff;
+    width: 21px;
+    align-self: center;
+    margin: auto;
 
     &:hover {
       span {

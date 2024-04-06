@@ -4,20 +4,22 @@
         <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
         <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
 
-        <span class="monthly-date"> <%= date.day %> </span>
+        <div class="monthly-date"> <%= date.day %> </div>
 
           <%= link_to meetings_weekly_path(start_date: date) do %>
           <div class="monthly-shifts">
             <% if DayOff.for_day(date).present? %>
               <div class="day-off-monthly"> <%= DayOff.for_day(date.to_date)[0]&.user&.first_name %> OFF</div>
             <% end %>
-            <% if !meetings.empty? %>
+            <% if morning_shifts.present? %>
               <div class="morning-shift">
                 <% morning_shifts.each do |meeting| %>
                   <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
                 <% end %>
               </div>
+            <% end %>
 
+            <% if evening_shifts.present? %>
               <div class="evening-shift">
                 <% evening_shifts.each do |meeting| %>
                   <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
