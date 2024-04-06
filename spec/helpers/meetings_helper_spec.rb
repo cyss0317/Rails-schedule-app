@@ -13,9 +13,8 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe MeetingsHelper, type: :helper do
-  describe "#convert_time" do
-    it "converts a string to a DateTime object" do
-      
+  describe '#convert_time' do
+    it 'converts a string to a DateTime object' do
     end
   end
 end

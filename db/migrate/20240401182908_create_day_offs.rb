@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDayOffs < ActiveRecord::Migration[7.1]
   def change
     create_table :day_offs do |t|

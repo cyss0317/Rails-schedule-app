@@ -1,6 +1,20 @@
 @import "../variables.scss";
 @import "../calendar/header.scss";
 
+.day-off-monthly {
+  background-color: #7c47b2;
+  color: $theme-white;
+  border-radius: 0.5rem;
+}
+
+.monthly-shifts {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 9px;
+}
+
 .morning-shift {
   border-radius: 0.5rem;
   background-color: $theme-yellow-faded;

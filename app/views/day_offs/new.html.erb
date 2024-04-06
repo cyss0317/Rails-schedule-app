@@ -2,10 +2,10 @@
   <h1 class="font-bold text-4xl">Request Day Off</h1>
   <% if @day_off.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(@day_off.errors.count, "error") %> Prohibited this day-off from being saved:</h2>
+      <h2> Prohibited this request day off:</h2>
       <ul>
         <% @day_off.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+          <li>-<%= error.full_message %></li>
         <% end %>
       </ul>
     </div>

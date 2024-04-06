@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DayOffsController < ApplicationController
   layout 'application'
 
@@ -9,15 +11,7 @@ class DayOffsController < ApplicationController
     @day_off = DayOff.new(day_off_params)
 
     respond_to do |format|
-      if @day_off.taken_days.present?
-        # taken_days = @day_off.off_dates.select { |date| DayOff.where(start_time: date).any? }
-        debugger
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @day_off.errors, status: :unprocessable_entity }
-        format.html do
-          render :new, status: :unprocessable_entity, notice: "These days are taken by others, "
-        end
-      elsif @day_off.save
+      if @day_off.save
         format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully requested day off' }
       else
         format.html { render :new, status: :unprocessable_entity }

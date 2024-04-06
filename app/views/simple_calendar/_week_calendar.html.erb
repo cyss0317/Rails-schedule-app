@@ -15,7 +15,17 @@
         <div class="weekly-date">
           <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
           <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p><%=  %>
-          <%= link_to "#{t('date.abbr_day_names')[day.wday]}", "day_offs/new?start_time=#{day.to_s}" %>
+
+
+          <% if DayOff.for_day(day).present? %>
+            <p class="day-off"> <%= DayOff.for_day(day.to_date)[0]&.user&.first_name %> OFF</p>
+            <%# TODO: if it is admin user, need to let them edit or not? %>
+            <%# TODO: if it is yourselv, we should display link to edit %>
+          <% else %>
+            <p> <%= link_to "Request Day Off", "day_offs/new?start_time=#{day.to_s}", class: "request-day-off-btn" %> </p>
+          <% end %>
+
+
         </div>
       <% end %>
     </div>

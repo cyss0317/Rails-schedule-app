@@ -40,6 +40,13 @@ $number-of-hour-cells: 17;
       }
     }
 
+    .day-off {
+      color: purple;
+    }
+
+    .request-day-off-btn {
+      color: $today-date-color
+    }
     .today {
       // border: 1px solid #0b57d0;
     }
