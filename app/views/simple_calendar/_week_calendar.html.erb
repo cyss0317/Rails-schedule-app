@@ -14,11 +14,16 @@
       <% date_range.slice(0, 7).each do |day| %>
         <div class="weekly-date">
           <div class="date <%= 'today-date' if day.today? %>"><%= "#{day.mday}" %></div>
-          <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p><%=  %>
+          <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
 
 
           <% if DayOff.for_day(day).present? %>
-            <p class="day-off"> <%= DayOff.for_day(day.to_date)[0]&.user&.first_name %> OFF</p>
+            <% day_off = DayOff.for_day(day.to_date)[0]  %>
+            <% if current_user.first_name == day_off.user.first_name %>
+              <%= link_to "#{day_off.user.first_name} OFF", edit_day_off_url(day_off.id), class: "day-off" %>
+            <% else %>
+              <p class="day-off"> <%= day_off.user.first_name %> OFF</p>
+            <% end %>
             <%# TODO: if it is admin user, need to let them edit or not? %>
             <%# TODO: if it is yourselv, we should display link to edit %>
           <% else %>
