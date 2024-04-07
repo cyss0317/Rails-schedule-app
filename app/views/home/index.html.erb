@@ -1,44 +1,36 @@
-<div class="text-center">
+<div class="center-body">
   <% if current_user %>
       <%= month_calendar(events: @meetings) do |date, meetings| %>
         <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
         <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
 
-        <span class="monthly-date"> <%= date.day %> </span>
-        <% if !meetings.empty? %>
-          <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
-            <%= link_to meetings_weekly_path(start_date: date) do %>
-              <div class="flex-col">
-                <div class="morning-shift">
-                  <% morning_shifts.each do |meeting| %>
-                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-                  <% end %>
-                </div>
-                <div class="evening-shift">
-                  <% evening_shifts.each do |meeting| %>
-                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-                  <% end %>
-                </div>
-              </div>
+        <div class="monthly-date"> <%= date.day %> </div>
+
+          <%= link_to meetings_weekly_path(start_date: date) do %>
+          <div class="monthly-shifts">
+            <% if DayOff.for_day(date).present? %>
+              <div class="day-off-monthly"> <%= DayOff.for_day(date.to_date)[0]&.user&.first_name %> OFF</div>
             <% end %>
-          <% else %>
-            <div class="flex-col">
+            <% if morning_shifts.present? %>
               <div class="morning-shift">
                 <% morning_shifts.each do |meeting| %>
                   <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
                 <% end %>
               </div>
+            <% end %>
+
+            <% if evening_shifts.present? %>
               <div class="evening-shift">
                 <% evening_shifts.each do |meeting| %>
                   <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
                 <% end %>
               </div>
-            </div>
-          <% end %>
+            <% end %>
 
-        <% end  %>
-        
-      <% end %>
+          </div>
+
+      <% end  %>
+    <% end %>
   <% else %>
     <%= link_to "Sign Up", new_user_registration_path %>
     <%= link_to "Sign In", new_user_session_path %>

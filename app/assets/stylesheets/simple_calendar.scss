@@ -30,7 +30,7 @@
     // width: max(60px, calc(100% / 7));
     width: calc($monthly-table-body-column-width / 7);
     padding: 12px;
-    
+
     transition: all 0.15s ease-in-out;
     a:hover {
       cursor: pointer;
@@ -63,12 +63,18 @@
     color: $theme-red;
   }
 
-  .today > span {
-    border-radius: 10rem;
-    padding: 9px;
-    background-color: $today-date-color;
-    color: $white;
+  .monthly-date {
+    text-align: center;
+  }
 
+  .today > div.monthly-date {
+    border-radius: 10rem;
+    background-color: #0b57d0;
+    color: #ffffff;
+    width: 21px;
+    align-self: center;
+    margin: auto;
+    text-align: center;
     &:hover {
       span {
         background-color: $today-date-hover-color;
@@ -78,8 +84,8 @@
 
   .date {
     border-radius: 10rem;
-    width: 46px;
-    height: 46px;
+    width: 30px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;

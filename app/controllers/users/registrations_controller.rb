@@ -18,7 +18,7 @@ module Users
               '#9CCC65',
               '#FF7043',
               '#29B6F6',
-              '#FFD54F']
+              '#FFD54F'].freeze
 
     # GET /resource/sign_up
     # def new

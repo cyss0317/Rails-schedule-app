@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true, length: { maximum: 15 }
 
   has_many :meetings, dependent: :destroy
+  has_many :day_offs, dependent: :destroy
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
 

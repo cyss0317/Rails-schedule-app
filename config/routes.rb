@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmation: 'users/confirmations'
   }
+  resources :day_offs
   # devise_for :registrations
   # namespace :users do
   #   resources :registrations, only: %i[new create]

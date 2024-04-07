@@ -1,9 +1,35 @@
 @import "../variables.scss";
 @import "../calendar/header.scss";
 
+.day-off-monthly {
+  background-color: #7c47b2;
+  color: $theme-white;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  outline: 2px solid #7c47b2;
+  border: 1px solid white;
+  text-align: center;
+}
+
+.monthly-shifts > * {
+  min-width: 82px;
+}
+
+.monthly-shifts {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 9px;
+}
+
 .morning-shift {
   border-radius: 0.5rem;
   background-color: $theme-yellow-faded;
+  outline: 2px solid $theme-yellow-faded;
+  border: 1px solid white;
 
   li {
     position: relative;
@@ -50,6 +76,8 @@
 .evening-shift {
   border-radius: 0.5rem;
   background-color: $theme-navy-faded;
+  outline: 2px solid $theme-navy-faded;
+  border: 1px solid white;
 
   li {
     position: relative;

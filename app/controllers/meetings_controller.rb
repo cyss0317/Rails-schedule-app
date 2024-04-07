@@ -5,7 +5,7 @@ class MeetingsController < ApplicationController
   helper DateHelper
 
   before_action :load_meeting, only: %i[show edit update destroy]
-  before_action :select_options_for_users, only: %i[weekly new edit]
+  before_action :select_options_for_users, only: %i[weekly new edit create]
 
   # GET /meetings or /meetings.json
   def index
@@ -45,6 +45,7 @@ class MeetingsController < ApplicationController
     Rails.logger.warn("WARNING: #{params[:start_time]}")
     Rails.logger.warn("WARNING: #{params.inspect}")
     @meeting = Meeting.new
+
     @start_time = params[:start_time]
   end
 
@@ -109,10 +110,20 @@ class MeetingsController < ApplicationController
   end
 
   def select_options_for_users
-    @users =
-      User.sort_by_first_name.pluck(:first_name, :last_name, :id).map do |first_name, last_name, id|
-        ["#{first_name} #{last_name}", id]
-      end
+    start_date = params[:start_date]&.to_date || @meeting&.start_time || DateTime.now.beginning_of_week
+    off_user = DayOff.for_day(start_date)[0]&.user
+
+    @users = if off_user.nil?
+               User.sort_by_first_name.pluck(:first_name, :last_name,
+                                             :id).map do |first_name, last_name, id|
+                 ["#{first_name} #{last_name}", id]
+               end
+             else
+               User.sort_by_first_name.where.not(id: off_user.id).pluck(:first_name, :last_name,
+                                                                        :id).map do |first_name, last_name, id|
+                 ["#{first_name} #{last_name}", id]
+               end
+             end
   end
 
   # Only allow a list of trusted parameters through.
