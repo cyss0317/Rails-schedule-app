@@ -8,10 +8,10 @@
 
     <%= render @meeting %>
 
-    <%= link_to "Edit this shift", edit_meeting_path(@meeting), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Delete this shift", meeting_path(@meeting), method: :delete, params: { redirect_url: redirect_url }, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    <%= link_to "Edit this shift", edit_meeting_path(@meeting), class: "mt-2 rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
+    <div class="inline-block ">
+      <%= button_to "Delete this shift", meeting_path(@meeting), method: :delete, params: { redirect_url: redirect_url }, class: "mt-2 rounded-lg py-3 px-3 bg-gray-100 font-medium" %>
     </div>
-    <%= link_to "Cancel", 'javascript:history.back()' || root_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Cancel", 'javascript:history.back()' || root_path, class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

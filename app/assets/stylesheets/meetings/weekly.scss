@@ -107,13 +107,14 @@ $number-of-hour-cells: 16;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 46px;
-        height: 46px;
+        width: 30px;
+        height: 30px;
         border: none;
       }
 
       .weekly-date {
         border-bottom: 1px solid $table-border-color;
+        margin-top: 5px;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -127,8 +128,9 @@ $number-of-hour-cells: 16;
           width: $table-row-width-medium;
         }
 
-        p {
+        * {
           border: none;
+          padding: 0 0.5rem 0 0.5rem;
           margin-bottom: 0.25rem;
         }
       }
