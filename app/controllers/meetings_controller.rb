@@ -5,7 +5,7 @@ class MeetingsController < ApplicationController
   helper DateHelper
 
   before_action :load_meeting, only: %i[show edit update destroy]
-  before_action :select_options_for_users, only: %i[weekly new edit]
+  before_action :select_options_for_users, only: %i[weekly new edit create]
 
   # GET /meetings or /meetings.json
   def index

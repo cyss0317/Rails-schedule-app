@@ -20,9 +20,9 @@
           <% if DayOff.for_day(day).present? %>
             <% day_off = DayOff.for_day(day.to_date)[0]  %>
             <% if current_user.first_name == day_off.user.first_name %>
-              <%= link_to "#{day_off.user.first_name} OFF", edit_day_off_url(day_off.id), class: "day-off" %>
+              <p><%= link_to "#{day_off.user.first_name} OFF", edit_day_off_url(day_off.id), class: "day-off your-day-off" %></p>
             <% else %>
-              <p class="day-off"> <%= day_off.user.first_name %> OFF</p>
+              <p class="day-off "> <%= day_off.user.first_name %> OFF</p>
             <% end %>
             <%# TODO: if it is admin user, need to let them edit or not? %>
             <%# TODO: if it is yourselv, we should display link to edit %>
@@ -39,9 +39,9 @@
       <% date_range.each_slice(7) do |week| %>
           <div class="hours">
    
-            <% (8..24).each do |hour| %>
-              <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+            <% (8..23).each do |hour| %>
               <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
+              <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
             <% end %>
           </div>
           <% week.each do |day| %>
@@ -57,8 +57,6 @@
                     <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, hour_idx: hour_idx, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
                   <% end %>
                 <% end %>
-                <%# debugger %>
-
 
                 <%# sorted_events.fetch(day, []).each_with_index do |event, idx| %>
                   <%# render partial: "meetings/weekly_meeting", locals: {meeting: event, idx: idx, meetings_count: sorted_events.count, morning_shift_count: morning_shift_count, evening_shift_count: evening_shift_count,  classes: "weekly-meeting-#{event.id}", style: { height: "2.5rem"}} %>
@@ -80,7 +78,6 @@
     current_time = new Date()
     current_hour = current_time.getHours()
     current_minutes = current_time.getMinutes()
-    //debugger
     current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
     current_time_liner.style.top = `${current_time_height_from_top}px`
     // add date attribute to the current time liner to be used in the click event

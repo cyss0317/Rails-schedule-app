@@ -14,7 +14,7 @@ $table-row-width-medium: calc(
 );
 $table-body-row-height: 50px;
 $table-border-color: rgb(218, 220, 224);
-$number-of-hour-cells: 17;
+$number-of-hour-cells: 16;
 
 #dragElement {
   width: 100px;
@@ -43,9 +43,14 @@ $number-of-hour-cells: 17;
     .day-off {
       color: purple;
     }
+    .your-day-off {
+      &:hover {
+        color: $text-color;
+      }
+    }
 
     .request-day-off-btn {
-      color: $today-date-color
+      color: $today-date-color;
     }
     .today {
       // border: 1px solid #0b57d0;

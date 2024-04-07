@@ -32,14 +32,14 @@
 
   <div class="flex align-items-center justify-content-evenly">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-    <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+
+<% end %>
     <% if method == :PATCH %>
       <%= button_to "Delete", meeting_path(@meeting), method: :delete, params: { redirect_url: request.referer }, class: "rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
     <% end %>
-
+    <%= link_to "Cancel", request.referer, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
-<% end %>
 
 <script>
     document.addEventListener("keydown", (e) => {

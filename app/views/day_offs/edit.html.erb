@@ -1,5 +1,5 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-  <h1 class="font-bold text-4xl">Request Day Off</h1>
+  <h1 class="font-bold text-4xl">Edit Day Off</h1>
   <% if @day_off.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2> Prohibited this request day off:</h2>
@@ -11,5 +11,6 @@
     </div>
   <% end %>
 
-  <%= render partial: "day_offs/shared/form", locals: { method: :POST } %>
+  <%= render partial: "day_offs/shared/form", locals: { method: :PATCH } %>
+
 </div>

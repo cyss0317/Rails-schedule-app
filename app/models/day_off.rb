@@ -16,7 +16,12 @@ class DayOff < ApplicationRecord
   def check_days_taken
     return true unless taken_days.present?
 
-    errors.add(:base, "Available days are [#{available_days.join(', ')}]. Sorry, other day(s) is/are taken.")
+    if available_days.empty?
+      errors.add(:base, 'All dates are already taken')
+    else
+      errors.add(:base, "Available dates are [#{available_days.join(', ')}]. Sorry, other day(s) is/are taken.")
+    end
+
     false
   end
 
@@ -24,7 +29,7 @@ class DayOff < ApplicationRecord
     off_dates.select do |date|
       # Query other DayOff records that overlap with the current date
       overlapping_day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
-                                   .where.not(id: self.id) # Exclude the current DayOff instance
+                                   .where.not(id:) # Exclude the current DayOff instance
 
       # Check if there are any records found, indicating the day is taken
       overlapping_day_offs.exists?
@@ -34,7 +39,7 @@ class DayOff < ApplicationRecord
   def available_days
     off_dates.reject do |date|
       available_days = DayOff.where('? BETWEEN start_time AND end_time', date)
-                             .where.not(id: self.id) # Exclude the current DayOff instance
+                             .where.not(id:) # Exclude the current DayOff instance
 
       available_days.exists?
     end.sort

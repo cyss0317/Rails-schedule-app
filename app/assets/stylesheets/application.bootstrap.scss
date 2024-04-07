@@ -4,6 +4,13 @@
 
 @import "simple_calendar";
 
+.center-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100dvw;
+}
 .shadow-custom {
   -webkit-box-shadow: 17px 56px 180px -15px rgba(117, 117, 117, 0.09);
   -moz-box-shadow: 17px 56px 180px -15px rgba(117, 117, 117, 0.09);
@@ -12,11 +19,11 @@
 
 @media (max-width: 380px) {
   /* Styles for small devices */
-  body {
-    min-width: 380px;
-    width: 95dvw;
-    margin: 0;
-  }
+  // body {
+  //   min-width: 380px;
+  //   width: 95dvw;
+  //   margin: 0;
+  // }
 }
 
 @media (min-width: 576px) {

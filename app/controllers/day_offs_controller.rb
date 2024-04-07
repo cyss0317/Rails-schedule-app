@@ -3,6 +3,7 @@
 class DayOffsController < ApplicationController
   layout 'application'
 
+  before_action :load_day_off, only: %i[edit update destroy]
   def new
     @day_off = DayOff.new
   end
@@ -20,9 +21,32 @@ class DayOffsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    # @day_off.update(day_off_params)
+  end
 
-  def destroy; end
+  def update
+    if @day_off.update(day_off_params)
+      respond_to do |format|
+        format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully updated day off' }
+      end
+    else
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @day_off.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    @day_off = DayOff.find(params[:id])
+    @day_off.delete
+
+    respond_to do |format|
+      format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully deleted day off' }
+      format.json { head :no_content }
+    end
+  end
 
   private
 
@@ -35,5 +59,9 @@ class DayOffsController < ApplicationController
     return false if param['start_time'].blank? || param['end_time'].blank? || param['user_id'].blank?
 
     true
+  end
+
+  def load_day_off
+    @day_off = DayOff.find(params[:id])
   end
 end

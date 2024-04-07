@@ -8,8 +8,7 @@ class Meeting < ApplicationRecord
   belongs_to :user
 
   validates :start_time, presence: true
-  validates :end_time, presence: true
-  validate :start_time_cannot_be_greater_than_end_time
+  validates :end_time, presence: true, date: { after_or_equal_to: :start_time}
 
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 

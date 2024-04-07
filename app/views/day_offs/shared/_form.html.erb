@@ -1,0 +1,20 @@
+<%= form_for(@day_off, as: "day_offs", url: method == :PATCH ? day_off_path(@day_off) : day_offs_url, html: { method: method}) do |f| %>
+  <div class="my-5">
+    <%= f.label :start_time %>
+    <%= f.date_field :start_time, value: params[:start_time]&.to_date || @day_off.start_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+  <div class="my-5">
+    <%= f.label :end_time %>
+    <%= f.date_field :end_time, value: params[:start_time]&.to_date || @day_off.end_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+
+  <div class="flex align-items-center justify-content-evenly">
+    <%= f.submit method == :POST ? "Request Day Off" : "Update Day Off", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+<% end %>
+    <% if method == :PATCH %>
+      <%= button_to "Delete", day_off_path(@day_off), method: :delete, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <% end %>
+    <%= link_to "Cancel", meetings_weekly_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  </div>
