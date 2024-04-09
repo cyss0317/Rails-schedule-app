@@ -17,8 +17,8 @@
           <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
 
 
-          <% if DayOff.for_day(day).present? %>
-            <% day_off = DayOff.for_day(day.to_date)[0]  %>
+          <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
+            <% day_off = DayOff.for_day_filtered_by_date(day.in_time_zone)[0]  %>
             <% if current_user.first_name == day_off.user.first_name %>
               <p><%= link_to "#{day_off.user.first_name} OFF", edit_day_off_url(day_off.id), class: "day-off your-day-off" %></p>
             <% else %>

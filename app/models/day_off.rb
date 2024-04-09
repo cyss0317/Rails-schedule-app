@@ -7,10 +7,24 @@ class DayOff < ApplicationRecord
   validates :end_time, date: { after_or_equal_to: :start_time }
   validate :check_days_taken, on: %i[create edit]
   scope :for_week, ->(date) { where('start_time >= ? AND end_time <= ?', date.beginning_of_week, date.end_of_week) }
-  scope :for_day, ->(date) { where('? BETWEEN start_time AND end_time', date) }
+  scope :for_day_filtered_by_date, lambda { |date|
+    where("DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
+      DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date.to_date, date.to_date) # catches the shifts with multiple days but not single day shift
 
+    # where('DATE(start_time) <= ? AND end_time >= ?', date, date.end_of_day.change(sec: 0)) # catches the shifts with multiple days but not single day shift
+    # where('start_time <= ? AND end_time >= ?', date.to_date, date.to_date) # catches the shifts with multiple days but not single day shift
+  }
+  scope :for_day_filtered_by_datetime, lambda { |datetime|
+    where('start_time <= ? AND end_time >= ?', datetime, datetime)
+  }
+  scope :morning_day_offs, lambda { |date|
+                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.change(hour: 8), date.change(hour: 13))
+                           }
+  scope :evening_day_offs, lambda { |date|
+                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time <= ?', date.change(hour: 13), date.end_of_day)
+                           }
   def off_dates
-    (start_time.to_date..end_time.to_date).to_a
+    (start_time.to_datetime..end_time.to_datetime).to_a
   end
 
   def check_days_taken
@@ -42,7 +56,7 @@ class DayOff < ApplicationRecord
                              .where.not(id:) # Exclude the current DayOff instance
 
       available_days.exists?
-    end.sort
+    end.map(&:to_date).sort
   end
 
   def any_of_days_taken?

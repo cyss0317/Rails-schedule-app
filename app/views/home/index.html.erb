@@ -8,8 +8,8 @@
 
           <%= link_to meetings_weekly_path(start_date: date) do %>
           <div class="monthly-shifts">
-            <% if DayOff.for_day(date).present? %>
-              <div class="day-off-monthly"> <%= DayOff.for_day(date.to_date)[0]&.user&.first_name %> OFF</div>
+            <% if DayOff.for_day_filtered_by_date(date).present? %>
+              <div class="day-off-monthly"> <%= DayOff.for_day_filtered_by_date(date.to_date)[0]&.user&.first_name %> OFF</div>
             <% end %>
             <% if morning_shifts.present? %>
               <div class="morning-shift">

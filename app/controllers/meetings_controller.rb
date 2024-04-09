@@ -111,7 +111,7 @@ class MeetingsController < ApplicationController
 
   def select_options_for_users
     start_date = params[:start_date]&.to_date || @meeting&.start_time || DateTime.now.beginning_of_week
-    off_user = DayOff.for_day(start_date)[0]&.user
+    off_user = DayOff.for_day_filtered_by_date(start_date)[0]&.user
 
     @users = if off_user.nil?
                User.sort_by_first_name.pluck(:first_name, :last_name,
