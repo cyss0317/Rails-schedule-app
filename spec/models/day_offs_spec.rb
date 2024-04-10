@@ -62,6 +62,26 @@ RSpec.describe DayOff, type: :model do
     end
   end
 
+  describe '#off_time_info' do
+    it 'returns the off time for morning off' do
+      day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 10), end_time: Time.new(2024, 1, 1, 15),
+                                 user_id: user.id)
+
+      expect(day_off.off_time_info(Time.new(2024, 1, 1))).to eq("#{user.first_name}, Morning Off")
+    end
+    it 'returns the off time for evening off' do
+      day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1, 17),
+                                 user_id: user.id)
+
+      expect(day_off.off_time_info(Time.new(2024, 1, 1))).to eq("#{user.first_name}, Evening Off")
+    end
+    it 'returns the off time for all day off' do
+      day_off = create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1).end_of_day,
+                                 user_id: user.id)
+
+      expect(day_off.off_time_info(Time.new(2024, 1, 1))).to eq("#{user.first_name}, All Day Off")
+    end
+  end
   describe '#available_days' do
     it 'returns the available days if the days are not taken by other users' do
       create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 2).end_of_day, user_id: user.id)

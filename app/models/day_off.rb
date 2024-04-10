@@ -18,13 +18,44 @@ class DayOff < ApplicationRecord
     where('start_time <= ? AND end_time >= ?', datetime, datetime)
   }
   scope :morning_day_offs, lambda { |date|
-                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.change(hour: 8), date.change(hour: 13))
+                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.change(hour: 8), date.change(hour: 15))
                            }
   scope :evening_day_offs, lambda { |date|
-                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time <= ?', date.change(hour: 13), date.end_of_day)
+                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time <= ?', date.change(hour: 15), date.end_of_day)
                            }
   def off_dates
     (start_time.to_datetime..end_time.to_datetime).to_a
+  end
+
+  def off_time_info(date)
+    which_shift_off = if start_time.to_date == date.to_date && end_time.to_date == date.to_date
+                        if morning_off?(date)
+                          'Morning'
+                        elsif evening_off?(date)
+                          'Evening'
+                        else
+                          'All Day'
+                        end
+                      else
+                        'No Day Off'
+                      end
+    "#{user.first_name}, #{which_shift_off} Off"
+  end
+
+  def morning_off?(date)
+    morning_start = date.change(hour: 8).change(min: 0)
+    morning_end = date.change(hour: 15).change(min: 0)
+    start_time >= morning_start && end_time <= morning_end
+  end
+
+  def evening_off?(date)
+    morning_end = date.change(hour: 15).change(min: 0)
+    evening_end = date.end_of_day
+    start_time >= morning_end && end_time <= evening_end
+  end
+
+  def all_day_off?(date)
+    start_time.to_date == date.to_date && end_time.to_date == date.to_date && !morning_off?(date) && !evening_off?(date)
   end
 
   def check_days_taken
