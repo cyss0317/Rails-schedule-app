@@ -33,7 +33,7 @@
                 <% elsif day_off.morning_off?(day.in_time_zone) %>
                   <p> <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "request-day-off-btn" %> </p>
                 <% elsif day_off.evening_off?(day.in_time_zone) %>
-                  <p> <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.end_of_day.change(sec: 0)}", class: "request-day-off-btn" %> </p>
+                  <p> <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "request-day-off-btn" %> </p>
                 <% end %>
             <% end %>
 

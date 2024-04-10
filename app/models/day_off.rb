@@ -43,9 +43,8 @@ class DayOff < ApplicationRecord
   end
 
   def morning_off?(date)
-    morning_start = date.change(hour: 8).change(min: 0)
     morning_end = date.change(hour: 15).change(min: 0)
-    start_time >= morning_start && end_time <= morning_end
+    start_time >= date.beginning_of_day && end_time <= morning_end
   end
 
   def evening_off?(date)
@@ -60,6 +59,8 @@ class DayOff < ApplicationRecord
 
   def check_days_taken
     return true unless taken_days.present?
+
+    # return true if taken_days.empty?
 
     if available_days.empty?
       errors.add(:base, 'All dates are already taken')
@@ -76,18 +77,47 @@ class DayOff < ApplicationRecord
       overlapping_day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
                                    .where.not(id:) # Exclude the current DayOff instance
 
+      is_morning_off_taken = false
+      is_evening_off_taken = false
+
+      overlapping_day_offs.select do |day_off|
+        return true if day_off.all_day_off?(date)
+
+        is_morning_off_taken = true if day_off.morning_off?(date)
+        is_evening_off_taken = true if day_off.evening_off?(date)
+
+        is_evening_off_taken && is_morning_off_taken
+      end
       # Check if there are any records found, indicating the day is taken
       overlapping_day_offs.exists?
     end.sort
   end
 
   def available_days
-    off_dates.reject do |date|
+    test = off_dates.reject do |date|
       available_days = DayOff.where('? BETWEEN start_time AND end_time', date)
                              .where.not(id:) # Exclude the current DayOff instance
+      half_taken_days = taken_days
 
-      available_days.exists?
-    end.map(&:to_date).sort
+      is_morning_off_taken = false
+      is_evening_off_taken = false
+      test = available_days.merge(half_taken_days).reject do |day_off|
+        return true if day_off.all_day_off?(date)
+
+        is_morning_off_taken = true if day_off.morning_off?(date)
+        is_evening_off_taken = true if day_off.evening_off?(date)
+
+        is_evening_off_taken && is_morning_off_taken
+      end
+      test.present?
+    end
+
+    test.map do |datetime|
+      day_offs = DayOff.where('? BETWEEN start_time AND end_time', datetime)
+      day_offs.map do |day_off|
+        day_off.morning_off?(datetime.to_date) ? "#{datetime.to_date} 3PM - 9PM" : "#{datetime.to_date} 8AM - 3PM"
+      end
+    end.flatten.sort
   end
 
   def any_of_days_taken?
