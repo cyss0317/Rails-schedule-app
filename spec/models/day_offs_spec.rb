@@ -35,7 +35,7 @@ RSpec.describe DayOff, type: :model do
     describe '.morning_day_offs' do
       it 'returns day off for morning for certain date' do
         evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
-                         user_id: user.id)
+                                       user_id: user.id)
         morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
 
@@ -62,6 +62,20 @@ RSpec.describe DayOff, type: :model do
     end
   end
 
+  describe '.for_day_filter_by_datetime' do
+    it 'takes in start_time and end_time and returns the day off for that time' do
+      day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15),
+                                 user_id: user.id)
+
+      expect(DayOff.for_day_filtered_by_datetime(day_off.start_time, day_off.end_time)).to eq([day_off])
+    end
+    it 'takes in start_time and end_time and returns empty if none exists' do
+      day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15),
+                                 user_id: user.id)
+
+      expect(DayOff.for_day_filtered_by_datetime(day_off.start_time, day_off.end_time)).to eq([day_off])
+    end
+  end
   describe '#off_time_info' do
     it 'returns the off time for morning off' do
       day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 10), end_time: Time.new(2024, 1, 1, 15),
@@ -94,8 +108,15 @@ RSpec.describe DayOff, type: :model do
 
       day_off = DayOff.new(start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 6), user_id: user.id)
 
-      expect(day_off.available_days).to eq(["2024-01-02 All Day", "2024-01-05 3PM - 9PM", "2024-01-06 8AM - 3PM"])
+      expect(day_off.available_days).to eq(['2024-01-02 All Day', '2024-01-05 3PM - 9PM', '2024-01-06 8AM - 3PM'])
     end
+
+    it 'returns the available evening off time frame if morning off is taken already' do
+      create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1, 15), user_id: user.id)
+
+      day_off = DayOff.new(start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
+                           user_id: user.id)
+      expect(day_off.available_days).to eq(['2024-01-01 3PM - 9PM']) end
   end
   describe '#off_dates' do
     it 'returns the off dates' do
@@ -108,6 +129,19 @@ RSpec.describe DayOff, type: :model do
     end
   end
 
+  describe '#half_day_taken?' do
+    it 'takes in date and returns true if the day is half day off' do
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8),
+                                     end_time: Time.new(2024, 1, 1, 15).end_of_day, user_id: user.id)
+
+      morning_off.half_day_taken?(Time.new(2024, 1, 1))
+    end
+    it 'takes in date and returns false if the day is all day off' do
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1), user_id: user.id)
+
+      morning_off.half_day_taken?(Time.new(2024, 1, 1))
+    end
+  end
   describe '#taken_days' do
     it 'returns the taken days if some days are already taken from other user' do
       user = create(:user)
@@ -131,7 +165,7 @@ RSpec.describe DayOff, type: :model do
     end
     it 'returns false if the day is NOT morning off' do
       evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1, 17),
-                                 user_id: user.id)
+                                     user_id: user.id)
 
       expect(evening_off.morning_off?(Time.new(2024, 1, 1))).to eq(false)
     end
@@ -166,7 +200,6 @@ RSpec.describe DayOff, type: :model do
       expect(evening_off.all_day_off?(Time.new(2024, 1, 1))).to eq(false)
     end
   end
-
 
   describe '#validations' do
     let(:user) { create(:user) }
@@ -238,7 +271,7 @@ RSpec.describe DayOff, type: :model do
         expect(day_off.errors.full_messages).to include('All dates are already taken')
       end
 
-      it 'adds "All Dates are already taken" error message if all days are taken' do
+      it 'adds available dates and times to error message if all days are taken' do
         day_off = DayOff.new(
           start_time: Time.new(2024, 1, 7),
           end_time: Time.new(2024, 1, 10).end_of_day,
@@ -247,6 +280,17 @@ RSpec.describe DayOff, type: :model do
 
         day_off.save
         expect(day_off.errors.full_messages).to include('Available dates are [2024-01-08 3PM - 9PM, 2024-01-09 All Day, 2024-01-10 All Day]. Sorry, other day(s) is/are taken.')
+      end
+      it 'does NOT add any errors if there is no DayOff object within the time frame' do
+        create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1, 15), user_id: user.id)
+        day_off = DayOff.new(
+          start_time: Time.new(2024, 1, 1, 15),
+          end_time: Time.new(2024, 1, 1).end_of_day,
+          user_id: user.id
+        )
+
+        day_off.save
+        expect(day_off.errors.full_messages).to be_empty
       end
     end
   end
