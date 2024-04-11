@@ -20,19 +20,17 @@
           <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone)  %>
             <% day_offs.each do |day_off| %>
-            <%#  TODO: display morning shift%>
                 <% if current_user.first_name == day_off.user.first_name %>
                   <p><%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off your-day-off" %></p>
                 <% else %>
                   <p class="day-off "> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
-            <%#  TODO: display dinner shift%>
-            <%#  TODO: or display all day shift%>
 
-                <% if day_off.all_day_off?(day.in_time_zone) %>
+                <% if day_offs.length == 2 %>
+
                 <% elsif day_off.morning_off?(day.in_time_zone) %>
                   <p> <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "request-day-off-btn" %> </p>
-                <% elsif day_off.evening_off?(day.in_time_zone) %>
+                <% elsif day_off.evening_off?(day.in_time_zone)%>
                   <p> <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "request-day-off-btn" %> </p>
                 <% end %>
             <% end %>

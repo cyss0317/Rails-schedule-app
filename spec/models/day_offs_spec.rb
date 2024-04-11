@@ -34,9 +34,9 @@ RSpec.describe DayOff, type: :model do
 
     describe '.morning_day_offs' do
       it 'returns day off for morning for certain date' do
-        create(:day_off, start_time: Time.new(2024, 1, 1, 13), end_time: Time.new(2024, 1, 1).end_of_day,
+        create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
                          user_id: user.id)
-        morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2).change(hour: 13),
+        morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
 
         expect(DayOff.morning_day_offs(Time.new(2024, 1, 8))).to eq([DayOff.first])
@@ -84,13 +84,17 @@ RSpec.describe DayOff, type: :model do
   end
   describe '#available_days' do
     it 'returns the available days if the days are not taken by other users' do
-      create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 2).end_of_day, user_id: user.id)
+      create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1).end_of_day, user_id: user.id)
       create(:day_off, start_time: Time.new(2024, 1, 3), end_time: Time.new(2024, 1, 3).end_of_day, user_id: user.id)
       create(:day_off, start_time: Time.new(2024, 1, 4), end_time: Time.new(2024, 1, 4).end_of_day, user_id: user.id)
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 5, 0), end_time: Time.new(2024, 1, 5, 15),
+                                     user_id: user.id)
+      evening_off = create(:day_off, start_time: Time.new(2024, 1, 6, 15), end_time: Time.new(2024, 1, 6).end_of_day,
+                                     user_id: user.id)
 
-      day_off = DayOff.new(start_time: Time.new(2024, 1, 3), end_time: Time.new(2024, 1, 6), user_id: user.id)
+      day_off = DayOff.new(start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 6), user_id: user.id)
 
-      expect(day_off.available_days).to eq([Time.new(2024, 1, 5).to_date, Time.new(2024, 1, 6).to_date])
+      expect(day_off.available_days).to eq([Date.new(2024, 1, 1), Time.new(2024, 1, 5)])
     end
   end
   describe '#off_dates' do
@@ -99,22 +103,22 @@ RSpec.describe DayOff, type: :model do
       day_off = create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 4).end_of_day,
                                  user_id: user.id)
 
-      expect(day_off.off_dates).to eq([Time.new(2024, 1, 1), Time.new(2024, 1, 2), Time.new(2024, 1, 3),
-                                       Time.new(2024, 1, 4)])
+      expect(day_off.off_dates).to eq([Date.new(2024, 1, 1), Date.new(2024, 1, 2), Date.new(2024, 1, 3),
+                                       Date.new(2024, 1, 4)])
     end
   end
 
   describe '#taken_days' do
     it 'returns the taken days if some days are already taken from other user' do
       user = create(:user)
-      create(:day_off, start_time: Time.new(2024, 1, 7), end_time: Time.new(2024, 1, 7), user_id: user.id)
-      create(:day_off, start_time: Time.new(2024, 1, 1),
-                       end_time: Time.new(2024, 1, 1) + 3.days, user_id: user.id)
-      day_off = DayOff.new(start_time: Time.new(2024, 1, 1),
-                           end_time: Time.new(2024, 1, 8), user_id: user.id)
 
-      expect(day_off.taken_days).to eq([Time.new(2024, 1, 1), Time.new(2024, 1, 2), Time.new(2024, 1, 3),
-                                        Time.new(2024, 1, 4), Time.new(2024, 1, 7)])
+      create(:day_off, start_time: Date.new(2024, 1, 1), end_time: Date.new(2024, 1, 4), user_id: user.id)
+      create(:day_off, start_time: Date.new(2024, 1, 7), end_time: Date.new(2024, 1, 7), user_id: user.id)
+
+      day_off = DayOff.new(start_time: Date.new(2024, 1, 1), end_time: Date.new(2024, 1, 8), user_id: user.id)
+
+      expect(day_off.taken_days).to eq([Date.new(2024, 1, 1), Date.new(2024, 1, 2), Date.new(2024, 1, 3),
+                                        Date.new(2024, 1, 4), Date.new(2024, 1, 7)])
     end
   end
 
@@ -123,14 +127,14 @@ RSpec.describe DayOff, type: :model do
     before do
       create(
         :day_off,
-        start_time: Time.new(2024, 1, 7),
-        end_time: Time.new(2024, 1, 7).end_of_day,
+        start_time: Time.new(2024, 1, 1),
+        end_time: Time.new(2024, 1, 4).end_of_day,
         user_id: user.id
       )
       create(
         :day_off,
-        start_time: Time.new(2024, 1, 1),
-        end_time: Time.new(2024, 1, 4).end_of_day,
+        start_time: Time.new(2024, 1, 7),
+        end_time: Time.new(2024, 1, 7).end_of_day,
         user_id: user.id
       )
     end
