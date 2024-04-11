@@ -34,7 +34,7 @@ RSpec.describe DayOff, type: :model do
 
     describe '.morning_day_offs' do
       it 'returns day off for morning for certain date' do
-        create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
+        evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
                          user_id: user.id)
         morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
@@ -94,7 +94,7 @@ RSpec.describe DayOff, type: :model do
 
       day_off = DayOff.new(start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 6), user_id: user.id)
 
-      expect(day_off.available_days).to eq([Date.new(2024, 1, 1), Time.new(2024, 1, 5)])
+      expect(day_off.available_days).to eq(["2024-01-02 All Day", "2024-01-05 3PM - 9PM", "2024-01-06 8AM - 3PM"])
     end
   end
   describe '#off_dates' do
@@ -183,6 +183,12 @@ RSpec.describe DayOff, type: :model do
         end_time: Time.new(2024, 1, 7).end_of_day,
         user_id: user.id
       )
+      create(
+        :day_off,
+        start_time: Time.new(2024, 1, 8),
+        end_time: Time.new(2024, 1, 8, 15),
+        user_id: user.id
+      )
     end
     describe 'any_of_days_taken?' do
       it 'returns true if any of the days are taken' do
@@ -222,8 +228,8 @@ RSpec.describe DayOff, type: :model do
 
       it 'adds "All Dates are already taken" error message if all days are taken' do
         day_off = DayOff.new(
-          start_time: Time.new(2024, 1, 2),
-          end_time: Time.new(2024, 1, 3).end_of_day,
+          start_time: Time.new(2024, 1, 1),
+          end_time: Time.new(2024, 1, 1, 15),
           user_id: user.id
         )
 
@@ -240,7 +246,7 @@ RSpec.describe DayOff, type: :model do
         )
 
         day_off.save
-        expect(day_off.errors.full_messages).to include('Available dates are [2024-01-08, 2024-01-09, 2024-01-10]. Sorry, other day(s) is/are taken.')
+        expect(day_off.errors.full_messages).to include('Available dates are [2024-01-08 3PM - 9PM, 2024-01-09 All Day, 2024-01-10 All Day]. Sorry, other day(s) is/are taken.')
       end
     end
   end
