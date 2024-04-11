@@ -122,6 +122,52 @@ RSpec.describe DayOff, type: :model do
     end
   end
 
+  describe '#morning_off?' do
+    it 'returns true if the day is morning off' do
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15),
+                                     user_id: user.id)
+
+      expect(morning_off.morning_off?(Time.new(2024, 1, 1))).to eq(true)
+    end
+    it 'returns false if the day is NOT morning off' do
+      evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1, 17),
+                                 user_id: user.id)
+
+      expect(evening_off.morning_off?(Time.new(2024, 1, 1))).to eq(false)
+    end
+  end
+
+  describe '#evening_off?' do
+    it 'returns true if the day is evening off' do
+      evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1, 17))
+
+      expect(evening_off.evening_off?(Time.new(2024, 1, 1))).to eq(true)
+    end
+
+    it 'returns false if the day is NOT evening off' do
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15))
+
+      expect(morning_off.evening_off?(Time.new(2024, 1, 1))).to eq(false)
+    end
+  end
+
+  describe '#all_day_off?' do
+    it 'returns true if the day is all day off' do
+      all_day_off = create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1).end_of_day)
+
+      expect(all_day_off.all_day_off?(Time.new(2024, 1, 1))).to eq(true)
+    end
+
+    it 'returns false if the day is NOT all day off' do
+      morning_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15))
+      evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day)
+
+      expect(morning_off.all_day_off?(Time.new(2024, 1, 1))).to eq(false)
+      expect(evening_off.all_day_off?(Time.new(2024, 1, 1))).to eq(false)
+    end
+  end
+
+
   describe '#validations' do
     let(:user) { create(:user) }
     before do

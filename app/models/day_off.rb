@@ -58,11 +58,9 @@ class DayOff < ApplicationRecord
   end
 
   def check_days_taken
-
     return true unless taken_days.present?
 
     availability = DayOff.where(' start_time <= ? AND end_time <= ?', start_time, end_time).present?
-
 
     if available_days.empty?
       errors.add(:base, 'All dates are already taken')
@@ -75,63 +73,62 @@ class DayOff < ApplicationRecord
     false
   end
 
-  # def taken_days
-  #   off_dates.select do |date|
-  #     # Query other DayOff records that overlap with the current date
-  #     overlapping_day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
-  #                                  .where.not(id:) # Exclude the current DayOff instance
-
-  #     # Check if there are any records found, indicating the day is taken
-  #     overlapping_day_offs.exists?
-  #   end.sort
-  # end
   def taken_days
     off_dates.select do |date|
-      overlapping_day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
-                                   .where.not(id:) # Assuming 'id' refers to 'self.id'
+      # Query other DayOff records that overlap with the current date
+      overlapping_day_offs = DayOff.where(
+        "DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
+        DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date, date
+      )
+                                   .where.not(id:) # Exclude the current DayOff instance
 
-      # Initialize flags for each day
-      is_morning_off_taken = false
-      is_evening_off_taken = false
-
-      overlapping_day_offs.each do |day_off|
-        if day_off.all_day_off?(date)
-          is_morning_off_taken = true
-          is_evening_off_taken = true
-          break # All day is taken, no need to check further
-        end
-
-        is_morning_off_taken ||= day_off.morning_off?(date)
-        is_evening_off_taken ||= day_off.evening_off?(date)
-      end
-
-      # If both morning and evening are taken, consider the day as taken
-      is_morning_off_taken && is_evening_off_taken
+      # Check if there are any records found, indicating the day is taken
+      overlapping_day_offs.exists?
     end.sort
   end
+  # def taken_days
+  #   off_dates.select do |date|
+  #     overlapping_day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
+  #                                  .where.not(id:) # Assuming 'id' refers to 'self.id'
+
+  #     # Initialize flags for each day
+  #     is_morning_off_taken = false
+  #     is_evening_off_taken = false
+
+  #     overlapping_day_offs.each do |day_off|
+  #       if day_off.all_day_off?(date)
+  #         is_morning_off_taken = true
+  #         is_evening_off_taken = true
+  #         break # All day is taken, no need to check further
+  #       end
+
+  #       is_morning_off_taken ||= day_off.morning_off?(date)
+  #       is_evening_off_taken ||= day_off.evening_off?(date)
+  #     end
+
+  #     # If both morning and evening are taken, consider the day as taken
+  #     is_morning_off_taken && is_evening_off_taken
+  #   end.sort
+  # end
 
   def available_days
     # Assume `off_dates` is an array of Date objects representing the range from `start_time` to `end_time`.
-    all_dates = off_dates.map(&:to_date).uniq
-
-    available_all_days = all_dates.select do |date|
+    available_all_days = off_dates.select do |date|
       # Check if there's any DayOff covering this date.
-      DayOff.where('? BETWEEN start_time AND end_time', date)
-            .where.not(id:).none?
     end
-
-    half_day_available_days = all_dates.select do |date|
-      day_offs = DayOff.where('? BETWEEN start_time AND end_time', date)
-                       .where.not(id:)
+    debugger
+    half_day_available_days = off_dates.select do |date|
+      day_offs_for_date = DayOff.where('? BETWEEN start_time AND end_time', date)
+                                .where.not(id:)
 
       # Split into morning and evening checks
-      morning_off_taken = day_offs.any? { |day_off| day_off.morning_off?(date) }
-      evening_off_taken = day_offs.any? { |day_off| day_off.evening_off?(date) }
+      morning_off_taken = morning_day_offs(date)
+      evening_off_taken = day_offs_for_date.any? { |day_off| day_off.evening_off?(date) }
 
       # If only morning or evening is taken, the other half is available
       morning_off_taken != evening_off_taken
     end
-
+    debugger
     # Combine and uniquify all and half-day available days
     (available_all_days + half_day_available_days).uniq.sort.map do |date|
       day_offs = DayOff.where(
