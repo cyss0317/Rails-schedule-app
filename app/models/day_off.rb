@@ -50,13 +50,13 @@ class DayOff < ApplicationRecord
 
   def morning_off?(date)
     morning_end = date.in_time_zone('America/Chicago').change(hour: 15).change(min: 0)
-    start_time >= date.in_time_zone('America/Chicago').beginning_of_day && end_time <= morning_end
+    start_time >= date.in_time_zone('America/Chicago').beginning_of_day && (end_time - 1.second) <= morning_end
   end
 
   def evening_off?(date)
     morning_end = date.in_time_zone('America/Chicago').change(hour: 15).change(min: 0)
     evening_end = date.in_time_zone('America/Chicago').end_of_day
-    start_time >= morning_end && end_time <= evening_end
+    (start_time + 1.second) >= morning_end && end_time <= evening_end
   end
 
   def half_day_taken?(date)
@@ -70,13 +70,13 @@ class DayOff < ApplicationRecord
   end
 
   def check_days_taken
-    return true unless taken_days.present?
+    return true unless any_of_days_taken?
 
     # return true unless DayOff.for_day_filtered_by_datetime(start_time, end_time).present?
     half_day_offs = taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
     # check if any of half day offs is morning off, if yes, check if evening off availability with evenging_off_available scope
     if half_day_offs.present?
-      evening_off_availability = half_day_offs.select { |date| DayOff.morning_day_offs(date).count > 1 }
+      evening_off_availability = half_day_offs.select { |date| DayOff.morning_day_offs(date).present? }
       return true if evening_off_availability
     end
 
@@ -114,15 +114,26 @@ class DayOff < ApplicationRecord
       evening_off_taken = DayOff.evening_day_offs(date)
       # Filter out all-day offs and returns days for where only one half is taken
       !DayOff.all_day_offs(date).present? && (morning_off_taken != evening_off_taken)
-    # !DayOff.all_day_offs(date).present? && (morning_off_taken.count > 1 || evening_off_taken.count > 1)
+      # !DayOff.all_day_offs(date).present? && (morning_off_taken.count > 1 || evening_off_taken.count > 1)
     end
     # Combine and uniquify all and half-day available days
-    debugger
     (available_all_days + half_day_available_days).uniq.sort.map do |date|
       day_offs = DayOff.where(
         "DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
         DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date, date
       )
+
+      # half_day_offs = taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
+      # # check if any of half day offs is morning off, if yes, check if evening off availability with evenging_off_available scope
+      # if half_day_offs.present?
+      #   evening_off_availability = half_day_offs.select { |date| DayOff.morning_day_offs(date).count > 1 }
+      #   return true if evening_off_availability
+      # end
+      # availability = check_days_taken
+      availability = DayOff.where('start_time <= ? AND end_time >= ?', start_time, end_time).count == 0
+      morning_off = taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
+      evening_off = taken_days.select { |date| half_day_taken?(date) && DayOff.evening_day_offs(date) }
+      # return "" if availability
 
       if day_offs.any? { |day_off| day_off.morning_off?(date) }
         "#{date} 3PM - 9PM" # Evening available
