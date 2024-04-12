@@ -40,10 +40,13 @@ class DayOffsController < ApplicationController
 
   def destroy
     @day_off = DayOff.find(params[:id])
+    deleted_day_off_start_time = @day_off.start_time
     @day_off.delete
 
     respond_to do |format|
-      format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully deleted day off' }
+      format.html do
+        redirect_to meetings_weekly_path(deleted_day_off_start_time), notice: 'Successfully deleted day off'
+      end
       format.json { head :no_content }
     end
   end

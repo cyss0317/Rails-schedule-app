@@ -98,8 +98,7 @@ class Meeting < ApplicationRecord
   end
 
   def table_row_height
-    ((end_time.hour + end_time.min / 60.00) - (start_time.hour + start_time.min / 60.00)) * HOUR_HEIGHT_IN_PX
-    # (end_time.hour - start_time.hour) * HOUR_HEIGHT_IN_PX + ((start_time.min + end_time.min) / 60.00).round(2) * HOUR_HEIGHT_IN_PX
+    (end_time.hour - start_time.hour) * HOUR_HEIGHT_IN_PX + (end_time.min / 60.00).round(2) * HOUR_HEIGHT_IN_PX
   end
 
   def table_row_top_shift

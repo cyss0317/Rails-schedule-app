@@ -111,18 +111,63 @@ class MeetingsController < ApplicationController
 
   def select_options_for_users
     start_date = params[:start_date]&.to_date || @meeting&.start_time || DateTime.now.beginning_of_week
-    off_user = DayOff.for_day(start_date)[0]&.user
+    off_users_ids = DayOff.for_day_filtered_by_date(start_date).map { |off| off.user.id }
+    morning_day_off_users_ids = DayOff.for_day_filtered_by_date(start_date).select do |off|
+      off.morning_off?(start_date)
+    end.map(&:user_id)
+    evening_day_off_users_ids = DayOff.for_day_filtered_by_date(start_date).select do |off|
+      off.evening_off?(start_date)
+    end.map(&:user_id)
 
-    @users = if off_user.nil?
+    unavailable_to_work_employee_ids = off_users_ids - morning_day_off_users_ids - evening_day_off_users_ids
+
+    # if day_offs.any? { |day_off| day_off.morning_off?(date) }
+    #   "#{date} 3PM - 9PM" # Evening available
+    # elsif day_offs.any? { |day_off| day_off.evening_off?(date) }
+    #   "#{date} 8AM - 3PM" # Morning available
+    # else
+    #   "#{date} All Day" # Whole day available
+    # end
+
+    @users = if unavailable_to_work_employee_ids.empty?
                User.sort_by_first_name.pluck(:first_name, :last_name,
                                              :id).map do |first_name, last_name, id|
-                 ["#{first_name} #{last_name}", id]
+                 if morning_day_off_users_ids&.include?(id)
+                   [
+                     "#{first_name} #{last_name}, Off 9AM - 3PM", id
+                   ]
+                 elsif evening_day_off_users_ids&.include?(id)
+                   [
+                     "#{first_name} #{last_name}, Off 3PM - 8PM", id
+                   ]
+                 else
+                   [
+                     "#{first_name} #{last_name}", id
+                   ]
+                 end
                end
              else
-               User.sort_by_first_name.where.not(id: off_user.id).pluck(:first_name, :last_name,
-                                                                        :id).map do |first_name, last_name, id|
-                 ["#{first_name} #{last_name}", id]
+               User.sort_by_first_name.where.not(id: unavailable_to_work_employee_ids).pluck(:first_name, :last_name,
+                                                                                             :id).map do |first_name, last_name, id|
+                 if morning_day_off_users_ids&.include?(id)
+                   [
+                     "#{first_name} #{last_name}, Off 9AM - 3PM", id
+                   ]
+                 elsif evening_day_off_users_ids&.include?(id)
+                   [
+                     "#{first_name} #{last_name}, Off 3PM - 8PM", id
+                   ]
+                 else
+                   [
+                     "#{first_name} #{last_name}", id
+                   ]
+                 end
                end
+
+               #  User.sort_by_first_name.where(id: available_to_work_employee_ids).pluck(:first_name, :last_name,
+               #                                                                  :id).map do |first_name, last_name, id|
+               #    ["#{first_name} #{last_name}", id]
+               #  end
              end
   end
 

@@ -6,10 +6,12 @@
       <div class="empty-tr overflow-auto">
         <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
           <div class="employee-hours">Total Hours:</div>
-          <% @users_total_hours_for_week.each do |user, hours|  %>
-            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}: #{hours}" %> </div>
-          <% end %>
+        <% else %>
+          <div class="employee-hours">Employee:</div>
         <% end %>
+          <% @users_total_hours_for_week.each do |user, hours|  %>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ": #{hours}" if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %> </div>
+          <% end %>
       </div>
       <% date_range.slice(0, 7).each do |day| %>
         <div class="weekly-date">
@@ -17,13 +19,24 @@
           <p><%= "#{t('date.abbr_day_names')[day.wday]}" %></p>
 
 
-          <% if DayOff.for_day(day).present? %>
-            <% day_off = DayOff.for_day(day.to_date)[0]  %>
-            <% if current_user.first_name == day_off.user.first_name %>
-              <p><%= link_to "#{day_off.user.first_name} OFF", edit_day_off_url(day_off.id), class: "day-off your-day-off" %></p>
-            <% else %>
-              <p class="day-off "> <%= day_off.user.first_name %> OFF</p>
+          <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
+            <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
+            <% day_offs.each do |day_off| %>
+                <% if current_user.first_name == day_off.user.first_name %>
+                  <p><%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off your-day-off" %></p>
+                <% else %>
+                  <p class="day-off "> <%= day_off.off_time_info(day.in_time_zone)%> </p>
+                <% end %>
+
+                <% if day_offs.length == 2 %>
+
+                <% elsif day_off.morning_off?(day.in_time_zone) %>
+                  <p> <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "request-day-off-btn" %> </p>
+                <% elsif day_off.evening_off?(day.in_time_zone)%>
+                  <p> <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "request-day-off-btn" %> </p>
+                <% end %>
             <% end %>
+
             <%# TODO: if it is admin user, need to let them edit or not? %>
             <%# TODO: if it is yourselv, we should display link to edit %>
           <% else %>
