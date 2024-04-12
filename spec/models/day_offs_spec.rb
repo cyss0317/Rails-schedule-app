@@ -47,8 +47,9 @@ RSpec.describe DayOff, type: :model do
 
     describe '.evening_day_offs' do
       it 'ONLY returns day off for evening for certain date' do
-        evening_day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 13), end_time: Time.new(2024, 1, 1).end_of_day.change(sec: 0),
+        evening_day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day.change(sec: 0),
                                            user_id: user.id)
+        monring_day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15))
 
         expect(DayOff.evening_day_offs(Time.new(2024, 1, 8))).to eq([])
         expect(DayOff.evening_day_offs(Time.new(2024, 1, 1))).to eq([evening_day_off])

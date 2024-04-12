@@ -24,7 +24,7 @@ class DayOff < ApplicationRecord
                              for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.change(hour: 8), date.change(hour: 15))
                            }
   scope :evening_day_offs, lambda { |date|
-                             for_day_filtered_by_date(date).where('start_time <= ? AND end_time <= ?', date.change(hour: 15), date.end_of_day)
+                             for_day_filtered_by_date(date).where('start_time >= ? AND end_time <= ?', date.change(hour: 15), date.end_of_day)
                            }
   scope :all_day_offs, lambda { |date|
     for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.beginning_of_day, date.end_of_day)

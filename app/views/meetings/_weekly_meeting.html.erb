@@ -1,8 +1,9 @@
   <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
     <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", edit_meeting_path(meeting),
       {  
-        class: "weekly-meeting #{classes} admin",
+        class: "weekly-meeting shadow #{classes} admin",
         style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
+          opacity: #{1 - (hour_idx * 0.015)};
           height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
           left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
       } 
@@ -10,8 +11,9 @@
   <% else %>
     <%= content_tag :div, "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}",
       {  
-        class: "weekly-meeting #{classes}",
+        class: "weekly-meeting shadow #{classes}",
         style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
+          opacity: #{1 - (hour_idx * 0.015)};
           height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
           left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
       } 
