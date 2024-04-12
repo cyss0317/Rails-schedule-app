@@ -229,7 +229,6 @@ RSpec.describe DayOff, type: :model do
           user_id: user.id
         )
 
-        debugger
         expect(day_off.any_of_days_taken?).to eq(false)
       end
     end
@@ -267,7 +266,7 @@ RSpec.describe DayOff, type: :model do
         )
 
         day_off.save
-        debugger
+
         expect(day_off.errors.full_messages).to include('Available dates are [2024-01-11 All Day]. Sorry, other day(s) is/are taken.')
       end
       it 'does NOT add any errors if there is no DayOff object within the time frame' do
@@ -279,6 +278,7 @@ RSpec.describe DayOff, type: :model do
         )
 
         day_off.save
+
         expect(day_off.errors.full_messages).to be_empty
       end
     end

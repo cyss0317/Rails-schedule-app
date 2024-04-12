@@ -6,10 +6,12 @@
       <div class="empty-tr overflow-auto">
         <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
           <div class="employee-hours">Total Hours:</div>
-          <% @users_total_hours_for_week.each do |user, hours|  %>
-            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}: #{hours}" %> </div>
-          <% end %>
+        <% else %>
+          <div class="employee-hours">Employee:</div>
         <% end %>
+          <% @users_total_hours_for_week.each do |user, hours|  %>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ": #{hours}" if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %> </div>
+          <% end %>
       </div>
       <% date_range.slice(0, 7).each do |day| %>
         <div class="weekly-date">
