@@ -6,31 +6,30 @@
 
         <div class="monthly-date"> <%= date.day %> </div>
 
-          <%= link_to meetings_weekly_path(start_date: date) do %>
-          <div class="monthly-shifts">
-            <% if DayOff.for_day_filtered_by_date(date).present? %>
-              <% day_offs = DayOff.for_day_filtered_by_date(date.in_time_zone)  %>
-              <% day_offs.each do |day_off| %>
-                <div class="day-off-monthly">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+          <%= link_to meetings_weekly_path(start_date: date), class: "flex flex-col gap-2" do %>
+            <div class="monthly-shifts">
+              <% if DayOff.for_day_filtered_by_date(date).present? %>
+                <% day_offs = DayOff.for_day_filtered_by_date(date.in_time_zone)  %>
+                <% day_offs.each do |day_off| %>
+                  <div class="day-off-monthly">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% end %>
               <% end %>
-            <% end %>
-            <% if morning_shifts.present? %>
-              <div class="morning-shift">
-                <% morning_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-                <% end %>
-              </div>
-            <% end %>
+              <% if morning_shifts.present? %>
+                <div class="morning-shift">
+                  <% morning_shifts.each do |meeting| %>
+                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+                  <% end %>
+                </div>
+              <% end %>
 
-            <% if evening_shifts.present? %>
-              <div class="evening-shift">
-                <% evening_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
-                <% end %>
-              </div>
-            <% end %>
-
-          </div>
+              <% if evening_shifts.present? %>
+                <div class="evening-shift">
+                  <% evening_shifts.each do |meeting| %>
+                    <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
 
       <% end  %>
     <% end %>
