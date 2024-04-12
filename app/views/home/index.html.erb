@@ -9,13 +9,17 @@
           <%= link_to meetings_weekly_path(start_date: date), class: "flex flex-col gap-2" do %>
             <div class="monthly-shifts">
               <% if DayOff.for_day_filtered_by_date(date).present? %>
-                <% day_offs = DayOff.for_day_filtered_by_date(date.in_time_zone)  %>
-                <% day_offs.each do |day_off| %>
-                  <div class="day-off-monthly">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% morning_day_offs = DayOff.morning_day_offs(date.in_time_zone)  %>
+                <% evening_day_offs = DayOff.evening_day_offs(date.in_time_zone)  %>
+                <% morning_day_offs.each do |day_off| %>
+                  <div class="day-off-morning-monthly shadow">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% end %>
+                 <% evening_day_offs.each do |day_off| %>
+                  <div class="day-off-evening-monthly shadow">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
                 <% end %>
               <% end %>
               <% if morning_shifts.present? %>
-                <div class="morning-shift">
+                <div class="morning-shift shadow">
                   <% morning_shifts.each do |meeting| %>
                     <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
                   <% end %>
@@ -23,7 +27,7 @@
               <% end %>
 
               <% if evening_shifts.present? %>
-                <div class="evening-shift">
+                <div class="evening-shift shadow">
                   <% evening_shifts.each do |meeting| %>
                     <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting} %>
               <% end %>
