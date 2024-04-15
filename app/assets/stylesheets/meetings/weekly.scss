@@ -27,6 +27,10 @@ $number-of-hour-cells: 16;
   transition: top 0.3s ease-in-out; /* Transition for smooth movement */
 }
 
+.line-height-50 {
+  line-height: 50px;
+}
+
 .weekly-calendar {
   .table {
     .empty-tr {
@@ -40,17 +44,29 @@ $number-of-hour-cells: 16;
       }
     }
 
-    .day-off {
-      color: purple;
-    }
     .your-day-off {
       &:hover {
         color: $text-color;
       }
     }
 
+    .day-off-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      max-width: 100%;
+      gap: 0.5rem;
+      height: 51px;
+
+      @media (min-width: 368px) and (max-width: 768px) {
+        height: 100px;
+      }
+
+    }
     .request-day-off-btn {
       color: $today-date-color;
+      background: transparent;
     }
     .today {
       // border: 1px solid #0b57d0;
@@ -90,6 +106,8 @@ $number-of-hour-cells: 16;
     .employee-hours {
       font-size: 12px;
       border-radius: 10px;
+      padding: 0;
+      text-align: center;
     }
 
     .table-header {
@@ -114,11 +132,18 @@ $number-of-hour-cells: 16;
 
       .weekly-date {
         border-bottom: 1px solid $table-border-color;
-        margin-top: 5px;
+        padding: 3px;
+        gap: 0.25rem;
         display: flex;
         justify-content: center;
         flex-direction: column;
         align-items: center;
+
+        // > div, >p {
+        //   background: transparent;
+        //   width:100%;
+        //   height:50px;
+        // }
 
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;
@@ -130,8 +155,8 @@ $number-of-hour-cells: 16;
 
         * {
           border: none;
-          padding: 0 0.5rem 0 0.5rem;
-          margin-bottom: 0.25rem;
+          padding: 0 0.25rem 0 0.25rem;
+          margin-bottom: 0;
         }
       }
 

@@ -55,9 +55,9 @@ class DayOff < ApplicationRecord
   def off_time_info(date)
     which_shift_off = if start_time.to_date <= date.to_date && end_time.to_date >= date.to_date
                         if morning_off?(date)
-                          'Morning'
+                          ''
                         elsif evening_off?(date)
-                          'Evening'
+                          ''
                         else
                           'All Day'
                         end
@@ -65,6 +65,20 @@ class DayOff < ApplicationRecord
                         'No Day Off'
                       end
     "#{user.first_name}, #{which_shift_off} Off"
+  end
+
+  def off_time_class(date)
+    if start_time.to_date <= date.to_date && end_time.to_date >= date.to_date
+      if morning_off?(date)
+        'morning-color'
+      elsif evening_off?(date)
+        'evening-color'
+      else
+        'all-color line-height-50'
+      end
+    else
+      ''
+    end
   end
 
   def morning_off?(date)
