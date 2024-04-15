@@ -90,11 +90,14 @@ class Meeting < ApplicationRecord
   end
 
   def morning_shift?
-    start_time.hour < 15
+    morning_end = start_time.to_date.in_time_zone('America/Chicago').change(hour: 15).change(min: 0)
+    start_time >= start_time.to_date.in_time_zone('America/Chicago').beginning_of_day && (end_time - 1.second) <= morning_end
   end
 
   def evening_shift?
-    start_time.hour >= 15
+    morning_end = start_time.to_date.in_time_zone('America/Chicago').change(hour: 15).change(min: 0)
+    evening_end = start_time.to_date.in_time_zone('America/Chicago').end_of_day
+    (start_time + 1.second) >= morning_end && end_time <= evening_end
   end
 
   def table_row_height
