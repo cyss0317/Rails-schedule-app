@@ -35,6 +35,4 @@ RSpec.describe 'DayOffs', type: :request do
       end.to change(DayOff, :count).by(0)
     end
   end
-
-  
 end

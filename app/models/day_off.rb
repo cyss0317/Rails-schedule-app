@@ -163,9 +163,9 @@ class DayOff < ApplicationRecord
       #   return true if evening_off_availability
       # end
       # availability = check_days_taken
-      availability = DayOff.where('start_time <= ? AND end_time >= ?', start_time, end_time).count == 0
-      morning_off = taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
-      evening_off = taken_days.select { |date| half_day_taken?(date) && DayOff.evening_day_offs(date) }
+      DayOff.where('start_time <= ? AND end_time >= ?', start_time, end_time).count
+      taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
+      taken_days.select { |date| half_day_taken?(date) && DayOff.evening_day_offs(date) }
       # return "" if availability
 
       if day_offs.any? { |day_off| day_off.morning_off?(date) }
