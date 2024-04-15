@@ -1,9 +1,8 @@
 @import "../variables.scss";
 @import "../calendar/header.scss";
 
-.day-off-morning-monthly {
-  background-color: $theme-yellow-faded;
-  color: $theme-black-faded;
+
+.day-off {
   border-radius: 0.5rem;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -13,17 +12,7 @@
   text-align: center;
 }
 
-.day-off-evening-monthly {
-  background-color: $theme-navy-faded;
-  color: $theme-white;
-  border-radius: 0.5rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  outline: 2px solid #7c47b2;
-  border: 2px solid white;
-  text-align: center;
-}
+
 
 .monthly-shifts > * {
   min-width: 82px;

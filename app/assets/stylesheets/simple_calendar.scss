@@ -12,6 +12,21 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+.morning-color {
+  background-color: $theme-yellow-faded;
+  color: $theme-black-faded;
+}
+.evening-color{
+  background-color: $theme-navy-faded;
+  color: $theme-white;
+}
+
+.all-color {
+  background: linear-gradient(90deg, $theme-yellow-faded, $theme-navy-faded);
+  color: $theme-black-faded;
+}
+
+
 .monthly-calendar {
   // margin: 1.5rem;
   table.table-header {
