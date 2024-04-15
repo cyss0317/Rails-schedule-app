@@ -12,6 +12,21 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+.morning-color {
+  background: $theme-yellow-faded !important;
+  color: $theme-black-faded;
+}
+.evening-color{
+  background: $theme-navy-faded !important;
+  color: $theme-white;
+}
+
+.all-color {
+  background: linear-gradient(90deg, $theme-yellow-faded, $theme-navy-faded) !important;
+  color: $theme-white;
+}
+
+
 .monthly-calendar {
   // margin: 1.5rem;
   table.table-header {
@@ -44,6 +59,7 @@
     color: $text-color;
     font-size: 20px;
     width: calc($monthly-table-body-column-width / 7);
+    text-align: center;
   }
 
   .wday-0 {

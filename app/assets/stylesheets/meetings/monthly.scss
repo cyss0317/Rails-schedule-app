@@ -1,28 +1,23 @@
 @import "../variables.scss";
 @import "../calendar/header.scss";
 
-.day-off-morning-monthly {
-  background-color: $theme-yellow-faded;
-  color: $theme-black-faded;
+.day-off {
   border-radius: 0.5rem;
   white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  width: 100%;
   outline: 2px solid #7c47b2;
   border: 2px solid white;
   text-align: center;
-}
+  height: 100%;
 
-.day-off-evening-monthly {
-  background-color: $theme-navy-faded;
-  color: $theme-white;
-  border-radius: 0.5rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  outline: 2px solid #7c47b2;
-  border: 2px solid white;
-  text-align: center;
+  @media (min-width: 368px) and (max-width: 768px) {
+    width: 100%;
+    white-space: normal;
+  }
+  @media (min-width: 768px) {
+    white-space: normal;
+  }
 }
 
 .monthly-shifts > * {
@@ -39,12 +34,13 @@
 
 .morning-shift {
   border-radius: 0.5rem;
-  background-color: $theme-yellow-faded;
   outline: 2px solid $theme-yellow-faded;
   border: 1px solid white;
 
   li {
     position: relative;
+    text-align: center;
+
     color: $title-color;
     a {
       color: $title-color;
@@ -58,6 +54,7 @@
 
   li.current-user-shift {
     font-weight: bold;
+    text-align: center;
 
     &::before {
       content: "Shift";
@@ -71,6 +68,7 @@
     a {
       // color: $theme-yellow;
       font-weight: bold;
+      text-align: center;
 
       &::before {
         content: "Shift";
@@ -85,14 +83,15 @@
   }
 }
 
-.evening-shift {
+.evening-shifts {
   border-radius: 0.5rem;
-  background-color: $theme-navy-faded;
   outline: 2px solid $theme-navy-faded;
   border: 1px solid white;
 
   li {
     position: relative;
+    text-align: center;
+
     color: $theme-white;
     a {
       color: $theme-white;
@@ -106,6 +105,7 @@
 
   li.current-user-shift {
     font-weight: bold;
+    text-align: center;
 
     &::before {
       content: "Shift";
@@ -119,6 +119,71 @@
     a {
       // color: $theme-yellow;
       font-weight: bold;
+      text-align: center;
+
+      &::before {
+        content: "Shift";
+        color: $red;
+        display: block;
+        position: absolute;
+        transform: rotate(-45deg);
+        top: -6px;
+        left: -18px;
+      }
+    }
+  }
+}
+
+.all-day-shifts::after {
+  content: "";
+  position: absolute;
+  top: -2.5px; /* Adjust based on the desired thickness of the border */
+  left: -2.5px; /* Adjust based on the desired thickness of the border */
+  right: -2.5px; /* Adjust based on the desired thickness of the border */
+  bottom: -2.5px; /* Adjust based on the desired thickness of the border */
+  z-index: -1;
+  background: linear-gradient(90deg, #fca31156, #002e4f56);
+  border-radius: inherit; /* If the main element has rounded corners */
+}
+
+.all-day-shifts {
+  position: relative;
+  border-radius: 0.5rem;
+  // outline-top: 2px solid linear-gradient($theme-navy-faded, $theme-yellow-faded );
+  // outline: 2px solid red;
+  border: 1px solid white;
+
+  li {
+    position: relative;
+    color: $theme-white;
+    text-align: center;
+    a {
+      color: $theme-white;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid $theme-white;
+    }
+  }
+
+  li.current-user-shift {
+    font-weight: bold;
+    text-align: center;
+
+    &::before {
+      content: "Shift";
+      color: $red;
+      display: block;
+      position: absolute;
+      transform: rotate(-45deg);
+      top: -6px;
+      left: -18px;
+    }
+    a {
+      // color: $theme-yellow;
+      font-weight: bold;
+      text-align: center;
 
       &::before {
         content: "Shift";

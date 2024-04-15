@@ -34,7 +34,7 @@ RSpec.describe DayOff, type: :model do
 
     describe '.morning_day_offs' do
       it 'returns day off for morning for certain date' do
-        evening_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
+        create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
                                        user_id: user.id)
         morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
