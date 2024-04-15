@@ -55,9 +55,9 @@ class DayOff < ApplicationRecord
   def off_time_info(date)
     which_shift_off = if start_time.to_date <= date.to_date && end_time.to_date >= date.to_date
                         if morning_off?(date)
-                          ''
+                          'Morning'
                         elsif evening_off?(date)
-                          ''
+                          'Evening'
                         else
                           'All Day'
                         end

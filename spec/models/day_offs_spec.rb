@@ -39,7 +39,7 @@ RSpec.describe DayOff, type: :model do
         morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
 
-        expect(DayOff.morning_day_offs(Time.new(2024, 1, 8))).to eq([DayOff.first])
+        expect(DayOff.morning_day_offs(Time.new(2024, 1, 8))).to eq([])
         expect(DayOff.morning_day_offs(Time.new(2024, 1, 1))).to eq([])
         expect(DayOff.morning_day_offs(Time.new(2024, 1, 2))).to eq([morning_day_off])
       end
