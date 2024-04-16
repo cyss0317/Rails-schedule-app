@@ -3,16 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Homes', type: :request do
+  include Devise::Test::IntegrationHelpers
   describe 'GET /index' do
-    it 'returns http success' do
-      get '/home/index'
-      expect(response).to have_http_status(:success)
+    before do
+      sign_in create(:user)
     end
-  end
 
-  describe 'GET /index' do
     it 'returns http success' do
-      get '/home/index'
+      get '/'
+
       expect(response).to have_http_status(:success)
     end
   end

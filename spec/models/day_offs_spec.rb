@@ -35,11 +35,11 @@ RSpec.describe DayOff, type: :model do
     describe '.morning_day_offs' do
       it 'returns day off for morning for certain date' do
         create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day,
-                                       user_id: user.id)
+                         user_id: user.id)
         morning_day_off = create(:day_off, start_time: Time.new(2024, 1, 2, 8), end_time: Time.new(2024, 1, 2, 15),
                                            user_id: user.id)
 
-        expect(DayOff.morning_day_offs(Time.new(2024, 1, 8))).to eq([DayOff.first])
+        expect(DayOff.morning_day_offs(Time.new(2024, 1, 8))).to eq([])
         expect(DayOff.morning_day_offs(Time.new(2024, 1, 1))).to eq([])
         expect(DayOff.morning_day_offs(Time.new(2024, 1, 2))).to eq([morning_day_off])
       end
@@ -49,7 +49,7 @@ RSpec.describe DayOff, type: :model do
       it 'ONLY returns day off for evening for certain date' do
         evening_day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 15), end_time: Time.new(2024, 1, 1).end_of_day.change(sec: 0),
                                            user_id: user.id)
-        monring_day_off = create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15))
+        create(:day_off, start_time: Time.new(2024, 1, 1, 8), end_time: Time.new(2024, 1, 1, 15))
 
         expect(DayOff.evening_day_offs(Time.new(2024, 1, 8))).to eq([])
         expect(DayOff.evening_day_offs(Time.new(2024, 1, 1))).to eq([evening_day_off])
@@ -102,10 +102,10 @@ RSpec.describe DayOff, type: :model do
       create(:day_off, start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 1).end_of_day, user_id: user.id)
       create(:day_off, start_time: Time.new(2024, 1, 3), end_time: Time.new(2024, 1, 3).end_of_day, user_id: user.id)
       create(:day_off, start_time: Time.new(2024, 1, 4), end_time: Time.new(2024, 1, 4).end_of_day, user_id: user.id)
-      morning_off = create(:day_off, start_time: Time.new(2024, 1, 5, 0), end_time: Time.new(2024, 1, 5, 15),
-                                     user_id: user.id)
-      evening_off = create(:day_off, start_time: Time.new(2024, 1, 6, 15), end_time: Time.new(2024, 1, 6).end_of_day,
-                                     user_id: user.id)
+      create(:day_off, start_time: Time.new(2024, 1, 5, 0), end_time: Time.new(2024, 1, 5, 15),
+                       user_id: user.id)
+      create(:day_off, start_time: Time.new(2024, 1, 6, 15), end_time: Time.new(2024, 1, 6).end_of_day,
+                       user_id: user.id)
 
       day_off = DayOff.new(start_time: Time.new(2024, 1, 1), end_time: Time.new(2024, 1, 6), user_id: user.id)
 

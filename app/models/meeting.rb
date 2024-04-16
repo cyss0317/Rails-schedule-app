@@ -8,15 +8,17 @@ class Meeting < ApplicationRecord
   belongs_to :user
 
   validates :start_time, presence: true
-  validates :end_time, presence: true, date: { after_or_equal_to: :start_time}
+  validates :end_time, presence: true, date: { after_or_equal_to: :start_time }
 
+  scope :current_week_meetings, lambda {
+                                  where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
+                                }
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50
-  def self.default
-    where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
-  end
+
+  def self.default; end
 
   def self.sort_by_start_time
     order(start_time: :asc)

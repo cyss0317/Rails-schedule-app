@@ -4,6 +4,7 @@ class DayOffsController < ApplicationController
   layout 'application'
 
   before_action :load_day_off, only: %i[edit update destroy]
+
   def new
     @day_off = DayOff.new
   end
@@ -54,6 +55,7 @@ class DayOffsController < ApplicationController
   private
 
   def day_off_params
+    Rails.logger.info("params: #{params}")
     params.require(:day_offs).permit(:start_time, :end_time, :user_id)
   end
 

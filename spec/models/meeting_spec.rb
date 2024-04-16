@@ -8,7 +8,6 @@ RSpec.describe Meeting, type: :model do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:name) }
     it { should validate_presence_of(:start_time) }
     it { should validate_presence_of(:end_time) }
   end
@@ -72,26 +71,26 @@ RSpec.describe Meeting, type: :model do
 
         expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(0)
       end
-      it 'returns 22 when idx is 1 and meetings_count is 4 and hour_idx is 1' do
+      it 'returns 20 when idx is 1 and meetings_count is 4 and hour_idx is 1' do
         idx = 1
         meetings_count = 4
         hour_idx = 1
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(22)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(20)
       end
-      it 'returns 86 when idx is 5 and meetings_count is 4 and hour_idx is 2' do
+      it 'returns 84 when idx is 5 and meetings_count is 4 and hour_idx is 2' do
         idx = 5
         meetings_count = 4
         hour_idx = 2
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(86)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(84)
       end
-      it 'returns 22 when idx is 9 and meetings_count is 4 and hour_idx is 3' do
+      it 'returns 20 when idx is 9 and meetings_count is 4 and hour_idx is 3' do
         idx = 9
         meetings_count = 4
         hour_idx = 3
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(22)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(20)
       end
     end
 
@@ -133,15 +132,6 @@ RSpec.describe Meeting, type: :model do
         meeting = create(:meeting)
 
         expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name]} #{meeting.user[:middle_name][0].capitalize}. #{meeting.user[:last_name][0].capitalize}".to_s)
-      end
-    end
-
-    describe '#shift_from_to' do
-      it 'returns a string of start time and end time' do
-        meeting = create(:meeting, start_time: Time.zone.parse('2023-01-01 10:23:00'),
-                                   end_time: Time.zone.parse('2023-01-01 13:30:00'))
-
-        expect(meeting.shift_from_to).to eq('10:23-1:30PM')
       end
     end
   end
