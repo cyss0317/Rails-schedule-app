@@ -3,15 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'meetings/edit', type: :view do
-  let(:meeting) do
-    Meeting.create!(
-      name: 'MyString',
-      user_id: 1
-    )
-  end
+  let(:meeting) { create(:meeting) }
 
   before(:each) do
     assign(:meeting, meeting)
+    assign(:users, [meeting.user])
   end
 
   it 'renders the edit meeting form' do

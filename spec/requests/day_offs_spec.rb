@@ -8,8 +8,8 @@ RSpec.describe 'DayOffs', type: :request do
     let(:valid_params) do
       {
         'day_offs' => {
-          'start_time' => '2020-01-01',
-          'end_time' => '2020-01-02',
+          'start_time' => '2020-01-01 12:00:00 -0600',
+          'end_time' => '2020-01-01 14:00:00 -0600',
           'user_id' => user.id
         }
       }
