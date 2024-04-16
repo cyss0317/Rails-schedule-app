@@ -6,23 +6,19 @@ class DayOff < ApplicationRecord
   validates :start_time, :user_id, presence: true
   validates :end_time, date: { after_or_equal_to: :start_time }
   validate :check_days_taken, on: %i[create edit]
+
   scope :for_week, ->(date) { where('start_time >= ? AND end_time <= ?', date.beginning_of_week, date.end_of_week) }
   scope :for_day_filtered_by_date, lambda { |date|
-    where("DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
-      DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date.to_date, date.to_date) # catches the shifts with multiple days but not single day shift
-
-    # where('DATE(start_time) <= ? AND end_time >= ?', date, date.end_of_day.change(sec: 0)) # catches the shifts with multiple days but not single day shift
-    # where('start_time <= ? AND end_time >= ?', date.to_date, date.to_date) # catches the shifts with multiple days but not single day shift
-  }
+                                     where("DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
+      DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date.to_date, date.to_date)
+                                   } # catches the shifts with multiple days but not single day shift }
   scope :for_day_filtered_by_datetime, lambda { |start_time, end_time|
-    where('start_time <= ? AND end_time >= ?', start_time, end_time)
-  }
+                                         where('start_time <= ? AND end_time >= ?', start_time, end_time)
+                                       }
   scope :evening_off_available, lambda { |start_time, end_time|
                                   where('start_time < ? AND end_time > ?', start_time, end_time)
                                 }
-  # scope :morning_day_offs, lambda { |date|
-  #                            for_day_filtered_by_date(date).where('start_time <= ? AND end_time >= ?', date.change(hour: 8), date.change(hour: 15))
-  #                          }
+
   scope :morning_day_offs, lambda { |date|
     tz = 'America/Chicago'
     morning_start = date.in_time_zone(tz).beginning_of_day
@@ -30,9 +26,6 @@ class DayOff < ApplicationRecord
 
     where('start_time >= ? AND end_time <= ?', morning_start, morning_end)
   }
-  # scope :evening_day_offs, lambda { |date|
-  #                            for_day_filtered_by_date(date).where('start_time >= ? AND end_time <= ?', date.change(hour: 15), date.end_of_day)
-  #                          }
 
   scope :evening_day_offs, lambda { |date|
     tz = 'America/Chicago'
@@ -45,9 +38,6 @@ class DayOff < ApplicationRecord
     for_day_filtered_by_date(date).where.not(id: DayOff.morning_day_offs(date).select(:id)).where.not(id: DayOff.evening_day_offs(date).select(:id))
   }
 
-  # scope :all_day_offs, lambda { |date|
-  #   for_day_filtered_by_date(date).where('start_time <= ? AND end_time <= ?', date.beginning_of_day, date.end_of_day)
-  # }
   def off_dates
     (start_time.to_date..end_time.to_date).to_a
   end

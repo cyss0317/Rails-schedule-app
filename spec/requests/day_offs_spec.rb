@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'DayOffs', type: :request do
-  include Devise::Test::IntegrationHelpers  # Corrected include here
+  include Devise::Test::IntegrationHelpers # Corrected include here
 
   let!(:user) { create(:user) }
   let(:valid_params) do
@@ -24,9 +24,12 @@ RSpec.describe 'DayOffs', type: :request do
       }
     }
   end
-  
-  describe '#create' do
 
+  before do
+    sign_in user
+  end
+
+  describe '#create' do
     it 'creates a new day off when valid params are given' do
       expect do
         sign_in user  # This method is now properly supported
@@ -41,6 +44,27 @@ RSpec.describe 'DayOffs', type: :request do
 
         post day_offs_path, params: invalid_params
       end.to change(DayOff, :count).by(0)
+    end
+  end
+
+  describe '#update' do
+    it 'updates a day off when valid params are given' do
+      day_off = create(:day_off, user_id: user.id)
+
+      patch day_off_path(day_off), params: valid_params
+
+      day_off.reload
+      expect(day_off.start_time).to eq('2020-01-02 12:00:00 -0600')
+    end
+
+    it 'does NOT updates a day off when invalid params are given' do
+      day_off = create(:day_off, user_id: user.id)
+
+      patch day_off_path(day_off), params: invalid_params
+
+      day_off.reload
+
+      expect(day_off.start_time).to eq(day_off.start_time)
     end
   end
 end
