@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :day_offs, dependent: :destroy
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
+  scope :without_demo_user, -> { where.not(first_name: 'Demo').where.not('email LIKE ?', '%demo%') }
 
   def full_name
     "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
