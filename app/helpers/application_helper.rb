@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  def flipper_check(flipper_name, email)
+    Flipper.enabled?(flipper_name, Flipper::Actor.new(email))
+  end
+
   def table_row_top(start_time)
     shift_start_time = 8
     (start_time - shift_start_time) * Meeting::HOUR_HEIGHT_IN_PX
