@@ -21,11 +21,11 @@ RSpec.describe User, type: :model do
   describe 'scopes' do
     describe '.sort_by_first_name' do
       it 'returns users sorted by first name' do
-        user_1 = create(:user, first_name: 'Zebra')
-        user_2 = create(:user, first_name: 'Apple')
-        user_3 = create(:user, first_name: 'Zombie')
+        user1 = create(:user, first_name: 'Zebra')
+        user2 = create(:user, first_name: 'Apple')
+        user3 = create(:user, first_name: 'Zombie')
 
-        expect(User.sort_by_first_name).to eq([user_2, user_1, user_3])
+        expect(User.sort_by_first_name).to eq([user2, user1, user3])
       end
     end
 
