@@ -1,4 +1,4 @@
-  <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>
+  <% if current_user.admin_user? %>
     <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", edit_meeting_path(meeting),
       {  
         class: "weekly-meeting shadow #{classes} admin",

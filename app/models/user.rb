@@ -29,6 +29,10 @@ class User < ApplicationRecord
     "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
   end
 
+  def admin_user?
+    Flipper.enabled?(:admin, Flipper::Actor.new(email))
+  end
+
   def time_zone
     Time.now.zone || 'UTC'
   end

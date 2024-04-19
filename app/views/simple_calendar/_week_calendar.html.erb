@@ -4,13 +4,13 @@
   <div class="table flex flex-col justify-center">
     <div class="table-header">
       <div class="empty-tr overflow-auto">
-        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
+        <% if current_user.admin_user? && @users_total_hours_for_week.present? %>
           <div class="employee-hours">Total Hours</div>
         <% else %>
           <div class="employee-hours">Employee:</div>
         <% end %>
           <% @users_total_hours_for_week.each do |user, hours|  %>
-            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %> </div>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if current_user.admin_user? && @users_total_hours_for_week.present? %> </div>
           <% end %>
       </div>
       <% date_range.slice(0, 7).each do |day| %>
@@ -23,7 +23,7 @@
           <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) || current_user.first_name == day_off.user.first_name %>
+                <% if current_user.admin_user? || current_user.first_name == day_off.user.first_name %>
                   <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow your-day-off #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
@@ -61,7 +61,7 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>">
+            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.admin_user? %>">
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
@@ -83,6 +83,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
+
     // current time liner
     current_time_liner = document.createElement("div")
     current_time_liner.classList.add("current-time-liner", "relative")
@@ -95,6 +96,7 @@
 
     current_time.setMinutes(0)
     current_time.setSeconds(0)
+    
     current_time_liner.addEventListener("click", (e) => {
       e.stopPropagation()
       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
