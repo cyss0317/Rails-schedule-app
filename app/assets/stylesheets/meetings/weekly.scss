@@ -62,7 +62,6 @@ $number-of-hour-cells: 16;
       @media (min-width: 368px) and (max-width: 768px) {
         height: 100px;
       }
-
     }
     .request-day-off-btn {
       color: $today-date-color;
@@ -209,11 +208,21 @@ $number-of-hour-cells: 16;
         &::before {
           content: "";
           position: absolute;
-          width: 17px;
-          height: 17px;
+          width: 13px;
+          height: 13px;
           background-color: #f4511e;
-          left: -10px;
-          top: -10px;
+          left: -12px;
+          top: -8px;
+          border-radius: 50%;
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          width: 13px;
+          height: 13px;
+          background-color: #f4511e;
+          right: -12px;
+          top: -8px;
           border-radius: 50%;
         }
       }

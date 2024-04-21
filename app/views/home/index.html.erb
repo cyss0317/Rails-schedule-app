@@ -31,7 +31,7 @@
             <% if all_day_shifts.present? %>
               <div class="all-day-shifts all-color all-day-outline shadow">
                 <% all_day_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting, classes: "all-day-color"} %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
                 <% end %>
               </div>
             <% end %>
@@ -39,7 +39,7 @@
             <% if morning_shifts.present? %>
               <div class="morning-shift morning-color shadow">
                 <% morning_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting, classes: "morning-color"} %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
                 <% end %>
               </div>
             <% end %>
@@ -47,7 +47,7 @@
             <% if evening_shifts.present? %>
               <div class="evening-shifts evening-color shadow">
                 <% evening_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting, classes: "evening-color"} %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
                 <% end %>
               </div>
             <% end %>

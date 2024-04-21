@@ -55,7 +55,6 @@
   li.current-user-shift {
     font-weight: bold;
     text-align: center;
-
     &::before {
       content: "Shift";
       color: $red;
