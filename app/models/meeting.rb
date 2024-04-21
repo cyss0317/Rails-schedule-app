@@ -14,15 +14,15 @@ class Meeting < ApplicationRecord
                                   where(start_time: Date.today.beginning_of_month.beginning_of_week..Date.today.end_of_month.end_of_week)
                                 }
   scope :find_all_by_user_id, ->(user_id) { where(user_id:) }
+  scope :monthly_meetings, ->(date) { where(start_time: date.beginning_of_month.beginning_of_week..date.end_of_month.end_of_week.end_of_day) }
+  scope :sort_by_start_time, -> { order(start_time: :asc) }
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50
 
-  def self.default; end
-
-  def self.sort_by_start_time
-    order(start_time: :asc)
-  end
+  # def self.sort_by_start_time
+  #   order(start_time: :asc)
+  # end
 
   def date_range
     Meeting.where(start_time: start_time.beginning_of_week..start_time.end_of_week)
