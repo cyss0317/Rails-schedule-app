@@ -16,14 +16,14 @@
 
               <% if all_day_offs.present? %>
                 <% all_day_offs.each do |day_off| %>
-                  <div class="day-off all-color shadow"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                  <div class="day-off day-off-monthly all-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
                 <% end %>
               <% else %>
                 <% morning_day_offs.each do |day_off| %>
-                  <div class="day-off morning-color shadow"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                  <div class="day-off day-off-monthly morning-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
                 <% end %>
                 <% evening_day_offs.each do |day_off| %>
-                  <div class="day-off evening-color shadow">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                  <div class="day-off day-off-monthly evening-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
                 <% end %>
               <% end %>
             <% end %>
