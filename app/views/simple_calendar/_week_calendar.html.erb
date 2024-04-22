@@ -4,13 +4,13 @@
   <div class="table flex flex-col justify-center">
     <div class="table-header">
       <div class="empty-tr overflow-auto">
-        <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %>
+        <% if current_user.admin_user? && @users_total_hours_for_week.present? %>
           <div class="employee-hours">Total Hours</div>
         <% else %>
           <div class="employee-hours">Employee:</div>
         <% end %>
           <% @users_total_hours_for_week.each do |user, hours|  %>
-            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) && @users_total_hours_for_week.present? %> </div>
+            <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if current_user.admin_user? && @users_total_hours_for_week.present? %> </div>
           <% end %>
       </div>
       <% date_range.slice(0, 7).each do |day| %>
@@ -23,8 +23,8 @@
           <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) || current_user.first_name == day_off.user.first_name %>
-                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow your-day-off #{day_off.off_time_class(day.in_time_zone)}" %>
+                <% if current_user.admin_user? || day_off.my_day_off?(current_user) %>
+                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
@@ -38,8 +38,6 @@
                 <% end %>
             <% end %>
 
-            <%# TODO: if it is admin user, need to let them edit or not? %>
-            <%# TODO: if it is yourselv, we should display link to edit %>
           <% else %>
             <%= link_to "Request Day", "day_offs/new?start_time=#{day.to_s}", class: "day-off shadow request-day-off-btn line-height-50" %>
           <% end %>
@@ -61,11 +59,13 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if Flipper.enabled?(:admin, Flipper::Actor.new(current_user.email)) %>">
+            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.admin_user? %>">
+              <% if calendar.td_classes_for(day).include?("today") %>
+                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.admin_user? %>"></div>
+              <% end %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
               <% else %>
-              <%# TODO: now need to use `calendar.render_shifts_by_hour(meetings)` and render meetings          %>
               <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each_with_index do |shifts_by_hour, hour_idx| %>
                 <% shifts_by_hour.each_with_index do |shift, idx| %>
                   <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, hour_idx: hour_idx, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
@@ -83,9 +83,9 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
+
     // current time liner
-    current_time_liner = document.createElement("div")
-    current_time_liner.classList.add("current-time-liner", "relative")
+    current_time_liner = document.querySelector(".current-time-liner")
     current_time = new Date()
     current_hour = current_time.getHours()
     current_minutes = current_time.getMinutes()
@@ -95,19 +95,18 @@
 
     current_time.setMinutes(0)
     current_time.setSeconds(0)
-    current_time_liner.addEventListener("click", (e) => {
+
+    admin_current_time_liner = document.querySelector(".current-time-liner-admin")
+    admin_current_time_liner?.addEventListener("click", (e) => {
       e.stopPropagation()
       window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
     })
 
     // append the current time liner to the today column//
-    today_shift_column = document.querySelector(".today")
-    today_shift_column?.appendChild(current_time_liner)
 
     // onClick scroll down to the current time
     document.querySelector(".today-date")?.addEventListener("click", (e) => {
-      current_time_liner = document.querySelector(".current-time-liner")
-      y = current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
+      y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
 
       window.scrollTo({top: y})
     })

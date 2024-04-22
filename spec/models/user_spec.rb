@@ -32,6 +32,7 @@ RSpec.describe User, type: :model do
     describe '.without_demo_user' do
       it 'returns users without demo users' do
         create(:user, first_name: 'Demo')
+        create(:user, first_name: 'DEMO')
         create(:user, email: 'demo_user@gmail.com')
         create(:user, email: 'user_demo@gamil.com')
         user = create(:user)

@@ -13,7 +13,9 @@ class User < ApplicationRecord
   has_many :day_offs, dependent: :destroy
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
-  scope :without_demo_user, -> { where.not(first_name: 'Demo').where.not('email LIKE ?', '%demo%') }
+  scope :without_demo_user, lambda {
+                              where('LOWER(first_name) NOT LIKE ?', '%demo%').where('LOWER(email) NOT LIKE ?', '%demo%')
+                            }
 
   def full_name
     "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
@@ -25,6 +27,10 @@ class User < ApplicationRecord
 
   def name_and_initials
     "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
+  end
+
+  def admin_user?
+    Flipper.enabled?(:admin, Flipper::Actor.new(email))
   end
 
   def time_zone

@@ -6,7 +6,7 @@
   white-space: nowrap;
   overflow: hidden;
   width: 100%;
-  outline: 2px solid #7c47b2;
+  outline: 3px solid #7c47b2;
   border: 2px solid white;
   text-align: center;
   height: 100%;
@@ -18,6 +18,10 @@
   @media (min-width: 768px) {
     white-space: normal;
   }
+}
+
+.day-off-monthly {
+  overflow: visible;
 }
 
 .monthly-shifts > * {
@@ -55,7 +59,6 @@
   li.current-user-shift {
     font-weight: bold;
     text-align: center;
-
     &::before {
       content: "Shift";
       color: $red;
@@ -167,7 +170,7 @@
     }
   }
 
-  li.current-user-shift {
+  .current-user-shift {
     font-weight: bold;
     text-align: center;
 
@@ -216,4 +219,22 @@ table > thead {
   position: sticky;
   top: 35px;
   z-index: 2;
+}
+
+.current-user-day-off {
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+}
+
+.current-user-day-off-monthly {
+  &::before {
+    content: "OFF";
+    color: $red;
+    display: block;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: -6px;
+    left: -10px;
+  }
 }
