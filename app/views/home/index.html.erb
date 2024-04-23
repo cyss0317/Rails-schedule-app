@@ -26,6 +26,7 @@
                   <div class="day-off day-off-monthly evening-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
                 <% end %>
               <% end %>
+              <div class="day-off-separator"></div>
             <% end %>
             
             <% if all_day_shifts.present? %>

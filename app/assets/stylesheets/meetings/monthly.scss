@@ -24,6 +24,17 @@
   overflow: visible;
 }
 
+.day-off-monthly {
+  overflow: visible;
+}
+
+.day-off-separator {
+  border-bottom: 2px solid purple;
+}
+
+.day-off-separator {
+  border-bottom: 2px solid purple;
+}
 .monthly-shifts > * {
   min-width: 82px;
 }
@@ -219,6 +230,42 @@ table > thead {
   position: sticky;
   top: 35px;
   z-index: 2;
+}
+
+.current-user-day-off {
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+}
+
+.current-user-day-off-monthly {
+  &::before {
+    content: "OFF";
+    color: $red;
+    display: block;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: -6px;
+    left: -10px;
+  }
+}
+
+.current-user-day-off {
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+}
+
+.current-user-day-off-monthly {
+  &::before {
+    content: "OFF";
+    color: $red;
+    display: block;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: -6px;
+    left: -10px;
+  }
 }
 
 .current-user-day-off {
