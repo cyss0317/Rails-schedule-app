@@ -213,6 +213,21 @@ RSpec.describe DayOff, type: :model do
         user_id: user.id
       )
     end
+
+    describe 'validate_time?' do
+      it 'returns false when NON-DateTime class is passed into start_time and end_time' do
+        failed_day_off = DayOff.new(start_time: '', end_time: '', user_id: user.id)
+
+        expect(failed_day_off.validate_time?).to eq(false)
+      end
+
+      it 'returns true when DateTime class is passed into start_time and end_time' do
+        day_off = DayOff.new(start_time: DateTime.now, end_time: DateTime.now, user_id: user.id)
+
+        expect(day_off.validate_time?).to eq(true)
+      end
+    end
+
     describe 'any_of_days_taken?' do
       it 'returns true if any of the days are taken' do
         day_off = DayOff.new(

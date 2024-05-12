@@ -6,6 +6,7 @@ class DayOff < ApplicationRecord
   validates :start_time, :user_id, presence: true
   validates :end_time, date: { after_or_equal_to: :start_time }
   validate :check_days_taken, on: %i[create edit]
+  # validate :
 
   scope :for_week, ->(date) { where('start_time >= ? AND end_time <= ?', date.beginning_of_week, date.end_of_week) }
   scope :for_day_filtered_by_date, lambda { |date|
@@ -170,6 +171,11 @@ class DayOff < ApplicationRecord
 
   def any_of_days_taken?
     taken_days.present?
+  end
+
+  def validate_time?
+    start_time.instance_of?(ActiveSupport::TimeWithZone) && end_time.instance_of?(ActiveSupport::TimeWithZone) ||
+      start_time.instance_of?(DateTime) && end_time.instance_of?(DateTime)
   end
 
   def user_name
