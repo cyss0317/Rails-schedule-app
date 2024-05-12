@@ -38,7 +38,7 @@ RSpec.describe 'DayOffs', type: :request do
       end.to change(DayOff, :count).by(1)
     end
 
-    xit 'does NOT create a new day off when invalid params are given' do
+    it 'does NOT create a new day off when invalid params are given' do
       expect do
         sign_in user  # Sign in added here for consistency
 

@@ -90,7 +90,10 @@
     current_hour = current_time.getHours()
     current_minutes = current_time.getMinutes()
     current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
-    current_time_liner.style.top = `${current_time_height_from_top}px`
+    if (current_time_liner) {
+      current_time_liner.style.top = `${current_time_height_from_top}px`
+    }
+
     // add date attribute to the current time liner to be used in the click event
 
     current_time.setMinutes(0)

@@ -4,6 +4,10 @@
 @use "shared/tooltip.scss";
 @use "shared/dropdown.scss";
 
+body {
+  background: #22222270;
+}
+
 * {
   color: $text-color;
 }
