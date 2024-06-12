@@ -283,5 +283,26 @@ RSpec.describe DayOff, type: :model do
         expect(day_off.errors.full_messages).to be_empty
       end
     end
+
+    describe '#been_passed?' do
+      it 'returns true if the day off has already passed' do
+        day_off = DayOff.new(
+          start_time: Time.new(2024, 1, 1),
+          end_time: Time.new(2024, 1, 1).end_of_day,
+          user_id: user.id
+        )
+
+        expect(day_off.been_passed?).to eq(true)
+      end
+      it 'returns false if the day off has already passed' do
+        day_off = DayOff.new(
+          start_time: (Time.now + 1.day).beginning_of_day,
+          end_time: (Time.now + 1.day).end_of_day,
+          user_id: user.id
+        )
+
+        expect(day_off.been_passed?).to eq(false)
+      end
+    end
   end
 end

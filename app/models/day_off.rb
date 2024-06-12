@@ -179,4 +179,8 @@ class DayOff < ApplicationRecord
   def my_day_off?(current_user)
     current_user.id == user.id
   end
+
+  def been_passed?
+    end_time < Time.now
+  end
 end
