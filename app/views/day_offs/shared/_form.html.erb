@@ -13,7 +13,7 @@
     <%= f.submit method == :POST ? "Request Day Off" : "Update Day Off", class: "rounded-lg py-3 px-3 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
     <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
 <% end %>
-    <% if method == :PATCH %>
+    <% if method == :PATCH && !@day_off.been_passed? %>
       <%= button_to "Delete", day_off_path(@day_off), method: :delete, class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
     <% end %>
     <%= link_to "Cancel", meetings_weekly_path, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
