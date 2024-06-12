@@ -6,7 +6,7 @@ class DayOff < ApplicationRecord
   validates :start_time, :user_id, presence: true
   validates :end_time, date: { after_or_equal_to: :start_time }
   validate :check_days_taken, on: %i[create edit]
-  # validate :
+  validate :validate_time?, on: %i[create edit]
 
   scope :for_week, ->(date) { where('start_time >= ? AND end_time <= ?', date.beginning_of_week, date.end_of_week) }
   scope :for_day_filtered_by_date, lambda { |date|
@@ -174,8 +174,13 @@ class DayOff < ApplicationRecord
   end
 
   def validate_time?
-    start_time.instance_of?(ActiveSupport::TimeWithZone) && end_time.instance_of?(ActiveSupport::TimeWithZone) ||
-      start_time.instance_of?(DateTime) && end_time.instance_of?(DateTime)
+    unless start_time.instance_of?(ActiveSupport::TimeWithZone) && end_time.instance_of?(ActiveSupport::TimeWithZone) ||
+           start_time.instance_of?(DateTime) && end_time.instance_of?(DateTime)
+      errors.add(:base,
+                 "Start time and End time can't be empty string")
+    end
+
+    true
   end
 
   def user_name
