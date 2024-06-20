@@ -27,7 +27,7 @@ class DayOffsController < ApplicationController
   end
 
   def update
-    if @day_off.update(day_off_params)
+    if validate_params && @day_off.update(day_off_params)
       respond_to do |format|
         format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully updated day off' }
       end
