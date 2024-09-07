@@ -86,30 +86,32 @@
 
     // current time liner
     current_time_liner = document.querySelector(".current-time-liner")
-    current_time = new Date()
-    current_hour = current_time.getHours()
-    current_minutes = current_time.getMinutes()
-    current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
-    current_time_liner.style.top = `${current_time_height_from_top}px`
-    // add date attribute to the current time liner to be used in the click event
+    if (current_time_liner) {
+      current_time = new Date()
+      current_hour = current_time.getHours()
+      current_minutes = current_time.getMinutes()
+      current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
+      current_time_liner.style.top = `${current_time_height_from_top}px`
+      // add date attribute to the current time liner to be used in the click event
 
-    current_time.setMinutes(0)
-    current_time.setSeconds(0)
+      current_time.setMinutes(0)
+      current_time.setSeconds(0)
 
-    admin_current_time_liner = document.querySelector(".current-time-liner-admin")
-    admin_current_time_liner?.addEventListener("click", (e) => {
-      e.stopPropagation()
-      window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
-    })
+      admin_current_time_liner = document.querySelector(".current-time-liner-admin")
+      admin_current_time_liner?.addEventListener("click", (e) => {
+        e.stopPropagation()
+        window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
+      })
 
-    // append the current time liner to the today column//
+      // append the current time liner to the today column//
 
-    // onClick scroll down to the current time
-    document.querySelector(".today-date")?.addEventListener("click", (e) => {
-      y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
+      // onClick scroll down to the current time
+      document.querySelector(".today-date")?.addEventListener("click", (e) => {
+        y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
 
-      window.scrollTo({top: y})
-    })
+        window.scrollTo({top: y})
+      })
+    }
 
 
     table_body = document.querySelectorAll(".admin-table")
@@ -117,7 +119,7 @@
       el.addEventListener("click", (e) => {
         //time configuration
         window.target = e
-
+  console.log("CLICKED")
         clicked_el = e.target.getClientRects()[0]
         table_cell_height = clicked_el.height / 17
         y_axis = e.clientY - clicked_el.top
