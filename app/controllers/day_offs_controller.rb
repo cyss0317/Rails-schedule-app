@@ -56,7 +56,7 @@ class DayOffsController < ApplicationController
 
   def day_off_params
     Rails.logger.info("params: #{params}")
-    params.require(:day_offs).permit(:start_time, :end_time, :user_id)
+    params.require(:day_offs).permit(:start_time, :end_time, :user_id, :description)
   end
 
   def validate_params
