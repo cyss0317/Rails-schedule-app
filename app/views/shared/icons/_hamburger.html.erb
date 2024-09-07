@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="hamburger relative font-normal w-10 l-10 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-</svg>
+<button class="hamburger relative font-normal w-10 l-10 cursor-pointer">
+  <svg xmlns="http://www.w3.org/2000/svg" class="" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+  </svg>
+</button>
 
 <div class="hamburger-background hidden">
   <div id="hamburger-menu" class="">
@@ -15,14 +17,18 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const hamburgerModalBackground = document.querySelector(".hamburger-background")
+
     document.querySelector(".hamburger").addEventListener("click", (e) => {
-      document.querySelector(".hamburger-background").classList.toggle("hidden")
+      hamburgerModalBackground.classList.toggle("hidden")
     })
-    document.querySelector(".hamburger-background").addEventListener("click", (e) => {
-      document.querySelector(".hamburger-background").classList.toggle("hidden")
+    // TODO: add onKeyDown on ESC to close the modal 9/06/2024
+    hamburgerModalBackground.addEventListener("click", (e) => {
+      hamburgerModalBackground.classList.toggle("hidden")
     })
+    hamburgerModalBackground.addEventListener("on")
     document.querySelector("#hamburger-menu").addEventListener("mouseleave", (e) => {
-      document.querySelector(".hamburger-background").classList.toggle("hidden")
+      hamburgerModalBackground.classList.toggle("hidden")
     })
   })
 </script>
