@@ -232,16 +232,6 @@ RSpec.describe DayOff, type: :model do
 
         expect(day_off.any_of_days_taken?).to eq(false)
       end
-
-      it 'fails to create a dayOff if description is not given' do
-        expect do
-          DayOff.create(
-            start_time: Time.new(2024, 1, 11),
-            end_time: Time.new(2024, 1, 12),
-            user_id: user.id
-          )
-        end.to change(DayOff, :count).by(0)
-      end
     end
 
     describe '#check_days_taken' do
@@ -249,8 +239,7 @@ RSpec.describe DayOff, type: :model do
         day_off = DayOff.new(
           start_time: Time.new(2024, 1, 11),
           end_time: Time.new(2024, 1, 12).end_of_day,
-          user_id: user.id,
-          description: "I'm taking a day off"
+          user_id: user.id
         )
 
         expect do
@@ -286,8 +275,7 @@ RSpec.describe DayOff, type: :model do
         day_off = DayOff.new(
           start_time: Time.new(2024, 1, 1, 15),
           end_time: Time.new(2024, 1, 1).end_of_day,
-          user_id: user.id,
-          description: "I'm taking a day off"
+          user_id: user.id
         )
 
         day_off.save
