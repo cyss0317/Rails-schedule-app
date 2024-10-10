@@ -9,16 +9,16 @@
   </div>
   <div class="my-5">
     <%= f.label :description %>
-    <%= f.text_field :description, value: params[:description] || @day_off.description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= f.text_area :description, value: params[:description] || @day_off.description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full h-24" %>
   </div>
 
   <%= f.hidden_field :user_id, value: current_user.id %>
 
   <div class="flex align-items-center justify-content-evenly gap-3">
-    <%= f.submit method == :POST ? "Request Day Off" : "Update Day Off", class: "rounded-lg py-3 px-3 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%= f.submit method == :POST ? "Request Day Off" : "Update Day Off", class: "rounded-lg h-24 py-3 px-3 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
     <%# link_to "Back to meetings", meetings_weekly_path(start_time: @meeting.start_date), class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
 <% end %>
-    <% if (@day_off.id.present? && current_user.admin_user?)k || (method == :PATCH && !@day_off.been_passed? && @day_off.my_day_off?(current_user)) %>
+    <% if (@day_off.id.present? && current_user.admin_user?) || (method == :PATCH && !@day_off.been_passed? && @day_off.my_day_off?(current_user)) %>
       <%= button_to "Delete", day_off_path(@day_off), method: :delete, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium", data: {confirm: "do you"} %>
     <% end %>
     <%= link_to "Cancel", meetings_weekly_path, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>

@@ -13,8 +13,10 @@ class DayOffsController < ApplicationController
     @day_off = DayOff.new(day_off_params)
 
     respond_to do |format|
-      if @day_off.save
-        format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully requested day off' }
+      if @day_off.save!
+        format.html do
+          redirect_to meetings_weekly_path(start_date: @day_off.start_time), notice: 'Successfully requested day off'
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @day_off.errors, status: :unprocessable_entity }
