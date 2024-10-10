@@ -22,8 +22,8 @@ class MeetingsController < ApplicationController
       @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
       @end_time = params[:start_date].to_date.end_of_week.at_end_of_day
     else
-      @start_time = params[:start_time] ? params[:start_time].to_date.beginning_of_week : DateTime.now.beginning_of_week
-      @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week : DateTime.now.end_of_week
+      @start_time = params[:start_time] ? params[:start_time].to_date.beginning_of_week.at_beginning_of_day : DateTime.now.beginning_of_week.at_beginning_of_day
+      @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week.at_end_of_day : DateTime.now.end_of_week.at_end_of_day
       # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
     end
     @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
