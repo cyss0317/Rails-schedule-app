@@ -249,7 +249,8 @@ RSpec.describe DayOff, type: :model do
         day_off = DayOff.new(
           start_time: Time.new(2024, 1, 11),
           end_time: Time.new(2024, 1, 12).end_of_day,
-          user_id: user.id
+          user_id: user.id,
+          description: "I'm taking a day off"
         )
 
         expect do
@@ -285,7 +286,8 @@ RSpec.describe DayOff, type: :model do
         day_off = DayOff.new(
           start_time: Time.new(2024, 1, 1, 15),
           end_time: Time.new(2024, 1, 1).end_of_day,
-          user_id: user.id
+          user_id: user.id,
+          description: "I'm taking a day off"
         )
 
         day_off.save

@@ -23,16 +23,13 @@
           <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <%# if !day_off.been_passed? && (current_user.admin_user? || day_off.my_day_off?(current_user)) %>
                 <% if current_user.admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
                   <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
 
-                <% if day_offs.length == 2 %>
-
-                <% elsif day_off.morning_off?(day.in_time_zone) %>
+                <% if day_off.morning_off?(day.in_time_zone) %>
                    <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "day-off shadow request-day-off-btn" %>
                 <% elsif day_off.evening_off?(day.in_time_zone)%>
                    <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "day-off shadow request-day-off-btn" %>
