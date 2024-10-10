@@ -11,7 +11,8 @@ RSpec.describe 'DayOffs', type: :request do
       'day_offs' => {
         'start_time' => '2020-01-01 12:00:00 -0600',
         'end_time' => '2020-01-01 14:00:00 -0600',
-        'user_id' => user.id
+        'user_id' => user.id,
+        'description' => 'I need a day off'
       }
     }
   end

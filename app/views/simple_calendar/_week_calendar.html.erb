@@ -23,15 +23,13 @@
           <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if !day_off.been_passed? && (current_user.admin_user? || day_off.my_day_off?(current_user)) %>
+                <% if current_user.admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
                   <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
 
-                <% if day_offs.length == 2 %>
-
-                <% elsif day_off.morning_off?(day.in_time_zone) %>
+                <% if day_off.morning_off?(day.in_time_zone) %>
                    <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "day-off shadow request-day-off-btn" %>
                 <% elsif day_off.evening_off?(day.in_time_zone)%>
                    <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "day-off shadow request-day-off-btn" %>
@@ -86,30 +84,32 @@
 
     // current time liner
     current_time_liner = document.querySelector(".current-time-liner")
-    current_time = new Date()
-    current_hour = current_time.getHours()
-    current_minutes = current_time.getMinutes()
-    current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
-    current_time_liner.style.top = `${current_time_height_from_top}px`
-    // add date attribute to the current time liner to be used in the click event
+    if (current_time_liner) {
+      current_time = new Date()
+      current_hour = current_time.getHours()
+      current_minutes = current_time.getMinutes()
+      current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
+      current_time_liner.style.top = `${current_time_height_from_top}px`
+      // add date attribute to the current time liner to be used in the click event
 
-    current_time.setMinutes(0)
-    current_time.setSeconds(0)
+      current_time.setMinutes(0)
+      current_time.setSeconds(0)
 
-    admin_current_time_liner = document.querySelector(".current-time-liner-admin")
-    admin_current_time_liner?.addEventListener("click", (e) => {
-      e.stopPropagation()
-      window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
-    })
+      admin_current_time_liner = document.querySelector(".current-time-liner-admin")
+      admin_current_time_liner?.addEventListener("click", (e) => {
+        e.stopPropagation()
+        window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
+      })
 
-    // append the current time liner to the today column//
+      // append the current time liner to the today column//
 
-    // onClick scroll down to the current time
-    document.querySelector(".today-date")?.addEventListener("click", (e) => {
-      y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
+      // onClick scroll down to the current time
+      document.querySelector(".today-date")?.addEventListener("click", (e) => {
+        y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
 
-      window.scrollTo({top: y})
-    })
+        window.scrollTo({top: y})
+      })
+    }
 
 
     table_body = document.querySelectorAll(".admin-table")
@@ -117,7 +117,7 @@
       el.addEventListener("click", (e) => {
         //time configuration
         window.target = e
-
+  console.log("CLICKED")
         clicked_el = e.target.getClientRects()[0]
         table_cell_height = clicked_el.height / 17
         y_axis = e.clientY - clicked_el.top

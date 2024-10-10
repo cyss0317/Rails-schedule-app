@@ -3,7 +3,7 @@
 class DayOff < ApplicationRecord
   belongs_to :user
 
-  validates :start_time, :user_id, presence: true
+  validates :start_time, :user_id, :description, presence: true
   validates :end_time, date: { after_or_equal_to: :start_time }
   validate :check_days_taken, on: %i[create edit]
 
