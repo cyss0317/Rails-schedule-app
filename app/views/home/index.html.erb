@@ -10,24 +10,7 @@
 
         <%= link_to meetings_weekly_path(start_date: date), class: "flex flex-col gap-2" do %>
           <div class="monthly-shifts">
-            <% if DayOff.for_day_filtered_by_date(date).present? %>
-              <% all_day_offs = DayOff.all_day_offs(date.in_time_zone) %>
-              <% morning_day_offs = DayOff.morning_day_offs(date.in_time_zone)  %>
-              <% evening_day_offs = DayOff.evening_day_offs(date.in_time_zone)  %>
-            <%# TODO: create a dayoffs partial that takes in meetings and renders below %>
-              <% if all_day_offs.present? %>
-                <% all_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly all-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-              <% else %>
-                <% morning_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly morning-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-                <% evening_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly evening-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-              <% end %>
-            <% end %>
+            <%= render partial: "day_offs", locals: { date: date }  %>
             
             <% if all_day_shifts.present? %>
             <%# TODO: create a meetings partial that takes in the meetings and renders %>

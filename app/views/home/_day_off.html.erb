@@ -1,0 +1,8 @@
+<div class="relative">
+  <div class="day-off day-off-monthly shadow <%= class_name %> <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">
+    <%= day_off.off_time_info(date.in_time_zone)%>    
+  </div>
+    <% if current_user.admin_user? || day_off.my_day_off?(current_user) %>
+      <span class="day-off-description hidden-with-opacity"><%= day_off.description %></span> 
+    <% end %>
+</div>

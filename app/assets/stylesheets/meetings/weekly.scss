@@ -251,6 +251,7 @@ $number-of-hour-cells: 16;
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          transition: opacity 0.2s ease-in-out;
           outline: 1px solid $theme-gray;
           text-overflow: ellipsis;
           overflow: hidden;

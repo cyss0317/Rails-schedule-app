@@ -4,9 +4,10 @@
 .day-off {
   border-radius: 0.5rem;
   white-space: nowrap;
+  position: relative;
   overflow: hidden;
   width: 100%;
-  outline: 3px solid #7c47b2;
+  outline: 3px solid $day-off-border-color;
   border: 2px solid white;
   text-align: center;
   height: 100%;
@@ -22,6 +23,45 @@
 
 .day-off-monthly {
   overflow: visible;
+}
+
+.hidden-with-opacity {
+  opacity: 0;
+  transition: opacity 0.1s ease-in;
+}
+
+.hidden-with-opacity.show {
+  opacity: 1;
+  transition: opacity 0.1s ease-in;
+}
+
+.day-off-description {
+  position: absolute;
+  font-size: 0.8rem;
+  color: #000000;
+  outline: 3px solid #7c47b2;
+  border: 2px solid white;
+  background-color: #ffffff;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  bottom: 100%; /* Position the description just above the "Day Off" element */
+  left: 63%; /* Center the description horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  z-index: 10; /* Ensure the description appears on top */
+  width: max(80%, 130px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.day-off-description::before {
+  content: "";
+  position: absolute;
+  bottom: -22px; /* Position the description just above the "Day Off" element */
+  left: 15%; /* Center the description horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  z-index: 10; /* Ensure the description appears on top */
+  border-width: 10px;
+  border-style: solid;
+  border-color: #7c47b2 transparent transparent transparent;
 }
 
 .monthly-shifts > * {

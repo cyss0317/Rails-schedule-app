@@ -1,0 +1,34 @@
+ <% if DayOff.for_day_filtered_by_date(date).present? %>
+  <% all_day_offs = DayOff.all_day_offs(date.in_time_zone) %>
+  <% morning_day_offs = DayOff.morning_day_offs(date.in_time_zone)  %>
+  <% evening_day_offs = DayOff.evening_day_offs(date.in_time_zone)  %>
+<%# TODO: create a dayoffs partial that takes in meetings and renders below %>
+  <% if all_day_offs.present? %>
+    <% all_day_offs.each do |day_off| %>
+      <%= render partial: "day_off", locals: { day_off: day_off, date: date, class_name: "all-color" } %>
+    <% end %>
+  <% else %>
+    <% morning_day_offs.each do |day_off| %>
+      <%= render partial: "day_off", locals: { day_off: day_off, date: date, class_name: "morning-color" } %>
+    <% end %>
+    <% evening_day_offs.each do |day_off| %>
+      <%= render partial: "day_off", locals: { day_off: day_off, date: date, class_name: "evening-color" } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    dayOffs = document.querySelectorAll(".day-off")
+
+    dayOffs.forEach(el => {
+      el.addEventListener("mouseover", (e) => {
+        e.currentTarget.nextElementSibling?.classList.add("show")
+      })
+
+      el.addEventListener("mouseleave", (e) => {
+        e.currentTarget.nextElementSibling?.classList.remove("show")
+      })
+    })
+  })
+</script>
