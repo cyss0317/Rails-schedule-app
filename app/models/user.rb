@@ -33,6 +33,10 @@ class User < ApplicationRecord
     Flipper.enabled?(:admin, Flipper::Actor.new(email))
   end
 
+  def flipper_enabled?(feature)
+    Flipper.enabled?(feature, Flipper::Actor.new(email.downcase))
+  end
+
   def time_zone
     Time.now.zone || 'UTC'
   end
