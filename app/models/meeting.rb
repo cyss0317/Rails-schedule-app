@@ -144,6 +144,14 @@ class Meeting < ApplicationRecord
     "#{format_date(start_time)}-#{format_date(end_time)}"
   end
 
+  def self.most_recent_week_meetings
+    most_recent_meeting = Meeting.last
+    week_start_time = most_recent_meeting.start_time.at_beginning_of_week.at_beginning_of_day
+    week_end_time = most_recent_meeting.start_time.at_end_of_week.at_end_of_day
+
+    Meeting.where(start_time: week_start_time..week_end_time)
+  end
+
   private
 
   def start_time_cannot_be_greater_than_end_time

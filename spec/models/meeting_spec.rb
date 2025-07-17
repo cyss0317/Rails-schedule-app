@@ -134,5 +134,22 @@ RSpec.describe Meeting, type: :model do
         expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name]} #{meeting.user[:middle_name][0].capitalize}. #{meeting.user[:last_name][0].capitalize}".to_s)
       end
     end
+
+    describe '#most_recent_week_meetings' do
+      it 'returns all the meetings of the most recent meeting' do
+        today = Date.new(2025, 7, 14)
+        7.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect(Meeting.most_recent_week_meetings.count).to be(7)
+
+        7.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect(Meeting.most_recent_week_meetings.count).to be(14)
+      end
+    end
   end
 end

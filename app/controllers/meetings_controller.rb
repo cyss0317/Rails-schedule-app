@@ -103,9 +103,11 @@ class MeetingsController < ApplicationController
 
   def copy_previous_week_schedule
     # params should have selected week
-
+    target_week_days = params[:week_days]
     # grab the most recent meeting and scope them by the week
+    most_recent_week_meetings = 
     # loop through the list of meetings and batch create meetings with selected week
+      # day.after_week
   end
 
   private
