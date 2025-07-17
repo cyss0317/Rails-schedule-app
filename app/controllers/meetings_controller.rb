@@ -12,31 +12,6 @@ class MeetingsController < ApplicationController
     @meetings = Meeting.all.sort_by_start_time
   end
 
-  def weekly
-    @meeting = Meeting.new
-    Rails.logger.info "ip: #{request.remote_ip}}"
-    Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
-
-    Rails.logger.info "CHOI's house: #{request.remote_ip == ' 72.133.102.178'}}"
-    if params[:start_date]
-      @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
-      @end_time = params[:start_date].to_date.end_of_week.at_end_of_day
-    else
-      @start_time = params[:start_time] ? params[:start_time].to_date.beginning_of_week.at_beginning_of_day : DateTime.now.beginning_of_week.at_beginning_of_day
-      @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week.at_end_of_day : DateTime.now.end_of_week.at_end_of_day
-      # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
-    end
-    @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
-    @users = @meetings.map(&:user).uniq
-    @users_total_hours_for_week = @users.map do |user|
-      total_hours = 0
-      @meetings.each do |meeting|
-        total_hours += (meeting.end_time - meeting.start_time) / 3600 if meeting.user == user
-      end
-      [user, total_hours.round(1)]
-    end
-  end
-
   # GET /meetings/1 or /meetings/1.json
   def show; end
 
@@ -69,7 +44,6 @@ class MeetingsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /meetings/1 or /meetings/1.json
   def update
     respond_to do |format|
       if @meeting.update(meeting_params)
@@ -100,6 +74,38 @@ class MeetingsController < ApplicationController
     Rails.application.load_seed
 
     redirect_to request.referer
+  end
+
+  def weekly
+    @meeting = Meeting.new
+    Rails.logger.info "ip: #{request.remote_ip}}"
+    Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
+
+    Rails.logger.info "CHOI's house: #{request.remote_ip == ' 72.133.102.178'}}"
+    if params[:start_date]
+      @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
+      @end_time = params[:start_date].to_date.end_of_week.at_end_of_day
+    else
+      @start_time = params[:start_time] ? params[:start_time].to_date.beginning_of_week.at_beginning_of_day : DateTime.now.beginning_of_week.at_beginning_of_day
+      @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week.at_end_of_day : DateTime.now.end_of_week.at_end_of_day
+      # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
+    end
+    @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
+    @users = @meetings.map(&:user).uniq
+    @users_total_hours_for_week = @users.map do |user|
+      total_hours = 0
+      @meetings.each do |meeting|
+        total_hours += (meeting.end_time - meeting.start_time) / 3600 if meeting.user == user
+      end
+      [user, total_hours.round(1)]
+    end
+  end
+
+  def copy_previous_week_schedule
+    # params should have selected week
+
+    # grab the most recent meeting and scope them by the week
+    # loop through the list of meetings and batch create meetings with selected week
   end
 
   private
