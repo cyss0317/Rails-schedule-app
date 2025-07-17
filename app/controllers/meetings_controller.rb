@@ -126,9 +126,11 @@ class MeetingsController < ApplicationController
 
     unavailable_to_work_employee_ids = off_users_ids - morning_day_off_users_ids - evening_day_off_users_ids
 
-    filtered_users = User.without_demo_user.sort_by_first_name.select do |user|
-      user.flipper_enabled?(:admin) || user.flipper_enabled?(:active)
+    active_user_ids = User.without_demo_user.sort_by_first_name.select do |user|
+      (user.flipper_enabled?(:admin) || user.flipper_enabled?(:active)) && user.id
     end
+
+    filtered_users = User.where(id: active_user_ids)
 
     return [] if filtered_users.empty?
 
