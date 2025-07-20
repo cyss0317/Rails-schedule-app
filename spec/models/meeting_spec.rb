@@ -134,5 +134,66 @@ RSpec.describe Meeting, type: :model do
         expect(meeting.user_weekly_name).to eq("#{meeting.user[:first_name]} #{meeting.user[:middle_name][0].capitalize}. #{meeting.user[:last_name][0].capitalize}".to_s)
       end
     end
+
+    describe '.most_recent_week_meetings' do
+      it 'returns all the meetings of the most recent meeting' do
+        today = Date.new(2025, 7, 14)
+        7.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect(Meeting.most_recent_week_meetings.count).to be(7)
+
+        7.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect(Meeting.most_recent_week_meetings.count).to be(14)
+
+        9.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect(Meeting.most_recent_week_meetings.count).to be(2)
+      end
+    end
+
+    describe '.copy_most_recent_week_of_meetings_to_target_week' do
+      it 'copies the most recent week of meetings to target week' do
+        start_date = Date.parse('2025-07-21') # Monday
+        target_week = (0..6).map { |i| start_date + i }
+
+        today = Date.new(2025, 7, 14)
+        7.times do |idx|
+          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect do
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+        end.to change(Meeting, :count).by(7)
+      end
+    end
+
+    describe '#updated_date_on_start_time' do
+      it 'returns a new datetime with updated date without changing the time' do
+        meeting = create(:meeting, start_time: DateTime.new(2022, 11, 11, 15, 0, 0, '-05:00'),
+                                   end_time: DateTime.new(2022, 11, 11, 18, 0, 0, '-05:00'))
+        target_date = Date.parse('2025-08-12')
+
+        expect(meeting.updated_date_on_start_time(target_date)).to eq(DateTime.parse("#{target_date} 15:00:00 -05:00"))
+        expect(meeting.end_time).to eq(DateTime.parse("#{Date.parse('2022-11-11')} 18:00:00 -05:00"))
+      end
+    end
+
+    describe '#updated_date_on_end_time' do
+      it 'returns a new datetime with updated date without changing the time' do
+        meeting = create(:meeting, start_time: DateTime.new(2022, 11, 11, 15, 0, 0, '-05:00'),
+                                   end_time: DateTime.new(2022, 11, 11, 18, 0, 0, '-05:00'))
+        target_date = Date.parse('2025-08-12')
+
+        expect(meeting.updated_date_on_end_time(target_date)).to eq(DateTime.parse("#{target_date} 18:00:00 -05:00"))
+        expect(meeting.start_time).to eq(DateTime.parse("#{Date.parse('2022-11-11')} 15:00:00 -05:00"))
+      end
+    end
   end
 end

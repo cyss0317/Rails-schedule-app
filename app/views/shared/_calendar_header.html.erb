@@ -14,7 +14,7 @@
   <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": meetings_weekly_path, "Month": root_path} } %>
   <div class="user-name"><%= current_user.full_name %></div>
   
-  <%= render partial: "shared/icons/hamburger" %>
+  <%= render partial: "shared/icons/hamburger", locals: { current: current } %>
 </div>
 
 <script>
