@@ -152,6 +152,38 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: week_start_time..week_end_time)
   end
 
+  def self.copy_most_recent_week_of_meetings_to_target_week(target_week)
+    most_recent_week_meetings = Meeting.most_recent_week_meetings
+    target_week_cwday_to_date = {}
+    # { 0: date_object }
+    target_week.each { |date| target_week_cwday_to_date[date.cwday] = date }
+
+    # [monday, tuesday]
+    most_recent_week_meetings.each do |meeting|
+      # as we loop over, we want to add day differences to the existing meeting so we can generate
+      # same set of meetings for target week
+      target_date =  target_week_cwday_to_date[meeting.convert_wday_to_cwday(meeting.start_time.wday)]
+      new_start_time = meeting.updated_date_on_start_time(target_date)
+      new_end_time = meeting.updated_date_on_end_time(target_date)
+
+      Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id)
+    end
+  end
+
+  def updated_date_on_start_time(target_date)
+    DateTime.parse("#{target_date} #{start_time.strftime('%H:%M:%S %z')}")
+  end
+
+  def updated_date_on_end_time(target_date)
+    DateTime.parse("#{target_date} #{end_time.strftime('%H:%M:%S %z')}")
+  end
+
+  def convert_wday_to_cwday(number)
+    return 7 if number.zero?
+
+    number
+  end
+
   private
 
   def start_time_cannot_be_greater_than_end_time

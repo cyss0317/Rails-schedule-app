@@ -12,7 +12,11 @@ end
 Rails.application.routes.draw do
   set_up_flipper
 
-  resources :meetings
+  resources :meetings do
+    collection do
+      post 'copy_previous_week_schedule'
+    end
+  end
   get 'meetings_weekly', to: 'meetings#weekly'
   post 'seed_meetings', to: 'meetings#seed'
   root to: 'home#index'
