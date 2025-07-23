@@ -13,6 +13,9 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+RUN gem update --system 3.4.10
+RUN gem install bundler:2.4.22
+RUN gem update --system 3.3.22
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
