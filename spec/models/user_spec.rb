@@ -41,4 +41,38 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#can_work_for_time_frame?(start_time, end_time, date)' do
+    let(:user) { create(:user, email: 'test@test.com') }
+
+    let(:date) { Date.parse('2025-07-21') }
+    let(:day_off) do
+      create(:day_off, start_time: DateTime.parse("#{date} 10:00:00 -5:00"),
+                       end_time: DateTime.parse("#{date} 18:00:00 -5:00"), user_id: user.id)
+    end
+    # let(:shift) do
+    #   create(:meeting, start_time: DateTime.parse("#{date} 10:00:00 -5:00"),
+    #                    end_time: DateTime.parse("#{date} 18:00:00 -5:00"), user_id: user.id)
+    # end
+
+    it "returns true if the user's day_off for the date does NOT overlap with the given time frame" do
+      shift = create(:meeting, start_time: DateTime.parse("#{date} 10:00:00 -5:00"),
+                               end_time: DateTime.parse("#{date} 18:00:00 -5:00"), user_id: user.id)
+
+      user.day_offs << day_off
+      user.meetings << shift
+
+      expect(user.can_work_for_time_frame?(shift.start_time, shift.end_time, date)).to be false
+    end
+
+    it "returns false if the user's day_off for the date overlaps with the given time frame" do
+      shift = create(:meeting, start_time: DateTime.parse("#{date} 19:00:00 -5:00"),
+                               end_time: DateTime.parse("#{date} 23:00:00 -5:00"), user_id: user.id)
+
+      user.day_offs << day_off
+      user.meetings << shift
+
+      expect(user.can_work_for_time_frame?(shift.start_time, shift.end_time, date)).to be true
+    end
+  end
 end
