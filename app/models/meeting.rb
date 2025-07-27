@@ -152,7 +152,7 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: week_start_time..week_end_time)
   end
 
-  def self.copy_most_recent_week_of_meetings_to_target_week(target_week)
+  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list)
     most_recent_week_meetings = Meeting.most_recent_week_meetings
     target_week_cwday_to_date = {}
     # { 0: date_object }
@@ -165,8 +165,13 @@ class Meeting < ApplicationRecord
       target_date =  target_week_cwday_to_date[meeting.convert_wday_to_cwday(meeting.start_time.wday)]
       new_start_time = meeting.updated_date_on_start_time(target_date)
       new_end_time = meeting.updated_date_on_end_time(target_date)
+      # need to check if these new times collapse with day_off for the shift's user
 
-      Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id)
+      if meeting.user.can_work_for_time_frame?(new_start_time, new_end_time, target_date)
+        Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id)
+      else
+        unable_to_copy_meeting_list << meeting
+      end
     end
   end
 
@@ -182,6 +187,10 @@ class Meeting < ApplicationRecord
     return 7 if number.zero?
 
     number
+  end
+
+  def user_can_work?
+    # check if meetings start_time and end_time collapse with user's day_off's start_time and end_time
   end
 
   private

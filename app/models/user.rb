@@ -37,6 +37,13 @@ class User < ApplicationRecord
     Flipper.enabled?(feature, Flipper::Actor.new(email.downcase))
   end
 
+  def can_work_for_time_frame?(start_time, end_time, date)
+    day_off = day_offs.for_day_filtered_by_date(date).first
+    return true unless day_off
+
+    !(day_off.start_time < end_time && start_time < day_off.end_time)
+  end
+
   def time_zone
     Time.now.zone || 'UTC'
   end

@@ -12,7 +12,7 @@
       <%= button_to "SEED Shifts", seed_meetings_path, method: :post %>
     <% end %>
     <% if current_user.admin_user? && current == "Week" && @meetings.empty? %>
-      <%= button_to "Copy Last Meetings", copy_previous_week_schedule_meetings_path(target_week: @date_range), method: :post, data: { confirm: "Click 'Yes' to continue and copy most recent week's schedule", turbo: false} %>
+      <%= button_to "Copy Last Week Shifts", copy_previous_week_schedule_meetings_path(target_week: @date_range), method: :post, data: { confirm: "Click 'Yes' to continue and copy most recent week's schedule", turbo: false} %>
     <% end %>
     <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
   </div>
