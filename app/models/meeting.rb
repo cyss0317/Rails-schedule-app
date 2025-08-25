@@ -165,7 +165,6 @@ class Meeting < ApplicationRecord
       target_date =  target_week_cwday_to_date[meeting.convert_wday_to_cwday(meeting.start_time.wday)]
       new_start_time = meeting.updated_date_on_start_time(target_date)
       new_end_time = meeting.updated_date_on_end_time(target_date)
-      # need to check if these new times collapse with day_off for the shift's user
 
       if meeting.user.can_work_for_time_frame?(new_start_time, new_end_time, target_date)
         Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id)

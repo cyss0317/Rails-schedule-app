@@ -99,8 +99,6 @@ class MeetingsController < ApplicationController
       end
       [user, total_hours.round(1)]
     end
-
-
   end
 
   def copy_previous_week_schedule
@@ -110,10 +108,10 @@ class MeetingsController < ApplicationController
     # grab the most recent meeting and scope them by the week
     Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list)
 
-    notice_message = @unable_to_copy_meeting_list.map { |meeting| "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date.to_s}"}.join("<br>").html_safe
-    # direct them to the week view
+    notice_message = @unable_to_copy_meeting_list.map do |meeting|
+      "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
+    end.join('<br>').html_safe
     redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
-    #  redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: 'Meeting was successfully created'
   end
 
   private
