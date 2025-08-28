@@ -18,6 +18,10 @@ class Meeting < ApplicationRecord
                              where(start_time: date.beginning_of_month.beginning_of_week..date.end_of_month.end_of_week.end_of_day)
                            }
   scope :sort_by_start_time, -> { order(start_time: :asc) }
+  scope :within_range, ->(range) { where(start_time: range.first.beginning_of_day..range.last.end_of_day) }
+  scope :meetings_for_the_week, lambda { |date|
+                                  where(start_time: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day)
+                                }
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50

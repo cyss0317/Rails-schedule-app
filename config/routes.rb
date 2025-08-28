@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :meetings do
     collection do
       post 'copy_previous_week_schedule'
+      delete 'clear_selected_week'
     end
   end
   get 'meetings_weekly', to: 'meetings#weekly'
