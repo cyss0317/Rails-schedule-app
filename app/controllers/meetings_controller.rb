@@ -128,6 +128,7 @@ class MeetingsController < ApplicationController
       notice_message = ['There are no schedules for this week']
     end
 
+    Rails.logger.info("CACHED: #{Rails.cache.read('last_cleared_schedules')}")
     redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
   end
 
