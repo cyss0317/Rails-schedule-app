@@ -26,9 +26,10 @@ RSpec.describe '/meetings', type: :request do
   let(:invalid_attributes) do
     skip('Add a hash of attributes invalid for your model')
   end
+  let(:user) { create(:user) }
 
   before do
-    sign_in create(:user)
+    sign_in user
   end
 
   describe 'GET /index' do
@@ -49,6 +50,7 @@ RSpec.describe '/meetings', type: :request do
 
   describe 'GET /new' do
     it 'renders a successful response' do
+      @users =  create_list(:user, 4)
       get new_meeting_url
       expect(response).to be_successful
     end
@@ -140,6 +142,28 @@ RSpec.describe '/meetings', type: :request do
       expect do
         post seed_meetings_url
       end.to change(Meeting, :count)
+    end
+  end
+
+  describe 'DELETE /clear_selected_week' do
+    it 'deletes all the meetings for the week' do
+      target_date = Time.zone.parse('2023-01-02 10:00:00')
+      meeting = create(:meeting, user_id: user.id, start_time: target_date)
+      (1..8).each do |idx|
+        create(:meeting, user_id: user.id, start_time: meeting.start_time + idx.day,
+                         end_time: meeting.end_time + idx.day)
+      end
+
+      target_week = %w[2023-01-02
+                       2023-01-03
+                       2023-01-04
+                       2023-01-05
+                       2023-01-06
+                       2023-01-07
+                       2023-01-08]
+      expect do
+        delete clear_selected_week_meetings_url, params: { target_week: }
+      end.to change(Meeting, :count).by(-7)
     end
   end
 end

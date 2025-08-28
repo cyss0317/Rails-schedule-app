@@ -18,6 +18,10 @@ class Meeting < ApplicationRecord
                              where(start_time: date.beginning_of_month.beginning_of_week..date.end_of_month.end_of_week.end_of_day)
                            }
   scope :sort_by_start_time, -> { order(start_time: :asc) }
+  scope :within_range, ->(range) { where(start_time: range.first.beginning_of_day..range.last.end_of_day) }
+  scope :meetings_for_the_week, lambda { |date|
+                                  where(start_time: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day)
+                                }
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50
@@ -152,7 +156,7 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: week_start_time..week_end_time)
   end
 
-  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list)
+  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list = [])
     most_recent_week_meetings = Meeting.most_recent_week_meetings
     target_week_cwday_to_date = {}
     # { 0: date_object }

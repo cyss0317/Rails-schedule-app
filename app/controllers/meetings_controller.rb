@@ -104,13 +104,31 @@ class MeetingsController < ApplicationController
   def copy_previous_week_schedule
     @unable_to_copy_meeting_list = []
     # params should have selected week
-    target_week = params[:target_week].map { |date| Date.parse(date) }
+    target_week = convert_target_week_param
     # grab the most recent meeting and scope them by the week
     Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list)
 
     notice_message = @unable_to_copy_meeting_list.map do |meeting|
       "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
     end.join('<br>').html_safe
+    redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
+  end
+
+  def clear_selected_week
+    target_week = convert_target_week_param
+    target_week_range = target_week.first.beginning_of_day..target_week.last.end_of_day
+
+    meetings = Meeting.within_range(target_week_range)
+    Rails.cache.write('last_cleared_schedules', meetings, expires_in: 10.minutes)
+
+    if meetings.exists?
+      meetings.destroy_all
+      notice_message = ['Successfully deleted']
+    else
+      notice_message = ['There are no schedules for this week']
+    end
+
+    Rails.logger.info("CACHED: #{Rails.cache.read('last_cleared_schedules')}")
     redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
   end
 
@@ -193,5 +211,9 @@ class MeetingsController < ApplicationController
   def meeting_params
     # deserialize_params
     params.require(:meeting).permit(:name, :start_time, :end_time, :user_id)
+  end
+
+  def convert_target_week_param
+    params[:target_week].map { |date| Date.parse(date) }
   end
 end

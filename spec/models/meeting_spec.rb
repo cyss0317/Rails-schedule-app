@@ -31,6 +31,27 @@ RSpec.describe Meeting, type: :model do
       expect(sorted_meetings[1].start_time.hour).to eq(11)
       expect(sorted_meetings[2].start_time.hour).to eq(12)
     end
+
+    it '.within_range' do
+      target_date = Time.zone.parse('2023-01-02 10:00:00')
+      meeting = create(:meeting, user_id: user.id, start_time: target_date)
+      (1..8).each do |idx|
+        create(:meeting, user_id: user.id, start_time: meeting.start_time + idx.day,
+                         end_time: meeting.end_time + idx.day)
+      end
+      range = [target_date, target_date + 1.day, target_date + 2.days]
+      expect(Meeting.within_range(range).length).to be(3)
+    end
+    it '.meetings_for_the_week' do
+      target_date = Time.zone.parse('2023-01-02 10:00:00')
+      meeting = create(:meeting, user_id: user.id, start_time: target_date)
+      (1..8).each do |idx|
+        create(:meeting, user_id: user.id, start_time: meeting.start_time + idx.day,
+                         end_time: meeting.end_time + idx.day)
+      end
+      expect(Meeting.meetings_for_the_week(target_date).length).to be(7)
+      expect(Meeting.meetings_for_the_week(target_date + 7.days).length).to be(2)
+    end
   end
 
   describe 'methods' do
