@@ -156,7 +156,7 @@ class Meeting < ApplicationRecord
     Meeting.where(start_time: week_start_time..week_end_time)
   end
 
-  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list)
+  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list = [])
     most_recent_week_meetings = Meeting.most_recent_week_meetings
     target_week_cwday_to_date = {}
     # { 0: date_object }
