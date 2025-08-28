@@ -172,6 +172,27 @@ RSpec.describe Meeting, type: :model do
           Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
         end.to change(Meeting, :count).by(7)
       end
+
+      it "does NOT copy those meetings overlap with the user's day off" do
+        start_date = Date.parse('2025-07-21') # Monday
+        user.day_offs << create(:day_off, user:,
+                                          start_time: DateTime.parse("#{start_date} 00:00:01"),
+                                          end_time: DateTime.parse("#{start_date} 23:23:59"))
+        user.save!
+        target_week = (0..6).map { |i| start_date + i }
+
+        today = Date.new(2025, 7, 14)
+        7.times do |idx|
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+        7.times do |idx|
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+        end
+
+        expect do
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+        end.to change(Meeting, :count).by(12)
+      end
     end
 
     describe '#updated_date_on_start_time' do
