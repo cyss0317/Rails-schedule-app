@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_11_183655) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_11_193412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,6 +47,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_11_183655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
+  end
+
+  create_table "location_users", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "company_id"
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_location_users_on_company_id"
   end
 
   create_table "locations", force: :cascade do |t|
