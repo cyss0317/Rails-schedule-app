@@ -51,11 +51,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_11_193412) do
 
   create_table "location_users", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "company_id"
-    t.string "role"
+    t.integer "location_id"
+    t.string "role", default: "user"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_location_users_on_company_id"
+    t.index ["location_id"], name: "index_location_users_on_location_id"
   end
 
   create_table "locations", force: :cascade do |t|

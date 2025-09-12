@@ -8,10 +8,12 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true, length: { maximum: 15 }
   validates :last_name, presence: true, length: { maximum: 15 }
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
 
   has_many :meetings, dependent: :destroy
   has_many :day_offs, dependent: :destroy
-  has_many :location
+  has_many :location_users, dependent: :destroy
+  has_many :locations, through: :location_users
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
   scope :without_demo_user, lambda {

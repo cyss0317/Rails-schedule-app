@@ -162,7 +162,7 @@ class MeetingsController < ApplicationController
 
     filtered_users = User.where(id: active_user_ids)
 
-    return [] if filtered_users.empty?
+    return @users = [] if filtered_users.empty?
 
     @users = if unavailable_to_work_employee_ids.empty?
                filtered_users.pluck(
