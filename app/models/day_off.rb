@@ -37,6 +37,7 @@ class DayOff < ApplicationRecord
   scope :all_day_offs, lambda { |date|
     for_day_filtered_by_date(date).where.not(id: DayOff.morning_day_offs(date).select(:id)).where.not(id: DayOff.evening_day_offs(date).select(:id))
   }
+  scope :filter_by_location_id, ->(location_id) { where(location_id:) }
 
   def off_dates
     (start_time.to_date..end_time.to_date).to_a

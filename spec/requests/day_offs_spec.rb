@@ -35,7 +35,7 @@ RSpec.describe 'DayOffs', type: :request do
       expect do
         sign_in user  # This method is now properly supported
 
-        post day_offs_path, params: valid_params
+        post location_day_offs_path, params: valid_params
       end.to change(DayOff, :count).by(1)
     end
 
@@ -43,7 +43,7 @@ RSpec.describe 'DayOffs', type: :request do
       expect do
         sign_in user  # Sign in added here for consistency
 
-        post day_offs_path, params: invalid_params
+        post location_day_offs_path, params: invalid_params
       end.to change(DayOff, :count).by(0)
     end
   end
