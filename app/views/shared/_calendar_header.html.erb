@@ -9,9 +9,9 @@
     <%= link_to "#{calendar.current_month_in_string} #{calendar.year}", root_path, class: "calendar-title" %>
   <% end %>
 
-  <%= link_to "Today", current.downcase == "month" ? root_path : meetings_weekly_path, class: "today-btn" %>
+  <%= link_to "Today", current.downcase == "month" ? root_path : weekly_location_meetings_path, class: "today-btn" %>
 
-  <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": meetings_weekly_path, "Month": root_path} } %>
+  <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": weekly_location_meetings_path, "Month": root_path} } %>
   <div class="user-name"><%= current_user.full_name %></div>
   
   <%= render partial: "shared/icons/hamburger", locals: { current: current } %>

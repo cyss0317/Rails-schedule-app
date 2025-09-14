@@ -8,7 +8,7 @@
 
         <div class="monthly-date"> <%= date.day %> </div>
 
-        <%= link_to meetings_weekly_path(start_date: date), class: "flex flex-col gap-2" do %>
+        <%= link_to weekly_location_meetings_path(start_date: date), class: "flex flex-col gap-2" do %>
           <div class="monthly-shifts">
             <% if DayOff.for_day_filtered_by_date(date).present? %>
               <% all_day_offs = DayOff.all_day_offs(date.in_time_zone) %>

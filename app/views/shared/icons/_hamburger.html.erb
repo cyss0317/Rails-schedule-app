@@ -9,13 +9,13 @@
     <%= yield %>
     <%= button_to "Edit Profile", edit_user_registration_path, method: :get %>
     <% if Rails.env.development?  %>
-      <%= button_to "SEED Shifts", seed_meetings_path, method: :post %>
+      <%= button_to "SEED Shifts", seed_location_meetings_path, method: :post %>
     <% end %>
     <% if current_user.admin_user? && current == "Week" %>
       <% if @meetings.empty? %>
         <%= button_to "Copy Last Week Shifts", copy_previous_week_schedule_location_meetings_path(target_week: @date_range), method: :post, data: { confirm: "Click 'Yes' to continue and copy most recent week's schedule", turbo: false} %>
       <% else %>
-        <%= button_to "Clear This Week Shifts", clear_selected_week_meetings_url(target_week: @date_range), method: :delete, data: { confirm: "Click 'Yes' to continue and delete schdules for this week", turbo: false } %>
+        <%= button_to "Clear This Week Shifts", clear_selected_week_location_meetings_path(target_week: @date_range), method: :delete, data: { confirm: "Click 'Yes' to continue and delete schdules for this week", turbo: false } %>
       <% end %>
     <% end %>
     <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>

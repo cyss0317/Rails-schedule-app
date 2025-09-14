@@ -162,7 +162,7 @@ RSpec.describe '/meetings', type: :request do
                        2023-01-07
                        2023-01-08]
       expect do
-        delete clear_selected_week_meetings_url, params: { target_week: }
+        delete clear_selected_week_location_meetings_path, params: { target_week: }
       end.to change(Meeting, :count).by(-7)
     end
   end

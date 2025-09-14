@@ -12,8 +12,6 @@ end
 Rails.application.routes.draw do
   set_up_flipper
 
-  get 'meetings_weekly', to: 'meetings#weekly'
-  post 'seed_meetings', to: 'meetings#seed'
   root to: 'home#index'
   devise_for :users, controllers: {
     registrations: 'users/registrations',
@@ -26,6 +24,8 @@ Rails.application.routes.draw do
     resources :locations, shallow: true, only: %i[new create edit index] do
       resources :meetings, shallow: true do
         collection do
+          get 'weekly', to: 'meetings#weekly'
+          post 'seed', to: 'meetings#seed'
           post 'copy_previous_week_schedule'
           delete 'clear_selected_week'
         end

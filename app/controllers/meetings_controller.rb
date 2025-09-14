@@ -9,7 +9,6 @@ class MeetingsController < ApplicationController
 
   # GET /meetings or /meetings.json
   def index
-    location_id = params[:location_id]
     @meetings = Meeting.filter_by_location_id(location_id).sort_by_start_time
   end
 
@@ -35,7 +34,8 @@ class MeetingsController < ApplicationController
       if @meeting.save
         # format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
         format.html do
-          redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: 'Meeting was successfully created'
+          redirect_to weekly_location_meetings_path(start_date: @meeting.start_time),
+                      notice: 'Meeting was successfully created'
         end
         # format.json { render :show, status: :created, location: @meeting }
       else
@@ -49,7 +49,8 @@ class MeetingsController < ApplicationController
     respond_to do |format|
       if @meeting.update(meeting_params)
         format.html do
-          redirect_to meetings_weekly_path(start_date: @meeting.start_time), notice: 'Meeting was successfully updated.'
+          redirect_to weekly_location_meetings_path(start_date: @meeting.start_time),
+                      notice: 'Meeting was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @meeting }
       else
@@ -91,7 +92,8 @@ class MeetingsController < ApplicationController
       @end_time = params[:start_time] ? params[:start_time].to_date.end_of_week.at_end_of_day : DateTime.now.end_of_week.at_end_of_day
       # @meetings = Meeting.where(start_time: DateTime.now.beginning_of_week, end_time:DateTime.now.end_of_week)
     end
-    @meetings = Meeting.find_all_by_start_time_and_end_time(@start_time, @end_time).sort_by_start_time
+    @meetings = Meeting.filter_by_location_id(location_id).find_all_by_start_time_and_end_time(@start_time,
+                                                                                               @end_time).sort_by_start_time
     @users = @meetings.map(&:user).uniq
     @users_total_hours_for_week = @users.map do |user|
       total_hours = 0
@@ -112,7 +114,7 @@ class MeetingsController < ApplicationController
     notice_message = @unable_to_copy_meeting_list.map do |meeting|
       "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
     end.join('<br>').html_safe
-    redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
+    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
   end
 
   def clear_selected_week
@@ -130,7 +132,7 @@ class MeetingsController < ApplicationController
     end
 
     Rails.logger.info("CACHED: #{Rails.cache.read('last_cleared_schedules')}")
-    redirect_to meetings_weekly_path(start_date: target_week[0]), notice: notice_message
+    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
   end
 
   private
@@ -216,5 +218,9 @@ class MeetingsController < ApplicationController
 
   def convert_target_week_param
     params[:target_week].map { |date| Date.parse(date) }
+  end
+
+  def location_id
+    params[:location_id]
   end
 end

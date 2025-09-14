@@ -15,7 +15,8 @@ class DayOffsController < ApplicationController
     respond_to do |format|
       if @day_off.save
         format.html do
-          redirect_to meetings_weekly_path(start_date: @day_off.start_time), notice: 'Successfully requested day off'
+          redirect_to weekly_location_meetings_path(start_date: @day_off.start_time),
+                      notice: 'Successfully requested day off'
         end
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -31,7 +32,9 @@ class DayOffsController < ApplicationController
   def update
     if validate_params && @day_off.update(day_off_params)
       respond_to do |format|
-        format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully updated day off' }
+        format.html do
+          redirect_to weekly_location_meetings_path(@day_off.start_time), notice: 'Successfully updated day off'
+        end
       end
     else
       respond_to do |format|
@@ -48,7 +51,7 @@ class DayOffsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to meetings_weekly_path(deleted_day_off_start_time), notice: 'Successfully deleted day off'
+        redirect_to weekly_location_meetings_path(deleted_day_off_start_time), notice: 'Successfully deleted day off'
       end
       format.json { head :no_content }
     end
