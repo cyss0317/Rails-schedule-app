@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :meeting do
+    transient { meetings_count { 2 } }
     user
     name { 'MyString' }
     start_time { '2023-11-17 23:56:19' }
@@ -24,6 +25,11 @@ FactoryBot.define do
     end
 
     trait(:create_test_case) do
+    end
+
+    trait(:with_relationships) do
+      association :user
+      association :location
     end
   end
 end

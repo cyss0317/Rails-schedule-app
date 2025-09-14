@@ -9,7 +9,8 @@ class MeetingsController < ApplicationController
 
   # GET /meetings or /meetings.json
   def index
-    @meetings = Meeting.all.sort_by_start_time
+    location_id = params[:location_id]
+    @meetings = Meeting.filter_by_location_id(location_id).sort_by_start_time
   end
 
   # GET /meetings/1 or /meetings/1.json

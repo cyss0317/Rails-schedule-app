@@ -3,6 +3,7 @@ FactoryBot.define do
     association :company
 
     transient { location_user_count { 2 } }
+    transient { meetings_count { 2 } }
 
     name { Faker::Company.name }
     street_address { Faker::Address.street_address }
@@ -15,6 +16,7 @@ FactoryBot.define do
 
     trait(:with_relationships) do
       after(:create) { |location, e| create_list(:location_user, e.location_user_count, location:) }
+      after(:create) { |location, e| create_list(:meeting, e.meetings_count, location:) }
     end
   end
 end

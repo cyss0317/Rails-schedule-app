@@ -6,6 +6,7 @@ class Meeting < ApplicationRecord
   include TimeHelper
 
   belongs_to :user
+  belongs_to :location
 
   validates :start_time, presence: true
   validates :end_time, presence: true, date: { after_or_equal_to: :start_time }
@@ -22,6 +23,7 @@ class Meeting < ApplicationRecord
   scope :meetings_for_the_week, lambda { |date|
                                   where(start_time: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day)
                                 }
+  scope :filter_by_location_id, ->(location_id) { where(location_id:)}
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50

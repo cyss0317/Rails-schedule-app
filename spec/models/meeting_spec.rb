@@ -52,6 +52,14 @@ RSpec.describe Meeting, type: :model do
       expect(Meeting.meetings_for_the_week(target_date).length).to be(7)
       expect(Meeting.meetings_for_the_week(target_date + 7.days).length).to be(2)
     end
+
+    it '.filter_by_location_id(location_id)' do
+      locations = create_list(:location, 2, :with_relationships, meetings_count: 10)
+      location = create(:location, :with_relationships, meetings_count: 20)
+      expect(Meeting.filter_by_location_id(locations[0].id).length).to be(10)
+      expect(Meeting.filter_by_location_id(locations[0].id).length).to be(10)
+      expect(Meeting.filter_by_location_id(location.id).length).to be(20)
+    end
   end
 
   describe 'methods' do

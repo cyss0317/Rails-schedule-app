@@ -1,0 +1,12 @@
+<div class="flex align-items-center justify-content-evenly gap-3">
+  <div class="flex flex-col align-items-center justify-content-evenly gap-3">
+    <% @companies.each do |company| %>
+      <%= link_to "#{company.name}", company_locations_path(company) %>
+    <% end %>
+  </div>
+  <div class="flex flex-col align-items-center justify-content-evenly gap-3">
+    <% @locations.each do |location| %>
+      <%= link_to "Show Schedules", company_location_meetings_path() %>
+    <% end %>
+  </div>
+</div>

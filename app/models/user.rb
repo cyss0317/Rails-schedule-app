@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :day_offs, dependent: :destroy
   has_many :location_users, dependent: :destroy
   has_many :locations, through: :location_users
+  has_many :companies
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
   scope :without_demo_user, lambda {

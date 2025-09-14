@@ -1,0 +1,16 @@
+<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+  <%=form_for(@location, as: "location", url: method == :POST ? company_locations_path : edit_company_location_path, html: { method: method }) do |f| %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "Name" , field: "name"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "Street Address" , field: "street_address"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "Building Number" , field: "building_number"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "City" , field: "city"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "State" , field: "state"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "Zip Code" , field: "zip_code"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "Phone Number" , field: "phone_number"  } %>
+    <%= f.hidden_field :company_id, value: @company.id%>
+    <div class="flex items-center justify-content-evenly">
+          <%= render partial: "shared/button", locals: { display_text: method == :POST ? "Create" : "Update" } %>
+          <%= render partial: "shared/cancel_button" %>
+    </div>
+  <% end %>
+</div>
