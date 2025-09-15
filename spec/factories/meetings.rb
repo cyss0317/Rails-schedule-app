@@ -2,12 +2,13 @@
 
 FactoryBot.define do
   factory :meeting do
+    association :user
+    association :location
+
     transient { meetings_count { 2 } }
-    user
     name { 'MyString' }
     start_time { '2023-11-17 23:56:19' }
     end_time { '2023-11-17 23:56:19' }
-    user_id { user.id }
 
     trait(:morning_shift) do
       start_time { Time.zone.now.beginning_of_day + 8.hours }

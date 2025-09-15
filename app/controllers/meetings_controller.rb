@@ -123,7 +123,7 @@ class MeetingsController < ApplicationController
     target_week = convert_target_week_param
     target_week_range = target_week.first.beginning_of_day..target_week.last.end_of_day
 
-    meetings = Meeting.within_range(target_week_range)
+    meetings = Meeting.filter_by_location_id(location_id).within_range(target_week_range)
     Rails.cache.write('last_cleared_schedules', meetings, expires_in: 10.minutes)
 
     if meetings.exists?
@@ -161,7 +161,7 @@ class MeetingsController < ApplicationController
 
     unavailable_to_work_employee_ids = off_users_ids - morning_day_off_users_ids - evening_day_off_users_ids
 
-    active_user_ids = User.without_demo_user.sort_by_first_name.select do |user|
+    active_user_ids = Location.find(location_id).users.without_demo_user.sort_by_first_name.select do |user|
       (user.flipper_enabled?(:admin) || user.flipper_enabled?(:active)) && user.id
     end
 

@@ -27,6 +27,7 @@ RSpec.describe '/meetings', type: :request do
     skip('Add a hash of attributes invalid for your model')
   end
   let(:user) { create(:user) }
+  let(:location) { create(:location)}
 
   before do
     sign_in user
@@ -51,7 +52,7 @@ RSpec.describe '/meetings', type: :request do
   describe 'GET /new' do
     it 'renders a successful response' do
       @users =  create_list(:user, 4)
-      get new_meeting_url
+      get new_location_meeting_path(location)
       expect(response).to be_successful
     end
   end
@@ -68,12 +69,12 @@ RSpec.describe '/meetings', type: :request do
     context 'with valid parameters' do
       it 'creates a new Meeting' do
         expect do
-          post meetings_url, params: { meeting: valid_attributes }
+          post location_meetings_path(location), params: { meeting: valid_attributes }
         end.to change(Meeting, :count).by(1)
       end
 
       it 'redirects to the created meeting' do
-        post meetings_url, params: { meeting: valid_attributes }
+        post location_meetings_path(location), params: { meeting: valid_attributes }
         expect(response).to redirect_to(meeting_url(Meeting.last))
       end
     end
@@ -81,12 +82,12 @@ RSpec.describe '/meetings', type: :request do
     context 'with invalid parameters' do
       it 'does not create a new Meeting' do
         expect do
-          post meetings_url, params: { meeting: invalid_attributes }
+          post location_meetings_path(location), params: { meeting: invalid_attributes }
         end.to change(Meeting, :count).by(0)
       end
 
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
-        post meetings_url, params: { meeting: invalid_attributes }
+        post location_meetings_path(location), params: { meeting: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -151,7 +152,7 @@ RSpec.describe '/meetings', type: :request do
       meeting = create(:meeting, user_id: user.id, start_time: target_date)
       (1..8).each do |idx|
         create(:meeting, user_id: user.id, start_time: meeting.start_time + idx.day,
-                         end_time: meeting.end_time + idx.day)
+                         end_time: meeting.end_time + idx.day, location_id: location.id)
       end
 
       target_week = %w[2023-01-02
@@ -162,7 +163,7 @@ RSpec.describe '/meetings', type: :request do
                        2023-01-07
                        2023-01-08]
       expect do
-        delete clear_selected_week_location_meetings_path, params: { target_week: }
+        delete clear_selected_week_location_meetings_path(location), params: { target_week: }
       end.to change(Meeting, :count).by(-7)
     end
   end

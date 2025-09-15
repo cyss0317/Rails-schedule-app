@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Meeting, type: :model do
+  let(:location) { create(:location) }
   describe 'associations' do
     it { should belong_to(:user) }
   end
@@ -194,11 +195,12 @@ RSpec.describe Meeting, type: :model do
 
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, start_time: today.beginning_of_week + idx.day,
+                           end_time: today + idx.day + 2.hours, location_id: location.id)
         end
 
         expect do
-          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.filter_by_location_id(location.id).copy_most_recent_week_of_meetings_to_target_week(target_week)
         end.to change(Meeting, :count).by(7)
       end
 
@@ -212,14 +214,16 @@ RSpec.describe Meeting, type: :model do
 
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours,
+                           location_id: location.id)
         end
         7.times do |idx|
-          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours,
+                           location_id: location.id)
         end
 
         expect do
-          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.filter_by_location_id(location.id).copy_most_recent_week_of_meetings_to_target_week(target_week)
         end.to change(Meeting, :count).by(12)
       end
     end

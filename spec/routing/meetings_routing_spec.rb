@@ -3,13 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe MeetingsController, type: :routing do
+  let(:location) { create(:location) }
   describe 'routing' do
     it 'routes to #index' do
-      expect(get: '/meetings').to route_to('meetings#index')
+      expect(get: location_meetings_path(location)).to route_to('meetings#index', location_id: location.id.to_s)
     end
 
     it 'routes to #new' do
-      expect(get: '/meetings/new').to route_to('meetings#new')
+      expect(get: new_location_meeting_path(location)).to route_to('meetings#new', location_id: location.id.to_s)
     end
 
     it 'routes to #show' do
@@ -21,7 +22,7 @@ RSpec.describe MeetingsController, type: :routing do
     end
 
     it 'routes to #create' do
-      expect(post: '/meetings').to route_to('meetings#create')
+      expect(post: location_meetings_path(location)).to route_to('meetings#create', location_id: location.id.to_s)
     end
 
     it 'routes to #update via PUT' do

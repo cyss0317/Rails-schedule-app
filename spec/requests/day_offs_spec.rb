@@ -5,14 +5,17 @@ require 'rails_helper'
 RSpec.describe 'DayOffs', type: :request do
   include Devise::Test::IntegrationHelpers # Corrected include here
 
-  let!(:user) { create(:user) }
+  let(:user) { create(:user, :with_relationships) }
+  let(:location) { Location.first }
+
   let(:valid_params) do
     {
       'day_offs' => {
         'start_time' => '2020-01-01 12:00:00 -0600',
         'end_time' => '2020-01-01 14:00:00 -0600',
         'user_id' => user.id,
-        'description' => 'I need a day off'
+        'description' => 'I need a day off',
+        'location_id' => location.id.to_s
       }
     }
   end
@@ -35,7 +38,7 @@ RSpec.describe 'DayOffs', type: :request do
       expect do
         sign_in user  # This method is now properly supported
 
-        post location_day_offs_path, params: valid_params
+        post location_day_offs_path(location), params: valid_params
       end.to change(DayOff, :count).by(1)
     end
 

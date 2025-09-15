@@ -2,6 +2,7 @@
 
 class DayOff < ApplicationRecord
   belongs_to :user
+  belongs_to :location
 
   validates :start_time, :user_id, :description, presence: true
   validates :end_time, date: { after_or_equal_to: :start_time }
@@ -129,20 +130,21 @@ class DayOff < ApplicationRecord
   def available_days
     # Assume `off_dates` is an array of Date objects representing the range from `start_time` to `end_time`.
     available_all_days = off_dates - taken_days
+    location_day_offs = DayOff.filter_by_location_id(location.id)
 
     half_day_available_days = taken_days.select do |date|
       # day_offs_for_date = DayOff.where('? BETWEEN start_time AND end_time', date)
       #                           .where.not(id:)
 
-      morning_off_taken = DayOff.morning_day_offs(date)
-      evening_off_taken = DayOff.evening_day_offs(date)
+      morning_off_taken = location_day_offs.morning_day_offs(date)
+      evening_off_taken = location_day_offs.evening_day_offs(date)
       # Filter out all-day offs and returns days for where only one half is taken
-      !DayOff.all_day_offs(date).present? && (morning_off_taken != evening_off_taken)
+      !location_day_offs.all_day_offs(date).present? && (morning_off_taken != evening_off_taken)
       # !DayOff.all_day_offs(date).present? && (morning_off_taken.count > 1 || evening_off_taken.count > 1)
     end
     # Combine and uniquify all and half-day available days
     (available_all_days + half_day_available_days).uniq.sort.map do |date|
-      day_offs = DayOff.where(
+      day_offs = location_day_offs.where(
         "DATE(start_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') <= ? AND
         DATE(end_time AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') >= ?", date, date
       )
@@ -154,9 +156,9 @@ class DayOff < ApplicationRecord
       #   return true if evening_off_availability
       # end
       # availability = check_days_taken
-      DayOff.where('start_time <= ? AND end_time >= ?', start_time, end_time).count
-      taken_days.select { |date| half_day_taken?(date) && DayOff.morning_day_offs(date) }
-      taken_days.select { |date| half_day_taken?(date) && DayOff.evening_day_offs(date) }
+      location_day_offs.where('start_time <= ? AND end_time >= ?', start_time, end_time).count
+      taken_days.select { |taken_date| half_day_taken?(taken_date) && location_day_offs.morning_day_offs(taken_date) }
+      taken_days.select { |taken_date| half_day_taken?(taken_date) && location_day_offs.evening_day_offs(taken_date) }
       # return "" if availability
 
       if day_offs.any? { |day_off| day_off.morning_off?(date) }
