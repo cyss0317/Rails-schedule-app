@@ -1,12 +1,22 @@
-<div class="flex align-items-center justify-content-evenly gap-3">
-  <div class="flex flex-col align-items-center justify-content-evenly gap-3">
+<div class="flex justify-content-evenly gap-3">
+  <div class="flex flex-col align-items-center gap-3">
     <% @companies.each do |company| %>
       <%= link_to "#{company.name}", company_locations_path(company) %>
+      <%= link_to edit_company_path(company), class: "text-blue-600 hover:text-blue-800" do %>
+       <i class="fas fa-edit mr-1"></i> Edit
+      <% end %>
     <% end %>
   </div>
-  <div class="flex flex-col align-items-center justify-content-evenly gap-3">
-    <% @locations.each do |location| %>
-      <%= link_to "Show #{location.name} Schedules", weekly_location_meetings_path(location_id: location.id) %>
-    <% end %>
-  </div>
+  <% if @companies.present? %>
+    <div class="flex flex-col align-items-center gap-3">
+      <% if @locations.empty? %>
+        <%# link_to "Create A Location", company_locations_path(@company)  %>
+        <%= render partial: "shared/button", locals: { method: "POST", display_text: "Create A Location", link: company_locations_path(@company) } %>
+      <% else %>
+        <% @locations.each do |location| %>
+          <%= link_to "Show #{location.name} Schedules", weekly_location_meetings_path(location_id: location.id) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

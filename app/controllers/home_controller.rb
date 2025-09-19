@@ -7,6 +7,11 @@ class HomeController < ApplicationController
     Rails.logger.info "HTTP_X_REAL_IP: #{request.headers['HTTP_X_REAL_IP']}"
     return redirect_to(new_user_session_path) unless current_user
 
-    redirect_to company_locations_path(company_id: current_user.companies.first.id) and return
+    if current_user.companies.empty?
+      flash[:notice] = "Let's start with create your Company"
+      redirect_to new_company_path(user_id: current_user.id)
+    else
+      redirect_to company_locations_path(company_id: current_user.companies.first.id) and return
+    end
   end
 end

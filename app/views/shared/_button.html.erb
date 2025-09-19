@@ -1,8 +1,18 @@
 <% type ||= "submit" %>
 <% classes ||= [] %>
+<% method ||= request.request_method %>
+<%# bg_class = method == "DELETE" ?  "bg-red-500" : "bg-indigo-600" %>
+<% bg_class = "bg-indigo-600" %>
+<% class_name = "flex w-full justify-center rounded-md #{bg_class} px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 #{classes.join(' ')}" %>
+<% link ||= "" %>
 
-<div class="m-1 mt-3">
-  <button type="<%= type %>" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 <%= classes.join(" ") %>">
-    <%= display_text %>
-  </button>
-</div>
+<%= debugger %>
+<% if link.present? %>
+  <%= button_to display_text, link, method: method, class: class_name %>
+<% else %>
+  <div class="m-1 mt-3">
+    <button type="<%= type %>" class="<%= class_name %>" >
+      <%= display_text %>
+    </button>
+  </div>
+<% end %>

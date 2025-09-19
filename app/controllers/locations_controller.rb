@@ -16,7 +16,10 @@ class LocationsController < ApplicationController
 
     respond_to do |format|
       if @location.save
-        format.html { redirect_to company_locations_path(@company, @location), status: 200, notice: 'Successfully created a location' }
+        format.html do
+          redirect_to company_locations_path(@company, @location), status: 200,
+                                                                   notice: 'Successfully created a location'
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @location.errors.full_message, status: :unprocessable_entity }
@@ -27,13 +30,13 @@ class LocationsController < ApplicationController
   def edit; end
 
   def index
-    if @locations&.empty?
-      respond_to do |format|
-        format.html { redirect_to new_company_location_path }
-      end
-    else
-      render
-    end
+    # if @locations&.empty?
+    #   respond_to do |format|
+    #     format.html { redirect_to new_company_location_path }
+    #   end
+    # else
+    render
+    # end
   end
 
   private

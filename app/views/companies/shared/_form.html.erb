@@ -1,9 +1,11 @@
 <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-  <%=form_for(@company, as: "company", url: method == :POST ? companies_path : edit_company_path, html: { method: method }) do |f| %>
+  <h1 class="text-lg font-medium leading-6 text-gray-900" >Company</h1>
+  <%=form_for(@company, as: "company", url: url, html: { method: method }) do |f| %>
     <%= render partial: "shared/text_field", locals: { form: f, label: "name" , field: "name"  } %>
     <%= f.hidden_field :user_id, value: current_user.id %>
     <div class="flex items-center justify-content-evenly">
-          <%= render partial: "shared/button", locals: { display_text: method == :POST ? "Create" : "Update" } %>
+          <%# render partial: "shared/button", locals: { display_text: request.request_method == "POST" ? "Create" : "Update", method: "POST"} %>
+          <%= render partial: "shared/button", locals: { display_text: "Delete", link: company_path(@company), method: :delete,  classes: ["text-red-300"]} %>
           <%= render partial: "shared/cancel_button" %>
     </div>
   <% end %>

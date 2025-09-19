@@ -19,8 +19,8 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmation: 'users/confirmations'
   }
-  resources :companies, only: %i[new create edit index] do
-    resources :locations, shallow: true, only: %i[new create edit index] do
+  resources :companies, only: %i[new create edit index destroy] do
+    resources :locations, shallow: true, only: %i[new create edit index destroy] do
       resources :day_offs, shallow: true
       resources :meetings, shallow: true do
         collection do
