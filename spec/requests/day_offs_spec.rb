@@ -55,7 +55,7 @@ RSpec.describe 'DayOffs', type: :request do
     it 'updates a day off when valid params are given' do
       day_off = create(:day_off, user_id: user.id)
 
-      patch day_off_path(day_off), params: valid_params
+      patch day_off_path(day_off, location_id: day_off.location.id), params: valid_params
 
       day_off.reload
 
@@ -65,7 +65,7 @@ RSpec.describe 'DayOffs', type: :request do
     it 'does NOT updates a day off when invalid params are given' do
       day_off = create(:day_off, user_id: user.id)
 
-      patch day_off_path(day_off), params: invalid_params
+      patch edit_day_off_path(day_off.location, day_off), params: invalid_params
 
       day_off.reload
 

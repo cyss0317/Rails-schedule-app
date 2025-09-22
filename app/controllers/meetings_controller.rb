@@ -147,15 +147,15 @@ class MeetingsController < ApplicationController
   def select_options_for_users
     start_date = params[:start_date]&.to_date || @meeting&.start_time || DateTime.now.beginning_of_week
 
-    filtered_by_date_day_offs = DayOff.filter_by_location_id(location_id).for_day_filtered_by_date(start_date)
+    day_offs_filtered_by_date = DayOff.filter_by_location_id(location_id).for_day_filtered_by_date(start_date)
 
-    off_users_ids = filtered_by_date_day_offs.map { |off| off.user.id }
+    off_users_ids = day_offs_filtered_by_date.map { |off| off.user.id }
 
-    morning_day_off_users_ids = filtered_by_date_day_offs.select do |off|
+    morning_day_off_users_ids = day_offs_filtered_by_date.select do |off|
       off.morning_off?(start_date)
     end.map(&:user_id)
 
-    evening_day_off_users_ids = filtered_by_date_day_offs.select do |off|
+    evening_day_off_users_ids = day_offs_filtered_by_date.select do |off|
       off.evening_off?(start_date)
     end.map(&:user_id)
 
@@ -174,19 +174,8 @@ class MeetingsController < ApplicationController
                  :first_name, :last_name,
                  :id
                ).map do |first_name, last_name, id|
-                 if morning_day_off_users_ids&.include?(id)
-                   [
-                     "#{first_name} #{last_name}, Off 9AM - 3PM", id
-                   ]
-                 elsif evening_day_off_users_ids&.include?(id)
-                   [
-                     "#{first_name} #{last_name}, Off 3PM - 8PM", id
-                   ]
-                 else
-                   [
-                     "#{first_name} #{last_name}", id
-                   ]
-                 end
+                 availability_label(first_name, last_name, id,
+                                    morning_day_off_users_ids, evening_day_off_users_ids)
                end
              else
                filtered_users.where.not(
@@ -195,20 +184,10 @@ class MeetingsController < ApplicationController
                  :first_name, :last_name,
                  :id
                ).map do |first_name, last_name, id|
-                 if morning_day_off_users_ids&.include?(id)
-                   [
-                     "#{first_name} #{last_name}, Off 9AM - 3PM", id
-                   ]
-                 elsif evening_day_off_users_ids&.include?(id)
-                   [
-                     "#{first_name} #{last_name}, Off 3PM - 8PM", id
-                   ]
-                 else
-                   [
-                     "#{first_name} #{last_name}", id
-                   ]
-                 end
+                 availability_label(first_name, last_name, id,
+                                    morning_day_off_users_ids, evening_day_off_users_ids)
                end
+
              end
   end
 
@@ -224,5 +203,21 @@ class MeetingsController < ApplicationController
 
   def location_id
     params[:location_id]
+  end
+
+  def availability_label(first_name, last_name, id, morning_day_off_users_ids, evening_day_off_users_ids)
+    if morning_day_off_users_ids&.include?(id)
+      [
+        "#{first_name} #{last_name}, Off 9AM - 3PM", id
+      ]
+    elsif evening_day_off_users_ids&.include?(id)
+      [
+        "#{first_name} #{last_name}, Off 3PM - 8PM", id
+      ]
+    else
+      [
+        "#{first_name} #{last_name}", id
+      ]
+    end
   end
 end

@@ -9,14 +9,11 @@
   </div>
   <% if @companies.present? %>
     <div class="flex flex-col align-items-center gap-3">
-      <% if @locations.empty? %>
         <%# link_to "Create A Location", company_locations_path(@company)  %>
-        <%= render partial: "shared/button", locals: { method: "POST", display_text: "Create A Location", link: company_locations_path(@company) } %>
-      <% else %>
         <% @locations.each do |location| %>
           <%= link_to "Show #{location.name} Schedules", weekly_location_meetings_path(location_id: location.id) %>
         <% end %>
-      <% end %>
+        <%= render partial: "shared/button", locals: { display_text: "Create A Location", link: new_company_location_path(@company), type: "button" } %>
     </div>
   <% end %>
 </div>

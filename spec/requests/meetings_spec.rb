@@ -27,7 +27,7 @@ RSpec.describe '/meetings', type: :request do
     skip('Add a hash of attributes invalid for your model')
   end
   let(:user) { create(:user) }
-  let(:location) { create(:location)}
+  let(:location) { create(:location) }
 
   before do
     sign_in user
@@ -149,7 +149,9 @@ RSpec.describe '/meetings', type: :request do
   describe 'DELETE /clear_selected_week' do
     it 'deletes all the meetings for the week' do
       target_date = Time.zone.parse('2023-01-02 10:00:00')
-      meeting = create(:meeting, user_id: user.id, start_time: target_date)
+      create(:location_user, user:, location:)
+      meeting = create(:meeting, user:, location:, start_time: target_date)
+
       (1..8).each do |idx|
         create(:meeting, user_id: user.id, start_time: meeting.start_time + idx.day,
                          end_time: meeting.end_time + idx.day, location_id: location.id)

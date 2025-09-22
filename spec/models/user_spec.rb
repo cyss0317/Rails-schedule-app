@@ -26,6 +26,8 @@ RSpec.describe User, type: :model do
       expect(user.day_offs.count).to eq(2)
       expect(user.meetings.count).to eq(3)
       expect(user.locations.count).to eq(2)
+      expect(user.working_companies.count).to eq(2)
+      expect(user.companies.count).to eq(0)
     end
   end
   describe 'scopes' do

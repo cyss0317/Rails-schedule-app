@@ -1,6 +1,7 @@
 class LocationUser < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, inverse_of: :location_users
   belongs_to :location
+  has_one :company, through: :location
 
   validates :user_id, uniqueness: { scope: :location_id }
 

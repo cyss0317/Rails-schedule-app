@@ -19,20 +19,21 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmation: 'users/confirmations'
   }
-  resources :companies, only: %i[new create edit index destroy] do
-    resources :locations, shallow: true, only: %i[new create edit index destroy] do
-      resources :day_offs, shallow: true
-      resources :meetings, shallow: true do
-        collection do
-          get 'weekly', to: 'meetings#weekly'
-          post 'seed', to: 'meetings#seed'
-          post 'copy_previous_week_schedule'
-          delete 'clear_selected_week'
-        end
+  resources :companies, only: %i[new create update edit index destroy] do
+    resources :locations, only: %i[new create update edit index destroy], shallow: true
+  end
+
+  resources :locations, only: [] do
+    resources :day_offs, shallow: true
+    resources :meetings, shallow: true do
+      collection do
+        get 'weekly', to: 'meetings#weekly'
+        post 'seed', to: 'meetings#seed'
+        post 'copy_previous_week_schedule'
+        delete 'clear_selected_week'
       end
     end
   end
-
   # devise_for :registrations
   # namespace :users do
   #   resources :registrations, only: %i[new create]

@@ -3,10 +3,13 @@
   <%=form_for(@company, as: "company", url: url, html: { method: method }) do |f| %>
     <%= render partial: "shared/text_field", locals: { form: f, label: "name" , field: "name"  } %>
     <%= f.hidden_field :user_id, value: current_user.id %>
-    <div class="flex items-center justify-content-evenly">
-          <%# render partial: "shared/button", locals: { display_text: request.request_method == "POST" ? "Create" : "Update", method: "POST"} %>
-          <%= render partial: "shared/button", locals: { display_text: "Delete", link: company_path(@company), method: :delete,  classes: ["text-red-300"]} %>
-          <%= render partial: "shared/cancel_button" %>
-    </div>
+    <div class="flex align-items-center justify-content-evenly gap-3">
+      <%= render partial: "shared/button", locals: { display_text: method == :post ? "Create" : "Update", type: "submit" } %>
+
   <% end %>
+      <%= render partial: "shared/cancel_button" %>
+    <% if method == :patch %>
+      <%= render partial: "shared/button", locals: { display_text: "Delete", link: company_path(@company), method: :delete, type: "button" } %>
+    <% end %>
+    </div>
 </div>

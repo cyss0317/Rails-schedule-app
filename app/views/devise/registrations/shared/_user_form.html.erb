@@ -15,6 +15,6 @@
           <%= render partial: "shared/button", locals: { display_text: method == "POST" ? "Sign Up" : "Update" } %>
           <%= render partial: "shared/cancel_button" %>
     </div>
-    <%# f.hidden_field :company_id, value: Location.find(resource.location_id).company.id  %>
+    <%# f.hidden_field :location_id, value: params[:location_id]  %>
   </form>
 </div>

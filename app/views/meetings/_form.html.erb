@@ -1,5 +1,5 @@
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
-<%= form_with(model: meeting, url: method == :PATCH ? meeting_path(meeting) : location_meetings_path(start_date: @start_time), html: { method: method}, class: "contents") do |form| %>
+<%= form_with(model: meeting, url: method == :patch ? meeting_path(meeting) : location_meetings_path(start_date: @start_time), html: { method: method}, class: "contents") do |form| %>
   <% if meeting.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(meeting.errors.count, "error") %> Prohibited this shift from being saved:</h2>
@@ -35,7 +35,7 @@
     <%# link_to "Back to meetings", weekly_location_meetings_path(start_time: @meeting.start_date), class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
 
 <% end %>
-    <% if method == :PATCH %>
+    <% if method == :patch %>
       <%= button_to "Delete", meeting_path(@meeting), method: :delete, params: { redirect_url: request.referer }, class: "rounded-lg py-3 px-3 bg-gray-100 font-medium" %>
     <% end %>
     <%= link_to "Cancel", request.referer, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>

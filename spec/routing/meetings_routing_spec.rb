@@ -22,7 +22,8 @@ RSpec.describe MeetingsController, type: :routing do
     end
 
     it 'routes to #create' do
-      expect(post: location_meetings_path(location)).to route_to('meetings#create', location_id: location.id.to_s)
+      expect(post: "/locations/#{location.id}/meetings").to route_to('meetings#create',
+                                                                       location_id: location.id.to_s)
     end
 
     it 'routes to #update via PUT' do

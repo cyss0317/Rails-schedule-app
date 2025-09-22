@@ -12,9 +12,10 @@ class User < ApplicationRecord
 
   has_many :meetings, dependent: :destroy
   has_many :day_offs, dependent: :destroy
-  has_many :location_users, dependent: :destroy
+  has_many :location_users, dependent: :destroy, inverse_of: :user
   has_many :locations, through: :location_users
   has_many :companies
+  has_many :working_companies, through: :locations, source: :company
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
   scope :without_demo_user, lambda {
@@ -34,7 +35,11 @@ class User < ApplicationRecord
   end
 
   def admin_user?
-    Flipper.enabled?(:admin, Flipper::Actor.new(email))
+    flipper_enabled?(:admin)
+  end
+
+  def active_user?
+    flipper_enabled?(:active)
   end
 
   def flipper_enabled?(feature)

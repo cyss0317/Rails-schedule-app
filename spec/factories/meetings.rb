@@ -2,9 +2,8 @@
 
 FactoryBot.define do
   factory :meeting do
-    association :user
-    association :location
-
+    location
+    user
     transient { meetings_count { 2 } }
     name { 'MyString' }
     start_time { '2023-11-17 23:56:19' }
@@ -29,6 +28,11 @@ FactoryBot.define do
     end
 
     trait(:with_relationships) do
+      association :user
+      association :location
+    end
+
+    trait(:with_association) do
       association :user
       association :location
     end

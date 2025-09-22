@@ -14,13 +14,14 @@ class LocationsController < ApplicationController
   def create
     @location = Location.new(location_params)
 
-    respond_to do |format|
-      if @location.save
+    if @location.save
+      respond_to do |format|
         format.html do
-          redirect_to company_locations_path(@company, @location), status: 200,
-                                                                   notice: 'Successfully created a location'
+          redirect_to company_locations_path(@company, @location), status: 200, notice: 'Successfully Created'
         end
-      else
+      end
+    else
+      respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @location.errors.full_message, status: :unprocessable_entity }
       end
