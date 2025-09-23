@@ -23,7 +23,8 @@ class User < ApplicationRecord
                             }
 
   def full_name
-    "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
+    [first_name, middle_name, last_name].reject(&:empty?).join(' ')
+    # "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
   end
 
   def name_and_last_name

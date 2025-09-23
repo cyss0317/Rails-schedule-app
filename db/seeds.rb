@@ -48,13 +48,15 @@ end
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time,
-    end_time: starting_time + (4 + i).hour
+    end_time: starting_time + (4 + i).hour,
+    location_id: Location.first.id
   )
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time + 2.hour,
-    end_time: starting_time + (4 + i).hour
+    end_time: starting_time + (4 + i).hour,
+    location_id: Location.first.id
   )
   # dinner shift
   starting_time = Time.new.in_time_zone.noon + i.days + 3.hour
@@ -62,12 +64,14 @@ end
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time,
-    end_time: starting_time + i.hour
+    end_time: starting_time + i.hour,
+    location_id: Location.first.id
   )
   Meeting.create(
     name: "Meeting #{i}",
     user_id: user_id_array.sample,
     start_time: starting_time,
-    end_time: starting_time + (2 + i).hour
+    end_time: starting_time + (2 + i).hour,
+    location_id: Location.first.id
   )
 end

@@ -39,7 +39,7 @@
 
 
           <% elsif day.beginning_of_day.after?(current_time) %>
-            <%= link_to "Request Day", new_edit_day_off_path(location_id: @location_id, start_time: day.to_s), class: "day-off shadow request-day-off-btn line-height-50" %>
+            <%= link_to "Request Day", new_location_day_off_path(location_id: @location_id, start_time: day.to_s), class: "day-off shadow request-day-off-btn line-height-50" %>
           <% end %>
 
           </div>

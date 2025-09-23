@@ -111,11 +111,17 @@ class MeetingsController < ApplicationController
     # params should have selected week
     target_week = convert_target_week_param
     # grab the most recent meeting and scope them by the week
-    Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list)
+    meetings = Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list,
+                                                                        location_id)
 
-    notice_message = @unable_to_copy_meeting_list.map do |meeting|
-      "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
-    end.join('<br>').html_safe
+    notice_message = if meetings.present?
+                       @unable_to_copy_meeting_list.map do |meeting|
+                         "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
+                       end.join('<br>').html_safe
+                     else
+                       'There are no previous schedules to copy'
+                     end
+
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
   end
 

@@ -1,7 +1,19 @@
+<!--
 <button class="hamburger relative font-normal w-10 l-10 cursor-pointer">
   <svg xmlns="http://www.w3.org/2000/svg" class="" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
   </svg>
+</button>
+-->
+
+
+<button
+  class=" hamburger relative md:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2"
+  aria-controls="company-drawer"
+  aria-expanded="false"
+>
+  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2"/></svg>
+  Companies
 </button>
 
 <div class="hamburger-background hidden">
@@ -13,9 +25,9 @@
     <% end %>
     <% if current_user.admin_user? && current == "Week" %>
       <% if @meetings.empty? %>
-        <%= button_to "Copy Last Week Shifts", copy_previous_week_schedule_location_meetings_path(target_week: @date_range), method: :post, data: { confirm: "Click 'Yes' to continue and copy most recent week's schedule", turbo: false} %>
+        <%= button_to "Copy Last Week Shifts", copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id], target_week: @date_range), method: :post, data: { confirm: "Click 'Yes' to continue and copy most recent week's schedule", turbo: false} %>
       <% else %>
-        <%= button_to "Clear This Week Shifts", clear_selected_week_location_meetings_path(target_week: @date_range), method: :delete, data: { confirm: "Click 'Yes' to continue and delete schdules for this week", turbo: false } %>
+        <%= button_to "Clear This Week Shifts", clear_selected_week_location_meetings_path(location_id: params[:location_id], target_week: @date_range), method: :delete, data: { confirm: "Click 'Yes' to continue and delete schdules for this week", turbo: false } %>
       <% end %>
     <% end %>
     <%= button_to "Sign Out", destroy_user_session_path, method: :delete, data: {confirm: "are you sure"} %>
