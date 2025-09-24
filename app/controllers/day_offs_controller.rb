@@ -63,11 +63,11 @@ class DayOffsController < ApplicationController
 
   def day_off_params
     Rails.logger.info("params: #{params}")
-    params.require(:day_offs).permit(:start_time, :end_time, :user_id, :description, :location_id)
+    params.require(:day_off).permit(:start_time, :end_time, :user_id, :description, :location_id)
   end
 
   def validate_params
-    param = params[:day_offs]
+    param = params[:day_off]
     return false if param['start_time'].blank? || param['end_time'].blank? || param['user_id'].blank?
 
     true
@@ -78,6 +78,6 @@ class DayOffsController < ApplicationController
   end
 
   def location_id
-    params[:location_id]
+    params[:location_id] || params.dig('day_off', 'location_id')
   end
 end

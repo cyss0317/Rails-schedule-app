@@ -1,4 +1,4 @@
-<%= form_for(@day_off, as: "day_offs", url: method == :patch ? edit_edit_day_off_path(@day_off) : location_day_offs_url, html: { method: method}) do |f| %>
+<%= form_for(@day_off, as: "day_off", url: method == :patch ? day_off_path(@day_off) : location_day_offs_path, html: { method: method}) do |f| %>
   <div class="my-5">
     <%= f.label :start_time %>
     <%= f.datetime_field :start_time, value: params[:start_time]&.to_datetime || @day_off.start_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
@@ -22,5 +22,5 @@
     <% if (@day_off.id.present? && current_user.admin_user?) || (method == :patch && !@day_off.been_passed? && @day_off.my_day_off?(current_user)) %>
       <%= button_to "Delete", day_off_path(@day_off), method: :delete, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium", data: {confirm: "do you"} %>
     <% end %>
-    <%= link_to "Cancel", weekly_location_meetings_path(location_id: params[:location_id]), class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Cancel", weekly_location_meetings_path(location_id: params[:id]), class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
   </div>

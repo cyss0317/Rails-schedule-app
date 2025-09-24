@@ -35,7 +35,7 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('turbo:load', () => {
     document.querySelectorAll("tr[class^='week-']").forEach(week => {
       week.addEventListener("click", (e) => {
         window.location = e.currentTarget.getAttribute("data-link")

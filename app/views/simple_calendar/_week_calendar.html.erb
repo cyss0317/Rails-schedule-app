@@ -25,7 +25,7 @@
             <% day_offs = @day_offs.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
                 <% if current_user.admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
-                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
+                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
@@ -81,7 +81,7 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", function() {
     row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
 
     // current time liner

@@ -4,7 +4,7 @@ class LocationsController < ApplicationController
   layout 'application'
 
   before_action :load_all_locations, :load_all_companies, only: %i[index]
-  before_action :load_location, only: %i[edit]
+  before_action :load_location, only: %i[edit update]
   before_action :load_company, only: %i[new create]
 
   def new
@@ -16,9 +16,20 @@ class LocationsController < ApplicationController
 
     if @location.save
       respond_to do |format|
-        format.html do
-          redirect_to company_locations_path(@company, @location), status: 200, notice: 'Successfully Created'
-        end
+        format.html { redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully Created' }
+      end
+    else
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @location.errors.full_message, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    if @location.update(location_params)
+      respond_to do |format|
+        format.html { redirect_to company_locations_path(@location.company), status: :see_other, notice: 'Successfully Updated' }
       end
     else
       respond_to do |format|

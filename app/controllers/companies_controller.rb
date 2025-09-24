@@ -17,7 +17,7 @@ class CompaniesController < ApplicationController
       if @company.save
         # LocationUser.create()
         format.html do
-          redirect_to company_locations_path(@company), status: 200, notice: 'Successfully created a company'
+          redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully created a company'
         end
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -31,11 +31,10 @@ class CompaniesController < ApplicationController
   def update
     if @company.update(company_params)
       respond_to do |format|
-        # 303
-        format.html do
-          redirect_to company_locations_path(@company), notice: 'Successfully updated', status: :see_other
-        end
-        format.turbo_stream { redirect_to company_locations_path(@company), status: :see_other }
+        format.turbo_stream { redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully updated' }
+        # format.html do
+        #   redirect_to company_locations_path(@company), notice: 'Successfully updated', status: :see_other
+        # end
       end
     else
       respond_to do |format|
