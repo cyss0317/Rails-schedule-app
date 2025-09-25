@@ -109,6 +109,19 @@ class MeetingsController < ApplicationController
     end
   end
 
+  def monthly
+    Rails.logger.info "ip address: #{request.remote_ip}"
+    Rails.logger.info "X-Forwarded-For: #{request.headers['X-Forwarded-For']}"
+    Rails.logger.info "HTTP_X_REAL_IP: #{request.headers['HTTP_X_REAL_IP']}"
+
+    start_date = params.fetch(:start_date, Date.today).to_date
+
+    @meetings =  Meeting.filter_by_location_id(location_id).monthly_meetings(start_date)
+
+    @day_offs = DayOff.filter_by_location_id(location_id)
+    render
+  end
+
   def copy_previous_week_schedule
     @unable_to_copy_meeting_list = []
     # params should have selected week

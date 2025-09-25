@@ -11,7 +11,7 @@
 
   <%= link_to "Today", current.downcase == "month" ? root_path : weekly_location_meetings_path, class: "today-btn" %>
 
-  <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": weekly_location_meetings_path, "Month": root_path} } %>
+  <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": weekly_location_meetings_path, "Month": monthly_location_meetings_path(location_id: params[:location_id]) } } %>
   <div class="user-name"><%= link_to "Home", root_path %></div>
   
   <%= render partial: "shared/icons/hamburger", locals: { current: current } %>

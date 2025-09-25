@@ -77,19 +77,19 @@
             <%= button_to "Copy Last Week Shifts",
                   copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
                   method: :post,
+                  data: { turbo_confirm: "Are you sure you want to copy the most recent week of shifts?"},
                   class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50" %>
           <% else %>
             <%= button_to "Clear This Week Shifts",
                   clear_selected_week_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
                   method: :delete,
-                  data: { confirm: "Click 'Yes' to clear this week's shifts" },
+                  data: { turbo_confirm: "Are you sure you want to delete all the shifts?" },
                   class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-red-600" %>
           <% end %>
         <% end %>
 
         <%= button_to "Sign Out", destroy_user_session_path,
               method: :delete,
-              data: { confirm: "are you sure?" },
               class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50" %>
       </nav>
     </div>

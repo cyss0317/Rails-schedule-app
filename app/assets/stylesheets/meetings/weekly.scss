@@ -255,6 +255,12 @@ $number-of-hour-cells: 16;
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          &:hover {
+            outline: 2px solid blue;
+            overflow: visible;
+            z-index: 1;
+            cursor: pointer;
+          }
         }
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;
@@ -278,4 +284,9 @@ $number-of-hour-cells: 16;
       }
     }
   }
+
+  .day-off.link {
+    cursor: pointer;
+  }
 }
+

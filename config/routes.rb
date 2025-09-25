@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :meetings, shallow: true do
       collection do
         get 'weekly', to: 'meetings#weekly'
+        get 'monthly', to: 'meetings#monthly'
         post 'seed', to: 'meetings#seed'
         post 'copy_previous_week_schedule'
         delete 'clear_selected_week'

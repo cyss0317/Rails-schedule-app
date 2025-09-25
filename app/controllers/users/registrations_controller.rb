@@ -7,18 +7,28 @@ module Users
     before_action :configure_sign_up_params, only: %i[new create]
     before_action :configure_account_update_params, only: [:update]
 
-    COLORS = ['#8C6E63',
-              '#546E7A',
-              '#7E57C2',
-              '#FFA726',
-              '#689F38',
-              '#FF4081',
-              '#4FC3F7',
-              '#E040FB',
-              '#9CCC65',
-              '#FF7043',
-              '#29B6F6',
-              '#FFD54F'].freeze
+    NEW_COLORS = [
+      '#FFB6C1', # Light Pink
+      '#AED581', # Light Green
+      '#FFF176', # Lemon
+      '#F48FB1', # Pink
+      '#80CBC4', # Teal Green
+      '#FFD180', # Light Orange
+      '#B39DDB', # Lavender
+      '#81D4FA', # Light Sky Blue
+      '#FFAB91', # Peach
+      '#C5E1A5', # Pale Green
+      '#FFE082', # Light Mustard
+      '#CE93D8', # Lilac
+      '#90CAF9', # Soft Blue
+      '#FFCCBC', # Salmon
+      '#A5D6A7', # Mint
+      '#FFF59D', # Pastel Yellow
+      '#9FA8DA', # Periwinkle
+      '#80DEEA', # Aqua
+      '#E6EE9C', # Lime Yellow
+      '#FFCDD2'  # Rose
+    ].freeze
 
     # GET /resource/sign_up
     # def new
@@ -26,9 +36,10 @@ module Users
     # end
 
     # POST /resource
-    # def create
-    #   super
-    # end
+    def create
+      LocationUser.create(user_id: id, location_id: params[:location_id]) if id.present?
+      super
+    end
 
     # GET /resource/edit
     # def edit
