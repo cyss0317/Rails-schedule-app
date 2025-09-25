@@ -4,8 +4,9 @@ class LocationsController < ApplicationController
   layout 'application'
 
   before_action :load_all_locations, :load_all_companies, only: %i[index]
-  before_action :load_location, only: %i[edit update]
+  before_action :load_location, only: %i[edit update destroy]
   before_action :load_company, only: %i[new create]
+  before_action :save_return_to, only: %i[index]
 
   def new
     @location = Location.new
@@ -29,7 +30,9 @@ class LocationsController < ApplicationController
   def update
     if @location.update(location_params)
       respond_to do |format|
-        format.html { redirect_to company_locations_path(@location.company), status: :see_other, notice: 'Successfully Updated' }
+        format.html do
+          redirect_to company_locations_path(@location.company), status: :see_other, notice: 'Successfully Updated'
+        end
       end
     else
       respond_to do |format|
@@ -49,6 +52,24 @@ class LocationsController < ApplicationController
     # else
     render
     # end
+  end
+
+  def destroy
+    if @location.delete
+      respond_to do |format|
+        format.html do
+          # redirect_to weekly_location_meetings_path(location_id:, start_time: deleted_day_off_start_time),
+          redirect_to session[:return_to] || company_locations_path(@location.company),
+                      status: :see_other,
+                      notice: 'Successfully Deleted'
+        end
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html redirect_to(session[:return_to] || root_path), status: :unprocessable_entity, notice: ''
+      end
+    end
   end
 
   private

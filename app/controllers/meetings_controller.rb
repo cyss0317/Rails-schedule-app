@@ -6,6 +6,7 @@ class MeetingsController < ApplicationController
 
   before_action :load_meeting, only: %i[show edit update destroy]
   before_action :select_options_for_users, only: %i[weekly new edit create]
+  before_action :save_return_to, only: %i[index weekly]
 
   # GET /meetings or /meetings.json
   def index

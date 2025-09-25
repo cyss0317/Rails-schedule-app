@@ -5,6 +5,7 @@ class CompaniesController < ApplicationController
 
   before_action :load_all_companies, only: %i[index]
   before_action :load_company, only: %i[edit destroy update]
+  before_action :save_return_to, only: %i[index]
 
   def new
     @company = Company.new

@@ -1,5 +1,5 @@
 <% start_date = params[:start_date].blank? ? DateTime.now : convert_time(params[:start_date]) %>
-<%= form_with(model: meeting, url: method == :patch ? meeting_path(meeting) : location_meetings_path(start_date: @start_time), html: { method: method}, class: "contents") do |form| %>
+<%= form_for(@meeting, url: method == :patch ? meeting_path(@meeting) : location_meetings_path(start_date: @start_time), html: { id: "meeting_form", method: method }, class: "contents") do |form| %>
   <% if meeting.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(meeting.errors.count, "error") %> Prohibited this shift from being saved:</h2>
@@ -29,16 +29,24 @@
     <%# form.label :end_time %>
     <%# form.time_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
-
-  <div class="flex align-items-center justify-content-evenly gap-3">
-    <%= form.submit class: "rounded-lg py-3 px-3 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-    <%# link_to "Back to meetings", weekly_location_meetings_path(start_time: @meeting.start_date), class: " rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
-
 <% end %>
+ <div class="mt-6 flex justify-center items-center gap-4">
+    <%= button_tag method == :post ? "Create" : "Update",
+          type: "submit",
+          form: "meeting_form",
+          class: "bg-indigo-600 text-white px-3 py-2 rounded-xl shadow" %>
+
+    <%= link_to "Cancel",
+          session.delete(:return_to) || request.referer,
+          class: "text-indigo-600 hover:text-indigo-700 px-3 py-2" %>
+
     <% if method == :patch %>
-      <%= button_to "Delete", meeting_path(@meeting), method: :delete, params: { redirect_url: request.referer }, class: "rounded-lg py-3 px-3 bg-gray-100 font-medium" %>
+      <%= button_to "Delete",
+        meeting_path(@meeting),
+        method: :delete,
+        data: { turbo_confirm: "Are you sure you want to delete this location?" },
+      class: "bg-red-500 text-white px-3 py-2 rounded-xl" %>
     <% end %>
-    <%= link_to "Cancel", request.referer, class: "rounded-lg py-3 px-3 bg-gray-100 inline-block font-medium" %>
   </div>
 
 <script>
