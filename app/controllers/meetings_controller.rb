@@ -35,7 +35,7 @@ class MeetingsController < ApplicationController
       if @meeting.save
         # format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
         format.html do
-          redirect_to weekly_location_meetings_path(start_date: @meeting.start_time),
+          redirect_to weekly_location_meetings_path(location_id: @meeting.location_id),
                       notice: 'Meeting was successfully created'
         end
         # format.json { render :show, status: :created, location: @meeting }
@@ -47,14 +47,16 @@ class MeetingsController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @meeting.update(meeting_params)
+    if @meeting.update(meeting_params)
+      respond_to do |format|
         format.html do
-          redirect_to weekly_location_meetings_path(start_date: @meeting.start_time),
+          redirect_to  weekly_location_meetings_path(location_id: @meeting.location_id),
                       notice: 'Meeting was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @meeting }
-      else
+      end
+    else
+      respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @meeting.errors, status: :unprocessable_entity }
       end
@@ -144,6 +146,10 @@ class MeetingsController < ApplicationController
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
   end
 
+  def location_id
+    params[:location_id]
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -168,9 +174,7 @@ class MeetingsController < ApplicationController
 
     unavailable_to_work_employee_ids = off_users_ids - morning_day_off_users_ids - evening_day_off_users_ids
 
-    active_user_ids = Location.find(location_id).users.without_demo_user.sort_by_first_name.select do |user|
-      (user.flipper_enabled?(:admin) || user.flipper_enabled?(:active)) && user.id
-    end
+    active_user_ids = Location.find(location_id || @meeting.location_id).users.without_demo_user.sort_by_first_name
 
     filtered_users = User.where(id: active_user_ids)
 
@@ -206,10 +210,6 @@ class MeetingsController < ApplicationController
 
   def convert_target_week_param
     params[:target_week].map { |date| Date.parse(date) }
-  end
-
-  def location_id
-    params[:location_id]
   end
 
   def availability_label(first_name, last_name, id, morning_day_off_users_ids, evening_day_off_users_ids)

@@ -16,6 +16,8 @@ class LocationsController < ApplicationController
     @location = Location.new(location_params)
 
     if @location.save
+      LocationUser.create(user_id: current_user.id, location_id: @location.id,
+                          role: current_user.admin_user? ? 'admin' : 'user')
       respond_to do |format|
         format.html { redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully Created' }
       end

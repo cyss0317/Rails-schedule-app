@@ -169,22 +169,22 @@ RSpec.describe Meeting, type: :model do
       it 'returns all the meetings of the most recent meeting' do
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(7)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(7)
 
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(14)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(14)
 
         9.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(2)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(2)
       end
     end
 
@@ -200,7 +200,7 @@ RSpec.describe Meeting, type: :model do
         end
 
         expect do
-          Meeting.filter_by_location_id(location.id).copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, [], location.id)
         end.to change(Meeting, :count).by(7)
       end
 
@@ -223,7 +223,7 @@ RSpec.describe Meeting, type: :model do
         end
 
         expect do
-          Meeting.filter_by_location_id(location.id).copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, [], location.id)
         end.to change(Meeting, :count).by(12)
       end
     end

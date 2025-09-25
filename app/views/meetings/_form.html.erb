@@ -22,10 +22,10 @@
 
   <div class="my-5">
     <%= form.label :end_time %>
-    <%= form.datetime_field :end_time, value: meeting.end_time || start_date, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.datetime_field :end_time, value: meeting.end_time || start_date + 1.hour, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
-    <%= form.hidden_field :location_id, value: params[:location_id] %>
+    <%= form.hidden_field :location_id, value: params[:location_id] || @meeting.location.id %>
     <%# form.label :end_time %>
     <%# form.time_field :end_time, value: convert_time(start_time).strftime("%Y-%m-%dT%H:%M"), class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>

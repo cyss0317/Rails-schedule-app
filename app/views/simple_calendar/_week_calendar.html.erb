@@ -5,7 +5,7 @@
   <div class="table flex flex-col justify-center">
     <div class="table-header">
       <div class="empty-tr overflow-auto">
-        <% if current_user.admin_user? && @users.present? %>
+        <% if current_user.location_admin_user?(params[:location_id]) && @users.present? %>
           <div class="employee-hours">Total Hours</div>
         <% elsif @users.present? %>
           <div class="employee-hours">Employee:</div>
@@ -24,7 +24,7 @@
           <% if @day_offs.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = @day_offs.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if current_user.admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
+                <% if current_user.location_admin_user?(day_off.location_id) || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
                   <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
@@ -59,9 +59,9 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.admin_user? %>">
+            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user?(params[:location_id]) %>">
               <% if calendar.td_classes_for(day).include?("today") %>
-                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.admin_user? %>"></div>
+                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user?(params[:location_id]) %>"></div>
               <% end %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
@@ -115,6 +115,7 @@
 
 
     table_body = document.querySelectorAll(".admin-table")
+        console.log("loaded")
     table_body.forEach(el => {
       el.addEventListener("click", (e) => {
         //time configuration
@@ -137,6 +138,7 @@
         console.log(date_and_time)
         //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
         //table_body.querySelector(".meeting-form").style.display = "block"
+
       
       })
     })

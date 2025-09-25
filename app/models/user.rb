@@ -35,12 +35,21 @@ class User < ApplicationRecord
     "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
   end
 
-  def admin_user?
-    flipper_enabled?(:admin)
+  def location_user(location_id)
+    location_users.where(location_id:).first
+  end
+
+  def location_admin_user?(location_id)
+    location_user(location_id)&.role == 'admin'
+    # flipper_enabled?(:admin)
   end
 
   def active_user?
     flipper_enabled?(:active)
+  end
+
+  def admin_user?
+    flipper_enabled?(:admin)
   end
 
   def flipper_enabled?(feature)

@@ -72,7 +72,7 @@
             class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
         <% end %>
 
-        <% if current_user.admin_user? && current == "Week" %>
+        <% if current_user.location_admin_user?(params[:location_id] || @location.id) && current == "Week" %>
           <% if @meetings.empty? %>
             <%= button_to "Copy Last Week Shifts",
                   copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
