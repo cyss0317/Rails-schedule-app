@@ -4,10 +4,11 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     layout 'application'
 
-    before_action :configure_sign_up_params, only: %i[new create]
+    helper_method :assigned_color
+    before_action :configure_sign_up_params, only: %i[create]
     before_action :configure_account_update_params, only: [:update]
 
-    NEW_COLORS = [
+    COLORS = [
       '#FFB6C1', # Light Pink
       '#AED581', # Light Green
       '#FFF176', # Lemon
@@ -37,8 +38,13 @@ module Users
 
     # POST /resource
     def create
-      LocationUser.create(user_id: id, location_id: params[:location_id]) if id.present?
-      super
+      super do |user|
+        loc_id = params[:location_id]
+
+        next unless loc_id.present?
+
+        LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user')
+      end
     end
 
     # GET /resource/edit
@@ -67,9 +73,17 @@ module Users
 
     protected
 
+    def assigned_color
+      taken_colors = User.pluck(:color)
+      available_colors = COLORS - taken_colors
+
+      available_colors[0] || Faker::Color.hex_color
+    end
+
     # If you have extra params to permit, append them to the sanitizer.
-    def configure_sign_up_params
-      attributes = %i[last_name first_name middle_name]
+    def configure_sign_up_paramst
+      attributes = %i[last_name first_name middle_name color]
+      # devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
       devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
     end
 
@@ -79,20 +93,6 @@ module Users
       devise_parameter_sanitizer.permit(:account_update, keys: attributes)
     end
 
-    def sign_up_params
-      attributes = %i[last_name first_name middle_name color email password password_confirmation]
-
-      update_color
-
-      params.require(:user).permit(attributes)
-    end
-
-    def update_color
-      taken_colors = User.pluck(:color)
-      available_colors = COLORS.map { |color| color unless taken_colors.include?(color) }.compact
-
-      params[:user][:color] = available_colors[0] || Faker::Color.hex_color
-    end
 
     # The path used after sign up.
     # def after_sign_up_path_for(resource)
@@ -103,5 +103,8 @@ module Users
     # def after_inactive_sign_up_path_for(resource)
     #   super(resource)
     # end
+    def load_user
+      @user ||= User.find_or_create_by
+    end
   end
 end

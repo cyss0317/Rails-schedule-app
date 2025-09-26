@@ -16,7 +16,7 @@ module Users
 
     # DELETE /resource/sign_out
     def destroy
-      redirect_to home: :indee
+      super
     end
 
     # protected
