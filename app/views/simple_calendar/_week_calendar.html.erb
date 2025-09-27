@@ -26,9 +26,9 @@
             <% day_offs.each do |day_off| %>
                 <% if current_user.location_admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
                 <%= binding.pry %>
-                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
+                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow flex items-center #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
-                  <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
+                  <p class="day-off shadow flex items-center <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
 
                 <% if day_off.morning_off?(day.in_time_zone) && day.after?(Time.now) %>
