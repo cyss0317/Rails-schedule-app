@@ -20,3 +20,11 @@
     <%= yield %>
   </body>
 </html>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    document.querySelectorAll("a[href]").forEach(a => {
+      a.dataset.turboPrefetch = "false";
+    });
+  });
+</script>

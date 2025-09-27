@@ -1,4 +1,4 @@
-<%= form_for @meeting url: meetings_path, method: :post do |form| %>
+<%= form_for @meeting url: location_meetings_path, method: :post do |form| %>
   <%= form.hidden_field :user_id, value: current_user.id %>
   <%= render partial: "shared/text_field", locals: { form: form, label: "name", field: "name"} %>
 <% end %>

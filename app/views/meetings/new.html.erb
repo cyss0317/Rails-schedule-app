@@ -2,12 +2,12 @@
   <div class="mx-auto md:w-2/3 w-full">
     <h1 class="font-bold text-4xl">New Shift</h1>
 
-    <%= render "form", meeting: @meeting, start_date: params[:start_date], method: :POST %>
+    <%= render "form", meeting: @meeting, start_date: params[:start_date], method: :post %>
   </div>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     document.querySelector("body").addEventListener("keydown", (e) => {
       if (e.keyCode == 27) {
         console.log("ESC")

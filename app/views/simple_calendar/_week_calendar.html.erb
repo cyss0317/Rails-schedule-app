@@ -3,9 +3,9 @@
   <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
 
   <div class="table flex flex-col justify-center">
-    <div class="table-header">
+    <div class="table-header sticky top-0 md:sticky  my-sticky-offset ">
       <div class="empty-tr overflow-auto">
-        <% if current_user.admin_user? && @users.present? %>
+        <% if current_user.location_admin_user? && @users.present? %>
           <div class="employee-hours">Total Hours</div>
         <% elsif @users.present? %>
           <div class="employee-hours">Employee:</div>
@@ -21,24 +21,27 @@
 
           <div class="day-off-container">
 
-          <% if DayOff.for_day_filtered_by_date(day.in_time_zone).present? %>
-            <% day_offs = DayOff.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
+          <% if @day_offs.for_day_filtered_by_date(day.in_time_zone).present? %>
+            <% day_offs = @day_offs.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if current_user.admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
-                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
+                <% if current_user.location_admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
+                <%= binding.pry %>
+                  <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
                 <% end %>
 
                 <% if day_off.morning_off?(day.in_time_zone) && day.after?(Time.now) %>
-                   <%= link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "day-off shadow request-day-off-btn" %>
+                   <%# link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "day-off shadow request-day-off-btn" %>
+                   <%= link_to "Request Evening Off", new_location_day_off_path(day_off.location_id, start_time: day.in_time_zone.change(hour: 15), end_time: day.in_time_zone.change(hour:23)), class: "day-off shadow request-day-off-btn" %>
                 <% elsif day_off.evening_off?(day.in_time_zone) && day.after?(Time.now) %>
-                   <%= link_to "Request Morning Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 9)}&end_time=#{day.in_time_zone.change(hour: 15)}", class: "day-off shadow request-day-off-btn" %>
+                   <%= link_to "Request Morning Off", new_location_day_off_path(day_off.location_id, start_time: day.in_time_zone.change(hour: 9), end_time: day.in_time_zone.change(hour:15)), class: "day-off shadow request-day-off-btn" %>
                 <% end %>
             <% end %>
 
-          <% elsif day.after?(Time.now) %>
-            <%= link_to "Request Day", "day_offs/new?start_time=#{day.to_s}", class: "day-off shadow request-day-off-btn line-height-50" %>
+
+          <% elsif day.beginning_of_day.after?(current_time) %>
+            <%= link_to "Request Day", new_location_day_off_path(location_id: @location_id, start_time: day.to_s), class: "day-off shadow request-day-off-btn line-height-50" %>
           <% end %>
 
           </div>
@@ -58,9 +61,9 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.admin_user? %>">
+            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? %>">
               <% if calendar.td_classes_for(day).include?("today") %>
-                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.admin_user? %>"></div>
+                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user? %>"></div>
               <% end %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
@@ -80,7 +83,7 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("turbo:load", function() {
     row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
 
     // current time liner
@@ -114,6 +117,7 @@
 
 
     table_body = document.querySelectorAll(".admin-table")
+        console.log("loaded")
     table_body.forEach(el => {
       el.addEventListener("click", (e) => {
         //time configuration
@@ -131,11 +135,12 @@
 
         //date configuration
         date = e.target.getAttribute("data-date")
-        window.location.href =`/meetings/new?start_date=${date} ${clicked_time_in_hour}`
+        window.location.href =`/locations/${<%= @location_id %>}/meetings/new?start_date=${date} ${clicked_time_in_hour}`
         date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
         console.log(date_and_time)
         //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
         //table_body.querySelector(".meeting-form").style.display = "block"
+
       
       })
     })

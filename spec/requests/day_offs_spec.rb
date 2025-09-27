@@ -5,20 +5,23 @@ require 'rails_helper'
 RSpec.describe 'DayOffs', type: :request do
   include Devise::Test::IntegrationHelpers # Corrected include here
 
-  let!(:user) { create(:user) }
+  let(:user) { create(:user, :with_relationships) }
+  let(:location) { Location.first }
+
   let(:valid_params) do
     {
-      'day_offs' => {
+      'day_off' => {
         'start_time' => '2020-01-01 12:00:00 -0600',
         'end_time' => '2020-01-01 14:00:00 -0600',
         'user_id' => user.id,
-        'description' => 'I need a day off'
+        'description' => 'I need a day off',
+        'location_id' => location.id.to_s
       }
     }
   end
   let(:invalid_params) do
     {
-      'day_offs' => {
+      'day_off' => {
         'start_time' => '',
         'end_time' => '',
         'user_id' => user.id
@@ -35,7 +38,7 @@ RSpec.describe 'DayOffs', type: :request do
       expect do
         sign_in user  # This method is now properly supported
 
-        post day_offs_path, params: valid_params
+        post location_day_offs_path(location), params: valid_params
       end.to change(DayOff, :count).by(1)
     end
 
@@ -43,7 +46,7 @@ RSpec.describe 'DayOffs', type: :request do
       expect do
         sign_in user  # Sign in added here for consistency
 
-        post day_offs_path, params: invalid_params
+        post location_day_offs_path, params: invalid_params
       end.to change(DayOff, :count).by(0)
     end
   end
@@ -52,7 +55,7 @@ RSpec.describe 'DayOffs', type: :request do
     it 'updates a day off when valid params are given' do
       day_off = create(:day_off, user_id: user.id)
 
-      patch day_off_path(day_off), params: valid_params
+      patch day_off_path(day_off, location_id: day_off.location.id), params: valid_params
 
       day_off.reload
 
@@ -62,7 +65,7 @@ RSpec.describe 'DayOffs', type: :request do
     it 'does NOT updates a day off when invalid params are given' do
       day_off = create(:day_off, user_id: user.id)
 
-      patch day_off_path(day_off), params: invalid_params
+      patch edit_day_off_path(day_off.location, day_off), params: invalid_params
 
       day_off.reload
 

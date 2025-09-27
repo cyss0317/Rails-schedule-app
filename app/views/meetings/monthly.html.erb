@@ -1,0 +1,61 @@
+   <div class="center-body">
+
+   <%= month_calendar(events: @meetings) do |date, meetings| %>
+      <% day_offs = @day_offs&.for_day_filtered_by_date(date) %>
+        <% location_id = params[:location_id] %>
+        <%# TODO: make a scope of morning shift, night evening shift, all day shift %>
+        <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
+        <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
+        <% all_day_shifts = meetings.select { |meeting| !meeting.morning_shift? && !meeting.evening_shift? } %>
+
+        <div class="monthly-date"> <%= date.day %> </div>
+
+        <%= link_to weekly_location_meetings_path(start_date: date), class: "flex flex-col gap-2" do %>
+          <div class="monthly-shifts">
+            <% if day_offs.present? %>
+              <% all_day_offs = @day_offs&.all_day_offs(date.in_time_zone) %>
+              <% morning_day_offs = @day_offs&.morning_day_offs(date.in_time_zone)  %>
+              <% evening_day_offs = @day_offs&.evening_day_offs(date.in_time_zone)  %>
+            <%# TODO: create a dayoffs partial that takes in meetings and renders below %>
+              <% if all_day_offs.present? %>
+                <% all_day_offs.each do |day_off| %>
+                  <div class="day-off day-off-monthly all-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% end %>
+              <% else %>
+                <% morning_day_offs.each do |day_off| %>
+                  <div class="day-off day-off-monthly morning-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% end %>
+                <% evening_day_offs.each do |day_off| %>
+                  <div class="day-off day-off-monthly evening-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
+                <% end %>
+              <% end %>
+            <% end %>
+            
+            <% if all_day_shifts.present? %>
+            <%# TODO: create a meetings partial that takes in the meetings and renders %>
+              <div class="all-day-shifts all-color all-day-outline shadow">
+                <% all_day_shifts.each do |meeting| %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if morning_shifts.present? %>
+              <div class="morning-shift morning-color shadow">
+                <% morning_shifts.each do |meeting| %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if evening_shifts.present? %>
+              <div class="evening-shifts evening-color shadow">
+                <% evening_shifts.each do |meeting| %>
+                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
+                <% end %>
+              </div>
+            <% end %>
+
+        <% end %>
+    <% end  %>
+</div>

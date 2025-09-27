@@ -6,6 +6,7 @@ class Meeting < ApplicationRecord
   include TimeHelper
 
   belongs_to :user
+  belongs_to :location
 
   validates :start_time, presence: true
   validates :end_time, presence: true, date: { after_or_equal_to: :start_time }
@@ -22,6 +23,7 @@ class Meeting < ApplicationRecord
   scope :meetings_for_the_week, lambda { |date|
                                   where(start_time: date.beginning_of_week.beginning_of_day..date.end_of_week.end_of_day)
                                 }
+  scope :filter_by_location_id, ->(location_id) { where(location_id:)}
 
   MAX_WIDTH = 80
   HOUR_HEIGHT_IN_PX = 50
@@ -148,16 +150,19 @@ class Meeting < ApplicationRecord
     "#{format_date(start_time)}-#{format_date(end_time)}"
   end
 
-  def self.most_recent_week_meetings
-    most_recent_meeting = Meeting.last
-    week_start_time = most_recent_meeting.start_time.at_beginning_of_week.at_beginning_of_day
-    week_end_time = most_recent_meeting.start_time.at_end_of_week.at_end_of_day
-
-    Meeting.where(start_time: week_start_time..week_end_time)
+  def self.most_recent_week_meetings(location_id)
+    most_recent_meeting = Meeting.filter_by_location_id(location_id).sort_by_start_time.last
+    week_start_time = most_recent_meeting&.start_time&.at_beginning_of_week&.at_beginning_of_day
+    week_end_time = most_recent_meeting&.start_time&.at_end_of_week&.at_end_of_day
+    if week_start_time.present? && week_end_time.present?
+      Meeting.where(start_time: week_start_time..week_end_time)
+    else
+      []
+    end
   end
 
-  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list = [])
-    most_recent_week_meetings = Meeting.most_recent_week_meetings
+  def self.copy_most_recent_week_of_meetings_to_target_week(target_week, unable_to_copy_meeting_list = [], location_id)
+    most_recent_week_meetings = Meeting.most_recent_week_meetings(location_id)
     target_week_cwday_to_date = {}
     # { 0: date_object }
     target_week.each { |date| target_week_cwday_to_date[date.cwday] = date }
@@ -171,7 +176,7 @@ class Meeting < ApplicationRecord
       new_end_time = meeting.updated_date_on_end_time(target_date)
 
       if meeting.user.can_work_for_time_frame?(new_start_time, new_end_time, target_date)
-        Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id)
+        Meeting.create!(start_time: new_start_time, end_time: new_end_time, user_id: meeting.user_id, location_id:)
       else
         unable_to_copy_meeting_list << meeting
       end

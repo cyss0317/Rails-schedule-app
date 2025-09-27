@@ -15,7 +15,8 @@ class DayOffsController < ApplicationController
     respond_to do |format|
       if @day_off.save
         format.html do
-          redirect_to meetings_weekly_path(start_date: @day_off.start_time), notice: 'Successfully requested day off'
+          redirect_to weekly_location_meetings_path(location_id:, start_date: @day_off.start_time),
+                      notice: 'Successfully requested day off'
         end
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -31,7 +32,10 @@ class DayOffsController < ApplicationController
   def update
     if validate_params && @day_off.update(day_off_params)
       respond_to do |format|
-        format.html { redirect_to meetings_weekly_path(@day_off.start_time), notice: 'Successfully updated day off' }
+        format.html do
+          redirect_to weekly_location_meetings_path(location_id:, start_time: @day_off.start_time),
+                      notice: 'Successfully updated day off'
+        end
       end
     else
       respond_to do |format|
@@ -48,7 +52,8 @@ class DayOffsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to meetings_weekly_path(deleted_day_off_start_time), notice: 'Successfully deleted day off'
+        redirect_to weekly_location_meetings_path(location_id:, start_time: deleted_day_off_start_time),
+                    notice: 'Successfully deleted day off'
       end
       format.json { head :no_content }
     end
@@ -58,11 +63,11 @@ class DayOffsController < ApplicationController
 
   def day_off_params
     Rails.logger.info("params: #{params}")
-    params.require(:day_offs).permit(:start_time, :end_time, :user_id, :description)
+    params.require(:day_off).permit(:start_time, :end_time, :user_id, :description, :location_id)
   end
 
   def validate_params
-    param = params[:day_offs]
+    param = params[:day_off]
     return false if param['start_time'].blank? || param['end_time'].blank? || param['user_id'].blank?
 
     true
@@ -70,5 +75,9 @@ class DayOffsController < ApplicationController
 
   def load_day_off
     @day_off = DayOff.find(params[:id])
+  end
+
+  def location_id
+    params[:location_id] || params.dig('day_off', 'location_id')
   end
 end

@@ -5,7 +5,7 @@
 </select>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     document.querySelector(".select-dropdown").addEventListener("change", (e) => {
       console.log(e.target.getAttribute("data-link"))
       window.location.href = e.target.value

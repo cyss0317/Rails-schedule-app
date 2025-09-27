@@ -12,14 +12,6 @@ end
 Rails.application.routes.draw do
   set_up_flipper
 
-  resources :meetings do
-    collection do
-      post 'copy_previous_week_schedule'
-      delete 'clear_selected_week'
-    end
-  end
-  get 'meetings_weekly', to: 'meetings#weekly'
-  post 'seed_meetings', to: 'meetings#seed'
   root to: 'home#index'
   devise_for :users, controllers: {
     registrations: 'users/registrations',
@@ -27,7 +19,23 @@ Rails.application.routes.draw do
     passwords: 'users/passwords',
     confirmation: 'users/confirmations'
   }
-  resources :day_offs
+  resources :companies, only: %i[new create update edit index destroy] do
+    resources :locations, only: %i[new create update edit index destroy], shallow: true
+  end
+
+  resources :locations, only: [] do
+    resources :day_offs, shallow: true
+    resources :meetings, shallow: true do
+      collection do
+        get 'weekly', to: 'meetings#weekly'
+        get 'monthly', to: 'meetings#monthly'
+        post 'seed', to: 'meetings#seed'
+        post 'copy_previous_week_schedule'
+        delete 'clear_selected_week'
+      end
+    end
+    resources :location_users, shallow: true, only: %i[index update]
+  end
   # devise_for :registrations
   # namespace :users do
   #   resources :registrations, only: %i[new create]

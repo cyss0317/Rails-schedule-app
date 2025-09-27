@@ -1,73 +1,40 @@
-<div class="center-body">
-  <% if current_user && current_user.flipper_enabled?(:active) %>
-      <%= month_calendar(events: @meetings) do |date, meetings| %>
-        <%# TODO: make a scope of morning shift, night evening shift, all day shift %>
-        <% morning_shifts = meetings.select { |meeting| meeting.morning_shift? } %>
-        <% evening_shifts = meetings.select { |meeting| meeting.evening_shift? } %>
-        <% all_day_shifts = meetings.select { |meeting| !meeting.morning_shift? && !meeting.evening_shift? } %>
+<div class="min-h-[60vh] grid place-items-center px-4">
+  <div class="w-full max-w-md rounded-2xl bg-white shadow-lg ring-1 ring-gray-100 p-6 md:p-8">
+    <% if current_user.locations.empty? %>
+      <div class="flex items-start gap-3">
+        <div class="mt-1 shrink-0 h-9 w-9 rounded-full bg-amber-100 grid place-items-center text-amber-600">!</div>
+        <div>
+          <h1 class="text-lg font-semibold text-gray-900">Your account hasn’t been activated yet</h1>
+          <p class="mt-1 text-sm text-gray-600">Please reach out to your manager to be added to a location.</p>
+        </div>
+      </div>
 
-        <div class="monthly-date"> <%= date.day %> </div>
+      <div class="mt-6 flex flex-col sm:flex-row gap-3">
+        <%= button_to "Sign Out",
+              destroy_user_session_path,
+              method: :delete,
+              class: "inline-flex items-center rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 shadow" %>
+    <% else %>
+      <h1 class="text-lg font-semibold text-gray-900">Welcome</h1>
+      <p class="mt-1 text-sm text-gray-600">Choose an option below to continue.</p>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <%= link_to "Sign Up",
+              new_user_registration_path,
+              class: "inline-flex justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-white font-medium shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300" %>
 
-        <%= link_to meetings_weekly_path(start_date: date), class: "flex flex-col gap-2" do %>
-          <div class="monthly-shifts">
-            <% if DayOff.for_day_filtered_by_date(date).present? %>
-              <% all_day_offs = DayOff.all_day_offs(date.in_time_zone) %>
-              <% morning_day_offs = DayOff.morning_day_offs(date.in_time_zone)  %>
-              <% evening_day_offs = DayOff.evening_day_offs(date.in_time_zone)  %>
-            <%# TODO: create a dayoffs partial that takes in meetings and renders below %>
-              <% if all_day_offs.present? %>
-                <% all_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly all-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-              <% else %>
-                <% morning_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly morning-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>"> <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-                <% evening_day_offs.each do |day_off| %>
-                  <div class="day-off day-off-monthly evening-color shadow <%='current-user-day-off current-user-day-off-monthly' if day_off.my_day_off?(current_user) %>">  <%= day_off.off_time_info(date.in_time_zone)%> </div>
-                <% end %>
-              <% end %>
-            <% end %>
-            
-            <% if all_day_shifts.present? %>
-            <%# TODO: create a meetings partial that takes in the meetings and renders %>
-              <div class="all-day-shifts all-color all-day-outline shadow">
-                <% all_day_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
-                <% end %>
-              </div>
-            <% end %>
-
-            <% if morning_shifts.present? %>
-              <div class="morning-shift morning-color shadow">
-                <% morning_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
-                <% end %>
-              </div>
-            <% end %>
-
-            <% if evening_shifts.present? %>
-              <div class="evening-shifts evening-color shadow">
-                <% evening_shifts.each do |meeting| %>
-                  <%= render partial: "meetings/monthly_meeting", locals: { meeting: meeting } %>
-                <% end %>
-              </div>
-            <% end %>
-
-        <% end %>
-    <% end  %>
-  <% elsif !current_user.flipper_enabled?(:active)%>
-    <h1>Your account has not been activated</h1>
-  <% else %>
-    <%= link_to "Sign Up", new_user_registration_path %>
-    <%= link_to "Sign In", new_user_session_path %>
-  <% end %>
+        <%= link_to "Sign In",
+              new_user_session_path,
+              class: "inline-flex justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-gray-700 font-medium hover:bg-gray-50" %>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 
 
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('turbo:load', () => {
    // document.querySelectorAll(".day").forEach(day => {
    //   day.addEventListener("click", (e) => {
    //     e.stopPropagation()

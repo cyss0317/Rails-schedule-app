@@ -1,4 +1,4 @@
-  <% if current_user.admin_user? %>
+  <% if current_user.location_admin_user? %>
     <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", edit_meeting_path(meeting),
       {  
         class: "weekly-meeting shadow #{classes} admin",
@@ -21,9 +21,13 @@
   <% end %>
   <script>
     // make border line appear on blocks of time that belongs to a meeting
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('turbo:load', () => {
+      document.querySelectorAll(".weekly-meeting").forEach(node => {
+        node.addEventListener("click", (e) => e.stopPropagation());
+      });
+
       document.querySelectorAll(".<%= classes %>").forEach(meeting => {
-        meeting.getBoundingClientRect();
+        // meeting.getBoundingClientRect();
         // meeting.style.left = 
         meeting.addEventListener("mouseover", (e) => {
           document.querySelectorAll(".<%= classes %>").forEach(meeting => {

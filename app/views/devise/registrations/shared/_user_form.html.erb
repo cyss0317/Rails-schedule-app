@@ -1,9 +1,9 @@
 <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
   <form class="space-y-6" action="#" method=<%= method %>>
-    <%= render partial: "shared/text_field", locals: { form: f, lable: "first_name" , field: "first_name"  } %>
-    <%= render partial: "shared/text_field", locals: { form: f, lable: "middle_name", field: "middle_name" } %>
-    <%= render partial: "shared/text_field", locals: { form: f, lable: "last_name", field: "last_name" } %>
-    <%# render partial: "shared/color_field", locals: { form: f, lable: "color", field: "color" } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "first_name" , field: "first_name"  } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "middle_name", field: "middle_name" } %>
+    <%= render partial: "shared/text_field", locals: { form: f, label: "last_name", field: "last_name" } %>
+    <%# render partial: "shared/color_field", locals: { form: f, label: "color", field: "color" } %>
 
     <%= render partial: "shared/email_field", locals: { form: f } if method == "POST" %>
 
@@ -15,6 +15,7 @@
           <%= render partial: "shared/button", locals: { display_text: method == "POST" ? "Sign Up" : "Update" } %>
           <%= render partial: "shared/cancel_button" %>
     </div>
-    <%# f.hidden_field :company_id, value: Location.find(resource.location_id).company.id  %>
+    <%# f.hidden_field :location_id, value: params[:location_id]  %>
+    <%= f.hidden_field :color, value: assigned_color %>
   </form>
 </div>

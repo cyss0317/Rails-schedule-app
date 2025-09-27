@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Meeting, type: :model do
+  let(:location) { create(:location) }
   describe 'associations' do
     it { should belong_to(:user) }
   end
@@ -51,6 +52,14 @@ RSpec.describe Meeting, type: :model do
       end
       expect(Meeting.meetings_for_the_week(target_date).length).to be(7)
       expect(Meeting.meetings_for_the_week(target_date + 7.days).length).to be(2)
+    end
+
+    it '.filter_by_location_id(location_id)' do
+      locations = create_list(:location, 2, :with_relationships, meetings_count: 10)
+      location = create(:location, :with_relationships, meetings_count: 20)
+      expect(Meeting.filter_by_location_id(locations[0].id).length).to be(10)
+      expect(Meeting.filter_by_location_id(locations[0].id).length).to be(10)
+      expect(Meeting.filter_by_location_id(location.id).length).to be(20)
     end
   end
 
@@ -160,22 +169,22 @@ RSpec.describe Meeting, type: :model do
       it 'returns all the meetings of the most recent meeting' do
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(7)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(7)
 
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(14)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(14)
 
         9.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, location_id: location.id, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
         end
 
-        expect(Meeting.most_recent_week_meetings.count).to be(2)
+        expect(Meeting.most_recent_week_meetings(location.id).count).to be(2)
       end
     end
 
@@ -186,11 +195,12 @@ RSpec.describe Meeting, type: :model do
 
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, start_time: today.beginning_of_week + idx.day,
+                           end_time: today + idx.day + 2.hours, location_id: location.id)
         end
 
         expect do
-          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, [], location.id)
         end.to change(Meeting, :count).by(7)
       end
 
@@ -204,14 +214,16 @@ RSpec.describe Meeting, type: :model do
 
         today = Date.new(2025, 7, 14)
         7.times do |idx|
-          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours,
+                           location_id: location.id)
         end
         7.times do |idx|
-          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours)
+          create(:meeting, user:, start_time: today.beginning_of_week + idx.day, end_time: today + idx.day + 2.hours,
+                           location_id: location.id)
         end
 
         expect do
-          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week)
+          Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, [], location.id)
         end.to change(Meeting, :count).by(12)
       end
     end

@@ -16,7 +16,7 @@
 
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
-        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= meetings_weekly_path(start_date: week[0])%>" >
+        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= weekly_location_meetings_path(start_date: week[0])%>" >
           <div>
             <% week.each do |day| %>
                 <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
@@ -35,7 +35,7 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('turbo:load', () => {
     document.querySelectorAll("tr[class^='week-']").forEach(week => {
       week.addEventListener("click", (e) => {
         window.location = e.currentTarget.getAttribute("data-link")

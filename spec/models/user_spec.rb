@@ -18,6 +18,18 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'association' do
+    it 'has location_users association' do
+      user = create(:user, :with_relationships, meetings_count: 3)
+
+      expect(user.location_users.count).to eq(2)
+      expect(user.day_offs.count).to eq(2)
+      expect(user.meetings.count).to eq(3)
+      expect(user.locations.count).to eq(2)
+      expect(user.working_companies.count).to eq(2)
+      expect(user.companies.count).to eq(0)
+    end
+  end
   describe 'scopes' do
     describe '.sort_by_first_name' do
       it 'returns users sorted by first name' do

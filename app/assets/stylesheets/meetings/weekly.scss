@@ -33,6 +33,11 @@ $number-of-hour-cells: 16;
 
 .weekly-calendar {
   .table {
+    @media (min-width: 768px) {
+      .my-sticky-offset {
+        top: 2.5rem !important; /* whatever top-10 is (2.5rem = 40px) */
+      }
+    }
     .empty-tr {
       cursor: pointer;
       height: 90px;
@@ -60,7 +65,7 @@ $number-of-hour-cells: 16;
       height: 51px;
 
       @media (min-width: 368px) and (max-width: 768px) {
-        height: 100px;
+        height: 60px;
       }
     }
     .request-day-off-btn {
@@ -115,11 +120,9 @@ $number-of-hour-cells: 16;
       flex-direction: row;
       align-items: flex-end;
       background-color: $theme-white;
-      position: sticky;
       z-index: 2;
 
       width: $main-width-medium;
-      top: 40px;
 
       .date {
         display: flex;
@@ -255,6 +258,12 @@ $number-of-hour-cells: 16;
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          &:hover {
+            outline: 2px solid blue;
+            overflow: visible;
+            z-index: 1;
+            cursor: pointer;
+          }
         }
         @media (min-width: 368px) and (max-width: 768px) {
           width: $table-row-width-small;
@@ -277,5 +286,9 @@ $number-of-hour-cells: 16;
         border-left: 1px solid white;
       }
     }
+  }
+
+  .day-off.link {
+    cursor: pointer;
   }
 }

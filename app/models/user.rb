@@ -8,9 +8,14 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true, length: { maximum: 15 }
   validates :last_name, presence: true, length: { maximum: 15 }
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
 
   has_many :meetings, dependent: :destroy
   has_many :day_offs, dependent: :destroy
+  has_many :location_users, dependent: :destroy, inverse_of: :user
+  has_many :locations, through: :location_users
+  has_many :companies
+  has_many :working_companies, through: :locations, source: :company
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
   scope :without_demo_user, lambda {
@@ -18,7 +23,8 @@ class User < ApplicationRecord
                             }
 
   def full_name
-    "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
+    [first_name, middle_name, last_name].reject(&:empty?).join(' ')
+    # "#{first_name.capitalize} #{middle_name.capitalize} #{last_name.capitalize}"
   end
 
   def name_and_last_name
@@ -29,8 +35,21 @@ class User < ApplicationRecord
     "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
   end
 
+  def location_user
+    LocationUser.where(user_id: id).first
+  end
+
+  def location_admin_user?
+    location_user&.role == 'admin'
+    # flipper_enabled?(:admin)
+  end
+
+  def active_user?
+    flipper_enabled?(:active)
+  end
+
   def admin_user?
-    Flipper.enabled?(:admin, Flipper::Actor.new(email))
+    flipper_enabled?(:admin)
   end
 
   def flipper_enabled?(feature)
@@ -46,5 +65,9 @@ class User < ApplicationRecord
 
   def time_zone
     Time.now.zone || 'UTC'
+  end
+
+  def role
+    location_user.role.camelize
   end
 end
