@@ -23,4 +23,9 @@ class ApplicationController < ActionController::Base
   def save_return_to
     session[:return_to] = request.fullpath
   end
+
+  def cancel_button_url
+    root_path if session.delete(return_to) == request.original_url
+    session.delete(:return_to) || request.referer
+  end
 end

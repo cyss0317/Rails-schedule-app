@@ -41,9 +41,11 @@ module Users
       super do |user|
         loc_id = params[:location_id]
 
+        binding.pry
         next unless loc_id.present?
 
-        LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user')
+        location_user = LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user')
+        user.update(location_user_id: location_user.id)
       end
     end
 
@@ -81,7 +83,7 @@ module Users
     end
 
     # If you have extra params to permit, append them to the sanitizer.
-    def configure_sign_up_paramst
+    def configure_sign_up_params
       attributes = %i[last_name first_name middle_name color]
       # devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
       devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
