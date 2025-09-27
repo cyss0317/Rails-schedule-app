@@ -3,7 +3,7 @@
   <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
 
   <div class="table flex flex-col justify-center">
-    <div class="table-header">
+    <div class="table-header sticky top-0 md:sticky  my-sticky-offset ">
       <div class="empty-tr overflow-auto">
         <% if current_user.location_admin_user?(params[:location_id]) && @users.present? %>
           <div class="employee-hours">Total Hours</div>

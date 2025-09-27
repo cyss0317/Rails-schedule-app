@@ -36,7 +36,7 @@ class User < ApplicationRecord
   end
 
   def location_user(location_id)
-    location_users.where(location_id:).first
+    LocationUser.where(location_id:).first
   end
 
   def location_admin_user?(location_id)
@@ -65,5 +65,9 @@ class User < ApplicationRecord
 
   def time_zone
     Time.now.zone || 'UTC'
+  end
+
+  def role(location_id)
+    location_user(location_id).role.camelize
   end
 end

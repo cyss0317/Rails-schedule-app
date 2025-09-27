@@ -55,7 +55,7 @@
         </div>
         <div>
           <div class="font-medium"><%= current_user&.email %></div>
-          <div class="text-xs text-gray-500">Signed in</div>
+          <div class="text-xs text-gray-500">Signed in (<%= current_user.role(@location_id) %>)</div>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
         <%= link_to "Edit Profile", edit_user_registration_path,
           class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
 
-        <% if Rails.env.development? %>
+        <% if Rails.env.development? && current == "week" %>
           <%= button_to "SEED Shifts", seed_location_meetings_path, method: :post,
             class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
         <% end %>

@@ -115,7 +115,7 @@ class MeetingsController < ApplicationController
     Rails.logger.info "HTTP_X_REAL_IP: #{request.headers['HTTP_X_REAL_IP']}"
 
     start_date = params.fetch(:start_date, Date.today).to_date
-
+    @location_id = location_id
     @meetings =  Meeting.filter_by_location_id(location_id).monthly_meetings(start_date)
 
     @day_offs = DayOff.filter_by_location_id(location_id)
