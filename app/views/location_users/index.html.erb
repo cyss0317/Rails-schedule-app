@@ -1,0 +1,52 @@
+<!-- app/views/location_users/index.html.erb -->
+<div class="mx-auto max-w-3xl p-4">
+  <h1 class="text-2xl font-semibold text-gray-900 mb-4">Location Users</h1>
+
+  <div class="divide-y rounded-xl border border-gray-200 bg-white shadow-sm">
+    <% @location_users.each do |lu| %>
+      <%= turbo_frame_tag dom_id(lu) do %>
+        <div class="flex items-center justify-between p-3">
+          <div class="min-w-0">
+            <p class="font-medium text-gray-900 m-0">
+              <%= lu.user.first_name %> <%= lu.user.last_name %> (<%= lu.user.email %>)
+            </p>
+          </div>
+
+          <!-- Toggle -->
+          <div
+            data-controller="role-toggle"
+            data-role-toggle-url-value="<%= location_user_path(lu) %>"
+            class="flex items-center gap-2"
+            >
+
+            <!-- Accessible label -->
+            <div>
+
+              Role:
+              <span class="font-medium <%= lu.admin? ? 'text-indigo-600' : 'text-gray-700' %>">
+                <%= lu.role.camelize %>
+              </span>
+            </div>
+            <span class="sr-only">Toggle admin</span>
+
+            <label class="relative inline-flex h-7 w-12 items-center cursor-pointer">
+              <!-- Checkbox drives knob; checked == admin -->
+              <input type="checkbox"
+                     class="peer sr-only"
+                     data-action="change->role-toggle#toggle"
+                     <%= "checked" if lu.admin? %>
+                     >
+
+              <!-- Track -->
+              <span class="absolute inset-0 rounded-full bg-gray-300 peer-checked:bg-indigo-600 transition-colors"></span>
+
+              <!-- Knob -->
+              <span class="relative h-5 w-5 translate-x-1 rounded-full bg-white shadow transition-transform
+                           peer-checked:translate-x-6"></span>
+            </label>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

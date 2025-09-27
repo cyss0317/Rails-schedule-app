@@ -34,6 +34,7 @@ Rails.application.routes.draw do
         delete 'clear_selected_week'
       end
     end
+    resources :location_users, shallow: true, only: %i[index update]
   end
   # devise_for :registrations
   # namespace :users do

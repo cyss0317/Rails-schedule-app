@@ -35,12 +35,12 @@ class User < ApplicationRecord
     "#{first_name.capitalize} #{middle_name[0].capitalize if middle_name.present?}. #{last_name[0].capitalize}"
   end
 
-  def location_user(location_id)
-    LocationUser.where(location_id:).first
+  def location_user
+    LocationUser.where(user_id: id).first
   end
 
-  def location_admin_user?(location_id)
-    location_user(location_id)&.role == 'admin'
+  def location_admin_user?
+    location_user&.role == 'admin'
     # flipper_enabled?(:admin)
   end
 
@@ -67,7 +67,7 @@ class User < ApplicationRecord
     Time.now.zone || 'UTC'
   end
 
-  def role(location_id)
-    location_user(location_id).role.camelize
+  def role
+    location_user.role.camelize
   end
 end

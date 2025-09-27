@@ -81,7 +81,7 @@ class LocationsController < ApplicationController
   end
 
   def load_all_companies
-    @companies = current_user.companies
+    @companies = current_user.companies.present? ? current_user.companies : current_user.working_companies
   end
 
   def load_all_locations

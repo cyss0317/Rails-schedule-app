@@ -9,7 +9,7 @@
     <%= link_to "#{calendar.current_month_in_string} #{calendar.year}", root_path, class: "calendar-title" %>
   <% end %>
 
-  <%= link_to "Today", current.downcase == "month" ? root_path : weekly_location_meetings_path, class: "today-btn" %>
+  <%= link_to "Today #{Time.zone.now.to_date}", current.downcase == "month" ? monthly_location_meetings_path(location_id: params[:location_id]) : weekly_location_meetings_path, class: "today-btn" %>
 
   <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": weekly_location_meetings_path, "Month": monthly_location_meetings_path(location_id: params[:location_id]) } } %>
   <div class="user-name"><%= link_to "Home", root_path %></div>

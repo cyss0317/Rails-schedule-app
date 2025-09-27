@@ -3,14 +3,8 @@
   <header class="sticky top-0 z-10 bg-white border-b">
     <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
       <h1 class="text-xl font-semibold tracking-tight"><%= current_user.full_name %>'s Schedules</h1>
-      <button
-        class="md:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2"
-        aria-controls="company-drawer"
-        aria-expanded="false"
-      >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2"/></svg>
-        Companies
-      </button>
+
+        <%= render partial: "shared/icons/hamburger", locals: { current: "month" } %>
     </div>
   </header>
 
@@ -39,15 +33,17 @@
                 <span class="font-medium"><%= company.name %></span>
                 <span class="text-sm text-gray-500"><%= company.locations.length %> locations </span> 
                 <% end %>
-                <%= link_to "Edit", edit_company_path(company), class: "text-sm text-indigo-600 hover:text-indigo-800 underline" %>
+                <%= link_to "Edit", edit_company_path(company), class: "text-sm text-indigo-600 hover:text-indigo-800 underline" if current_user.admin_user? %>
             </div>
           </nav>
         <% end %>
 
         <!-- Sidebar footer actions -->
-        <div class="p-3 flex items-center gap-2">
-          <%= link_to "Create Company", new_company_path, class: "w-full inline-flex justify-center rounded-xl bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700" %>
-        </div>
+        <% if current_user.admin_user? %>
+          <div class="p-3 flex items-center gap-2">
+            <%= link_to "Create Company", new_company_path, class: "w-full inline-flex justify-center rounded-xl bg-indigo-600 text-white px-3 py-2 hover:bg-indigo-700" %>
+          </div>
+        <% end %>
       </div>
     </aside>
 
@@ -68,7 +64,7 @@
             <option>Cedar Park</option>
           </select>
           -->
-          <%= link_to "Create a Location", new_company_location_path(@company), class: "inline-flex items-center rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 shadow" %>
+          <%= link_to "Create a Location", new_company_location_path(@company), class: "inline-flex items-center rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 shadow" if current_user.admin_user?%>
         </div>
       </div>
 
@@ -87,12 +83,19 @@
             </header>
             <div class="flex items-start justify-between">
               <dl class="mt-3 grid grid-cols-2 gap-2 text-sm">
-                <div>   <%= link_to "Employees", edit_location_path(location), class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
+                <% if current_user.admin_user? %>
+                <!-- 
+                  <div> <%= link_to "Employees",location_location_users_path(location), class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
+                -->
+                  <div> <%= content_tag :div, "Employees", class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
+                <% else %>
+                  <div> <%= content_tag :div, "Employees", class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
+                <% end %>
               </dl>
             </div>
             <div class="mt-4 flex items-center gap-2">
               <%= link_to "Show Schedules", weekly_location_meetings_path(location_id: location.id), class: "rounded-lg border px-3 py-1.5 hover:bg-gray-50" %>
-              <%= link_to "Edit", edit_location_path(location, company_id: params[:company_id]), class: "rounded-lg border px-3 py-1.5 hover:bg-gray-50" %>
+              <%= link_to "Edit", edit_location_path(location, company_id: params[:company_id]), class: "rounded-lg border px-3 py-1.5 hover:bg-gray-50" if current_user.admin_user? %>
             </div>
           </article>
         <% end %>
