@@ -9,7 +9,7 @@ namespace :after_party do
       ActiveRecord::Base.transaction do
         company = Company.create(name: 'Cricket', user_id: user.id)
         location = Location.create(name: 'Oltorf', street_address: '2030 E Oltorf St', building_number: 'Ste 104B',
-                                   city: 'Austin', state: 'Texas', zip_code: '78741', country: 'United States',
+                                   city: 'Austin', state: 'Texas', zip_code: '78741',
                                    company_id: company.id)
         users = User.all
         users.each do |u|
