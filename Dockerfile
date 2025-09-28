@@ -33,7 +33,7 @@ RUN bundle install && \
     # Optionally, if you need to install a specific version of Yarn
 # You can add the Yarn package repository and install from there
 # Install JavaScript dependencies
-ARG NODE_VERSION=16.14.0
+ARG NODE_VERSION=18.20.8
 ARG YARN_VERSION=1.22.19
 ENV PATH=/usr/local/node/bin:$PATH
 RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
