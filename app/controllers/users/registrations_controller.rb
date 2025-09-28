@@ -41,7 +41,6 @@ module Users
       super do |user|
         loc_id = params[:location_id]
 
-        binding.pry
         next unless loc_id.present?
 
         location_user = LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user')

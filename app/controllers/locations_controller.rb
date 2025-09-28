@@ -81,11 +81,19 @@ class LocationsController < ApplicationController
   end
 
   def load_all_companies
+    if current_user.developer_user?
+      @companies = Company.all
+      return
+    end
     @companies = current_user.companies.present? ? current_user.companies : current_user.working_companies
   end
 
   def load_all_locations
     load_company
+    if current_user.developer_user?
+      @locations = Location.all
+      return
+    end
     @locations = @company.locations
   end
 
@@ -95,7 +103,7 @@ class LocationsController < ApplicationController
 
   def location_params
     params.require(:location).permit(:name, :street_address,
-                                     :phone_number, :ip_address, :company_id, :zip_code, :city,
+                                     :ip_address, :company_id, :zip_code, :city,
                                      :country, :state, :building_number)
   end
 end

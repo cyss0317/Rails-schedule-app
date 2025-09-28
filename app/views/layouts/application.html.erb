@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsScheduleApp</title>
+    <title>Schedule App</title>
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1.5">
     <meta name="view-transition" content="same-origin" />
     <%= csrf_meta_tags %>
@@ -12,9 +12,11 @@
   </head>
 
   <body>
-    <%= render layout: "shared/modal", locals: { modal_title: "Notification", display: notice || alert ? true : false }  do %>
-      <p class="text-center notice"><%= notice %></p>
-      <p class="text-center alert"><%= alert %></p>
+    <% if notice.present? || alert.present? %>
+      <%= render layout: "shared/modal", locals: { modal_title: "Notification(s)", open: true } do %>
+        <p class="text-center notice"><%= notice %></p>
+        <p class="text-center alert"><%= alert %></p>
+      <% end %>
     <% end %>
 
     <%= yield %>

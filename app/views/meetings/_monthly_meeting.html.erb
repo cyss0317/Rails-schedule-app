@@ -1,5 +1,5 @@
   <%# TODO: add color to user and display the background of their meeting with it %>
-  <% if current_user.location_admin_user?  %>
+  <% if current_user.location_admin_user? || current_user.developer_user? %>
     <% if current_user.email == meeting.user.email  %>
         <li class="event current-user-shift" >
           <%= link_to "#{meeting.user_name} #{meeting.monthly_shift_hours}", meeting_path(meeting) %>

@@ -1,32 +1,31 @@
-<% display ||= false %>
-<div class="fade-in" id="modal" style="display:<%= display ? "block" : "none"%>">
-  <div class="modal_background z-20 fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+<%# locals: modal_title:, open: false %>
+<div
+  data-controller="modal"
+  data-modal-open-value="<%= open %>"
+  data-modal-target="root"
+  class="hidden"
+>
+  <div
+    class="modal_background z-20 fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+    data-modal-target="backdrop"
+    data-action="click->modal#backdrop"
+  >
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" data-modal-target="panel">
       <div class="mt-3 text-center">
         <h3 id="target-date" class="text-lg leading-6 font-medium text-gray-900"><%= modal_title %></h3>
         <div class="mt-2 px-7 py-3">
-          <!-- Modal body content goes here -->
           <%= yield %>
         </div>
         <div class="items-center px-4 py-3">
-          <%= render partial: "shared/button", locals: { display_text: "Close", classes: ["modal-close"]} %>
-
+          <button
+          type="button"
+          class="flex w-full bg-indigo-600 hover:bg-indigo-500 justify-center rounded-md #{bg_class} m-1 mt-3 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          data-action="click->modal#close"
+        >
+          Close
+        </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener('turbo:load', () => {
-    document.querySelector(".modal-close").addEventListener("click", () => {
-      document.querySelector("#modal").style.display = "none";
-    });
-
-    document.querySelector(".modal_background").addEventListener("click", (event) => {
-      if (event.target === event.currentTarget) {
-        document.querySelector("#modal").style.display = "none";
-      }
-    });
-  });
-</script>

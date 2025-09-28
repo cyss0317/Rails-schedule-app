@@ -6,7 +6,7 @@
     <%= render partial: "shared/text_field", locals: { form: f, label: "City" , field: "city"  } %>
     <%= render partial: "shared/text_field", locals: { form: f, label: "State" , field: "state"  } %>
     <%= render partial: "shared/text_field", locals: { form: f, label: "Zip Code" , field: "zip_code"  } %>
-    <%= render partial: "shared/text_field", locals: { form: f, label: "Phone Number" , field: "phone_number"  } %>
+    <%# render partial: "shared/text_field", locals: { form: f, label: "Phone Number" , field: "phone_number"  } %>
     <%= f.hidden_field :company_id, value: @location&.company&.id || params[:company_id] %>
   <% end %>
   <div class="mt-6 flex justify-center items-center gap-4">
