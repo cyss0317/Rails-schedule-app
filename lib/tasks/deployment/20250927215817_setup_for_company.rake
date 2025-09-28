@@ -15,6 +15,10 @@ namespace :after_party do
         users.each do |u|
           LocationUser.create(location_id: location.id, user_id: u.id, role: u != user ? 'user' : 'admin')
         end
+
+        Meeting.all.each do |m|
+          m.update(location_id: location.id)
+        end
         puts 'All the jobs ran successfully'
       end
     end
