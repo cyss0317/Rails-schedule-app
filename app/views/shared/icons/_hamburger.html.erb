@@ -61,6 +61,9 @@
 
       <!-- Nav links -->
       <nav class="space-y-1" aria-label="Main">
+        <% if params[:location_id].present? %>
+          <p class="block rounded-xl px-3 py-2 hover:bg-gray-50"><%= new_user_registration_path(location_id: params[:location_id]) %></p>
+        <% end %>
         <%= link_to "Home", root_path,
           class: "block rounded-xl px-3 py-2 text-indigo-700 bg-indigo-50 font-medium" %>
 
@@ -72,7 +75,7 @@
             class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
         <% end %>
 
-        <% if current_user.location_admin_user? && current == "Week" %>
+        <% if (current_user.location_admin_user? || current_user.developer_user?) && current == "Week" %>
           <% if @meetings.empty? %>
             <%= button_to "Copy Last Week Shifts",
                   copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id], target_week: @date_range),

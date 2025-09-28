@@ -52,6 +52,10 @@ class User < ApplicationRecord
     flipper_enabled?(:admin)
   end
 
+  def developer_user?
+    flipper_enabled?(:developer)
+  end
+
   def flipper_enabled?(feature)
     Flipper.enabled?(feature, Flipper::Actor.new(email.downcase))
   end
@@ -68,6 +72,6 @@ class User < ApplicationRecord
   end
 
   def role
-    location_user.role.camelize
+    developer_user? ? 'Developer' : location_user.role.camelize
   end
 end

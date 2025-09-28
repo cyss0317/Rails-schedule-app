@@ -1,4 +1,4 @@
-  <% if current_user.location_admin_user? %>
+  <% if current_user.location_admin_user? || current_user.developer_user? %>
     <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", edit_meeting_path(meeting),
       {  
         class: "weekly-meeting shadow #{classes} admin",

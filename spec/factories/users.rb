@@ -11,7 +11,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     middle_name { Faker::Name.middle_name }
     last_name { Faker::Name.last_name }
-    password { Faker::Internet.password }
+    password { "asdfasdf" }
 
     trait :with_relationships do
       after(:create) do |user, e|

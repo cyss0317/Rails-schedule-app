@@ -11,7 +11,7 @@
           <div class="employee-hours">Employee:</div>
         <% end %>
         <% @users_total_hours_for_week.each do |user, hours|  %>
-          <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if current_user.admin_user? && @users_total_hours_for_week.present? %> </div>
+          <div class="employee-hours shadow" style="background-color: <%= user.color %>"><%= "#{user.first_name}" %> <%= ":#{hours}" if (current_user.admin_user? || current_user.developer_user?) && @users_total_hours_for_week.present? %> </div>
         <% end %>
       </div>
       <% date_range.slice(0, 7).each do |day| %>
@@ -24,8 +24,7 @@
           <% if @day_offs.for_day_filtered_by_date(day.in_time_zone).present? %>
             <% day_offs = @day_offs.for_day_filtered_by_date(day.in_time_zone).sort_by(&:start_time)  %>
             <% day_offs.each do |day_off| %>
-                <% if current_user.location_admin_user? || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
-                <%= binding.pry %>
+                <% if (current_user.location_admin_user? || current_user.developer_user?) || (day_off.my_day_off?(current_user) && !day_off.been_passed?) %>
                   <%= link_to "#{day_off.off_time_info(day.in_time_zone)}", edit_day_off_url(day_off.id, location_id: params[:location_id]), class: "day-off shadow flex items-center #{'current-user-day-off' if day_off.my_day_off?(current_user)} #{day_off.off_time_class(day.in_time_zone)}" %>
                 <% else %>
                   <p class="day-off shadow flex items-center <%= day_off.off_time_class(day.in_time_zone) %>"> <%= day_off.off_time_info(day.in_time_zone)%> </p>
@@ -61,9 +60,9 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? %>">
+            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? || current_user.developer_user? %>">
               <% if calendar.td_classes_for(day).include?("today") %>
-                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user? %>"></div>
+                <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user? || current_user.developer_user? %>"></div>
               <% end %>
               <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                 <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
