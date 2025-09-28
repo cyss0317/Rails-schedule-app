@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_15_023614) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_27_215701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -91,6 +91,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_15_023614) do
     t.index ["start_time"], name: "index_meetings_on_start_time"
     t.index ["time"], name: "index_meetings_on_time"
     t.index ["user_id"], name: "index_meetings_on_user_id"
+  end
+
+  create_table "task_records", id: false, force: :cascade do |t|
+    t.string "version", null: false
   end
 
   create_table "users", force: :cascade do |t|

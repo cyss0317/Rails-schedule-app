@@ -80,6 +80,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    after_party (2.0.0)
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.4.1)
@@ -343,6 +344,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  after_party
   bootsnap
   byebug (~> 11.1)
   capybara

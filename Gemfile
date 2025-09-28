@@ -31,6 +31,7 @@ gem 'stimulus-rails'
 gem 'jbuilder'
 
 gem 'simple_calendar', '~> 2.4'
+gem 'after_party'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
