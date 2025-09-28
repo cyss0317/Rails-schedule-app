@@ -7,8 +7,10 @@ class Location < ApplicationRecord
   has_many :day_offs
 
   def full_address
-    [street_address, building_number, city, state, zip_code]
-      .reject(&:blank?)
-      .join(', ')
+    a = [street_address, building_number].reject(&:blank?).join(' ')
+    b = [city].reject(&:blank?).join('')
+    c = [state, zip_code].reject(&:blank?).join(' ')
+
+    [a, b, c].join(', ')
   end
 end
