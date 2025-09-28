@@ -6,7 +6,7 @@ namespace :after_party do
     # Put your task implementation HERE.
     user = User.find_by(email: 'hannahlee9994@gmail.com')
     if user.present?
-      ActiveRecord::Base.transactions do
+      ActiveRecord::Base.transaction do
         company = Company.create(name: 'Cricket', user_id: user.id)
         location = Location.create(name: 'Oltorf', street_address: '2030 E Oltorf St', building_number: 'Ste 104B',
                                    city: 'Austin', state: 'Texas', zip_code: '78741', country: 'United States',
