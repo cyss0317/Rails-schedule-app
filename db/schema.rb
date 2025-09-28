@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_27_215701) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_28_022656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "companies", force: :cascade do |t|
     t.string "name", null: false
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
@@ -61,19 +61,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_27_215701) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "street_address", null: false
-    t.string "phone_number", null: false
-    t.string "ip_address"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "company_id"
-    t.string "zip_code"
+    t.string "name"
+    t.string "street_address"
     t.string "building_number"
     t.string "city"
-    t.string "country"
     t.string "state"
-    t.index ["name"], name: "index_locations_on_name"
+    t.string "zip_code"
+    t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_locations_on_company_id"
   end
 
   create_table "meetings", force: :cascade do |t|
@@ -121,13 +118,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_27_215701) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "color"
-    t.integer "company_id"
-    t.integer "location_user_id"
-    t.string "phone_number"
-    t.index ["company_id"], name: "index_users_on_company_id"
+    t.bigint "location_user_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["location_user_id"], name: "index_users_on_location_user_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "locations", "companies"
 end
