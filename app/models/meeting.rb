@@ -201,6 +201,10 @@ class Meeting < ApplicationRecord
     # check if meetings start_time and end_time collapse with user's day_off's start_time and end_time
   end
 
+  def user_name
+    user.name_and_last_name
+  end
+
   private
 
   def start_time_cannot_be_greater_than_end_time

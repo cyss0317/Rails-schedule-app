@@ -34,7 +34,11 @@ Rails.application.routes.draw do
         delete 'clear_selected_week'
       end
     end
-    resources :location_users, shallow: true, only: %i[index update]
+    resources :location_users, shallow: true, only: %i[index update] do
+      member do
+        patch 'toggle_active', to: 'location_users#toggle_active'
+      end
+    end
   end
   # devise_for :registrations
   # namespace :users do

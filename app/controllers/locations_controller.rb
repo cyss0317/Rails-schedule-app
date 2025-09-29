@@ -90,10 +90,6 @@ class LocationsController < ApplicationController
 
   def load_all_locations
     load_company
-    if current_user.developer_user?
-      @locations = Location.all
-      return
-    end
     @locations = @company.locations
   end
 

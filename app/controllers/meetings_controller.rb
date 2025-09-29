@@ -35,7 +35,7 @@ class MeetingsController < ApplicationController
       if @meeting.save
         # format.html { redirect_to meeting_url(@meeting), notice: 'Meeting was successfully created.' }
         format.html do
-          redirect_to weekly_location_meetings_path(location_id: @meeting.location_id),
+          redirect_to weekly_location_meetings_path(location_id: @meeting.location_id, start_date: @meeting.start_time.beginning_of_day.to_date),
                       notice: 'Meeting was successfully created'
         end
         # format.json { render :show, status: :created, location: @meeting }
@@ -50,7 +50,7 @@ class MeetingsController < ApplicationController
     if @meeting.update(meeting_params)
       respond_to do |format|
         format.html do
-          redirect_to  weekly_location_meetings_path(location_id: @meeting.location_id),
+          redirect_to weekly_location_meetings_path(location_id: @meeting.location_id, start_date: @meeting.start_time.beginning_of_day.to_date),
                       notice: 'Meeting was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @meeting }
@@ -187,10 +187,8 @@ class MeetingsController < ApplicationController
 
     unavailable_to_work_employee_ids = off_users_ids - morning_day_off_users_ids - evening_day_off_users_ids
 
-    active_user_ids = Location.find(location_id || @meeting.location_id).users.without_demo_user.sort_by_first_name
-
-    filtered_users = User.where(id: active_user_ids)
-
+    filtered_users =   User.joins(:location_users).where(location_users: { location_id:,
+                                                                           active: true }).without_demo_user.sort_by_first_name
     return @users = [] if filtered_users.empty?
 
     @users = if unavailable_to_work_employee_ids.empty?

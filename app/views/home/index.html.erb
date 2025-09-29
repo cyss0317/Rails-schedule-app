@@ -1,6 +1,19 @@
 <div class="min-h-[60vh] grid place-items-center px-4">
   <div class="w-full max-w-md rounded-2xl bg-white shadow-lg ring-1 ring-gray-100 p-6 md:p-8">
-    <% if current_user.locations.empty? %>
+   <% if current_user.admin_user? || current_user.developer_user? %>
+     <h1 class="text-lg font-semibold text-gray-900">Welcome</h1>
+     <p class="mt-1 text-sm text-gray-600">Choose an option below to continue.</p>
+     <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+       <%= link_to "Create a Company",
+             new_company_path,
+             class: "inline-flex justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-white font-medium shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300" %>
+
+       <%= button_to "Sign Out",
+             destroy_user_session_path,
+             method: :delete,
+             class: "inline-flex justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-gray-700 font-medium hover:bg-gray-50" %>
+     </div>
+    <% else current_user.locations.empty? %>
       <div class="flex items-start gap-3">
         <div class="mt-1 shrink-0 h-9 w-9 rounded-full bg-amber-100 grid place-items-center text-amber-600">!</div>
         <div>
@@ -14,21 +27,6 @@
               destroy_user_session_path,
               method: :delete,
               class: "inline-flex items-center rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 shadow" %>
-              
-   <% else %>
-   <!--
-     <h1 class="text-lg font-semibold text-gray-900">Welcome</h1>
-     <p class="mt-1 text-sm text-gray-600">Choose an option below to continue.</p>
-     <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-       <%= link_to "Sign Up",
-             new_user_registration_path,
-             class: "inline-flex justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-white font-medium shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300" %>
-
-       <%= link_to "Sign In",
-             new_user_session_path,
-             class: "inline-flex justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-gray-700 font-medium hover:bg-gray-50" %>
-     </div>
-    -->
     <% end %>
   </div>
 </div>
