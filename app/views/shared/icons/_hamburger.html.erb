@@ -72,6 +72,9 @@
             Copy Employee Sign Up URL
           </button>
         <% end %>
+        <% if (current_user.admin_user? || current_user.developer_user?) && params[:location_id].present? %>
+          <div> <%= link_to "Show Employees", location_location_users_path(location_id: params[:location_id]), class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %></div>
+        <% end %>
 
         <%= link_to "Home", root_path,
           class: "block rounded-xl px-3 py-2 text-indigo-700 bg-indigo-50 font-medium" %>

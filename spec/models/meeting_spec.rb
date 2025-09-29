@@ -72,7 +72,7 @@ RSpec.describe Meeting, type: :model do
     end
 
     it '#user_name' do
-      expect(meeting.user_name).to eq('Yun')
+      expect(meeting.user_name).to eq('Yun Choi')
     end
 
     it '#user_name_month' do

@@ -13,7 +13,7 @@
 
   <div class="my-5">
     <%= form.label :employee %>
-    <%= form.select :user_id, options_for_select(@users, meeting.user ? meeting.user.id : @users[0]), {}, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.select :user_id, method == :patch ? [[@meeting.user_name, @meeting.user.id]] :options_for_select(@users || [], meeting.user ? meeting.user.id : @users[0]), {}, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
     <%= form.label :start_time %>

@@ -6,6 +6,7 @@ class LocationUser < ApplicationRecord
   validates :user_id, uniqueness: { scope: :location_id }
 
   scope :filter_by_location_id, ->(location_id) { where(location_id:) }
+  scope :filter_by_active, -> { where(active: true) }
 
   def admin?
     role == 'admin'

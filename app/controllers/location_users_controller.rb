@@ -1,5 +1,6 @@
 class LocationUsersController < ApplicationController
   before_action :load_location_users, only: %i[index]
+  before_action :load_location_user, only: %i[toggle_active]
   def index
     render
   end
@@ -9,8 +10,16 @@ class LocationUsersController < ApplicationController
     @location_user.update!(role: new_role)
 
     respond_to do |format|
-      format.turbo_stream  # renders update.turbo_stream.erb
+      format.turbo_stream # renders update.turbo_stream.erb
       format.html { redirect_back fallback_location: location_users_path, notice: "Role updated to #{new_role}" }
+    end
+  end
+
+  def toggle_active
+    @location_user.update(active: !@location_user.active)
+
+    respond_to do |format|
+      format.turbo_stream
     end
   end
 

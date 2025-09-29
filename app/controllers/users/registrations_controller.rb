@@ -43,7 +43,8 @@ module Users
 
         next unless loc_id.present?
 
-        location_user = LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user')
+        location_user = LocationUser.find_or_create_by(user_id: user.id, location_id: loc_id, role: 'user',
+                                                       active: true)
         user.update(location_user_id: location_user.id)
       end
     end
@@ -93,7 +94,6 @@ module Users
       attributes = %i[last_name first_name middle_name]
       devise_parameter_sanitizer.permit(:account_update, keys: attributes)
     end
-
 
     # The path used after sign up.
     # def after_sign_up_path_for(resource)

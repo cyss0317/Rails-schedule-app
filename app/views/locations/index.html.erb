@@ -60,7 +60,7 @@
       <!-- Section header -->
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 class="text-lg font-semibold">Cricket1 Locations</h2>
+          <h2 class="text-lg font-semibold"><%= @company.name %> Locations</h2>
           <p class="text-sm text-gray-500">Showing <%= @locations.length %> of <%= @locations.length %> locations</p>
         </div>
         <div class="flex items-center gap-2">
@@ -91,11 +91,11 @@
             </header>
             <div class="flex items-start justify-between">
               <dl class="mt-3 grid grid-cols-2 gap-2 text-sm">
-                <% if current_user.admin_user? %>
-                <!-- 
+                <% if current_user.admin_user? || current_user.developer_user? %>
                   <div> <%= link_to "Employees",location_location_users_path(location), class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
-                -->
+                <!-- 
                   <div> <%= content_tag :div, "Employees", class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
+                -->
                 <% else %>
                   <div> <%= content_tag :div, "Employees", class: "text-gray-500 hover:bg-gray-50" %><dd class="font-medium"><%= location.location_users.length %></dd></div>
                 <% end %>
