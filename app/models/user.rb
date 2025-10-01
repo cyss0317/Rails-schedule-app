@@ -16,6 +16,9 @@ class User < ApplicationRecord
   has_many :locations, through: :location_users
   has_many :companies
   has_many :working_companies, through: :locations, source: :company
+  has_many :active_location_users, -> { where(active: true) }, class_name: 'LocationUser'
+  has_many :active_locations, through: :active_location_users, source: :location
+  has_many :active_working_companies, through: :active_locations, source: :company
 
   scope :sort_by_first_name, -> { order(first_name: :asc) }
   scope :without_demo_user, lambda {

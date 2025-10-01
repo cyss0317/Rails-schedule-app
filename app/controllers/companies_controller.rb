@@ -32,7 +32,9 @@ class CompaniesController < ApplicationController
   def update
     if @company.update(company_params)
       respond_to do |format|
-        format.turbo_stream { redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully updated' }
+        format.turbo_stream do
+          redirect_to company_locations_path(@company), status: :see_other, notice: 'Successfully updated'
+        end
         # format.html do
         #   redirect_to company_locations_path(@company), notice: 'Successfully updated', status: :see_other
         # end
@@ -64,7 +66,7 @@ class CompaniesController < ApplicationController
   private
 
   def load_all_companies
-    @companies = current_user.companies
+    @companies = current_user.active_working_companies
   end
 
   def load_company
