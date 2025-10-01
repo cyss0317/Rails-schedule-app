@@ -1,7 +1,7 @@
 <!-- app/views/location_users/index.html.erb -->
 <div class="mx-auto max-w-3xl p-3 sm:p-4">
   <div class="flex items-center justify-between mb-3 sm:mb-4">
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">Location Users</h1>
+    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900"><%= @location.name %> Users</h1>
     <%= render partial: "shared/icons/hamburger", locals: { current: "month" } %>
   </div>
 
@@ -58,8 +58,9 @@
                 data-active-toggle-target="label"
                 class="absolute inset-0 grid place-items-center font-semibold transition-colors
                        text-[11px] sm:text-sm
-                       <%= lu.active? ? 'text-white' : 'text-transparent' %>">
-                <%= lu.active? ? 'Active' : '' %>
+                       text-white
+                       ">
+                Active
               </span>
 
               <!-- Knob: bigger/tappable on phones; travel matches width -->
