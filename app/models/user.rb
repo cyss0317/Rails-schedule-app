@@ -72,6 +72,12 @@ class User < ApplicationRecord
   end
 
   def role
-    developer_user? ? 'Developer' : location_user.role.camelize
+    if developer_user?
+      'Developer'
+    elsif admin_user?
+      'Admin'
+    else
+      location_user&.role&.camelize || 'User'
+    end
   end
 end
