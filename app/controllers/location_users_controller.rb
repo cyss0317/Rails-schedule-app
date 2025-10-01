@@ -1,6 +1,7 @@
 class LocationUsersController < ApplicationController
   before_action :load_location_users, only: %i[index]
   before_action :load_location_user, only: %i[toggle_active]
+  before_action :load_location, only: %i[index]
   def index
     render
   end
@@ -31,5 +32,9 @@ class LocationUsersController < ApplicationController
 
   def load_location_user
     @location_user = LocationUser.find(params[:id])
+  end
+
+  def load_location
+    @location = Location.find(params[:location_id])
   end
 end
