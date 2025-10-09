@@ -101,7 +101,7 @@
       admin_current_time_liner = document.querySelector(".current-time-liner-admin")
       admin_current_time_liner?.addEventListener("click", (e) => {
         e.stopPropagation()
-        window.location.href = "/meetings/new?start_date=" + encodeURIComponent(current_time)
+        window.location.href = "/locations/<%= @location_id %>/meetings/new?start_date=" + encodeURIComponent(current_time)
       })
 
       // append the current time liner to the today column//
