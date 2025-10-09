@@ -50,6 +50,7 @@ class CompaniesController < ApplicationController
   def index
     if @companies.empty?
       respond_to do |format|
+        format.turbo_stream
         format.html { redirect_to new_company_path }
       end
     else
@@ -60,7 +61,10 @@ class CompaniesController < ApplicationController
   def destroy
     return unless @company.destroy
 
-    redirect_to root_path
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to root_path }
+    end
   end
 
   private

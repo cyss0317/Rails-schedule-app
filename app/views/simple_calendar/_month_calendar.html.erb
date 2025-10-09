@@ -12,8 +12,11 @@
 
     <tbody>
       <% date_range.each_slice(7).with_index do |week, idx| %>
-        <tr class="week-<%= idx %>" data-date-range=<%= date_range %> data-link="<%= weekly_location_meetings_path(start_date: week[0])%>" >
-          <div>
+        <tr class="week-<%= idx %>" 
+            data-controller='monthly-calendar-row'
+            data-date-range=<%= date_range %>
+            data-monthly-calendar-row-url-value="<%= weekly_location_meetings_path(start_date: week[0])%>" 
+            data-action="click->monthly-calendar-row#navigate">
             <% week.each do |day| %>
                 <%= content_tag :td, class: calendar.td_classes_for(day), data: {date:day}  do %>
                   <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
@@ -23,29 +26,8 @@
                   <% end %>
               <% end %>
             <% end %>
-          </div>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-
-<script>
-  document.addEventListener('turbo:load', () => {
-    document.querySelectorAll("tr[class^='week-']").forEach(week => {
-      week.addEventListener("click", (e) => {
-        window.location = e.currentTarget.getAttribute("data-link")
-        <%#
-        document.querySelector("#myModal").style.display = "block"
-          %>
-      })
-    })
-
-    document.querySelectorAll(".day").forEach(day => {
-      day.addEventListener("click", (e) => {
-        window.startDate = new Date(e.target.getAttribute("data-date"))
-      })
-
-    })
-  })
-</script>

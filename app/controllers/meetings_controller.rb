@@ -65,10 +65,11 @@ class MeetingsController < ApplicationController
 
   # DELETE /meetings/1 or /meetings/1.json
   def destroy
+    return_to_url = weekly_location_meetings_path(location_id: @meeting.location_id, start_time: @meeting.start_time.beginning_of_day.to_date )
     @meeting.destroy!
 
     respond_to do |format|
-      format.html { redirect_to params[:redirect_url], notice: 'Meeting was successfully destroyed.' }
+      format.html { redirect_to session.delete(:return_to) || return_to_url, notice: 'Meeting was successfully destroyed.' }
       # format.html { redirect_back fallback_location: meetings_weekly_path }
       # format.html { redirect_to meetings_url, notice: 'Meeting was successfully destroyed.' }
       format.json { head :no_content }
@@ -85,8 +86,6 @@ class MeetingsController < ApplicationController
     @meeting = Meeting.new
     Rails.logger.info "ip: #{request.remote_ip}}"
     Rails.logger.info "real ip: #{request.env['HTTP_X_REAL_IP']}}"
-
-    Rails.logger.info "CHOI's house: #{request.remote_ip == ' 72.133.102.178'}}"
     if params[:start_date]
       @start_time = params[:start_date].to_date.beginning_of_week.at_beginning_of_day
       @end_time = params[:start_date].to_date.end_of_week.at_end_of_day
