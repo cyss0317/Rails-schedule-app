@@ -53,7 +53,7 @@ class MeetingsController < ApplicationController
           redirect_to weekly_location_meetings_path(location_id: @meeting.location_id, start_date: @meeting.start_time.beginning_of_day.to_date),
                       notice: 'Meeting was successfully updated.'
         end
-        format.json { render :show, status: :ok, location: @meeting }
+        format.json { render json: { id: @meeting.id, start_time: @meeting.start_time, end_time: @meeting.end_time }, status: :ok }
       end
     else
       respond_to do |format|

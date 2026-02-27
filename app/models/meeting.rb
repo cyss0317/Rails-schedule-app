@@ -46,7 +46,7 @@ class Meeting < ApplicationRecord
   end
 
   def user_name
-    user.first_name
+    user.name_and_last_name
   end
 
   def user_name_month
@@ -139,12 +139,6 @@ class Meeting < ApplicationRecord
     MAX_WIDTH / meetings_count - avoid_overlap(hour_idx, meetings_count)
   end
 
-  # def self.current_time_class
-  #   DateHelper.current_time_hour
-  # end
-
-  def self.morning_shifts; end
-
   # display work time from to end
   def work_time
     "#{format_date(start_time)}-#{format_date(end_time)}"
@@ -195,14 +189,6 @@ class Meeting < ApplicationRecord
     return 7 if number.zero?
 
     number
-  end
-
-  def user_can_work?
-    # check if meetings start_time and end_time collapse with user's day_off's start_time and end_time
-  end
-
-  def user_name
-    user.name_and_last_name
   end
 
   private

@@ -1,5 +1,38 @@
-.fade-in {
-  @media frame {
-    // animation: fade 1s;
+// ── Shift Entrance ─────────────────────────────────────────────────────────
+@keyframes shiftEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// ── Fade In ────────────────────────────────────────────────────────────────
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ── Slide Down ─────────────────────────────────────────────────────────────
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Utility classes ────────────────────────────────────────────────────────
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out both;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.2s ease-out both;
 }
