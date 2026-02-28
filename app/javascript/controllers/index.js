@@ -6,6 +6,7 @@ import ClipBoardController from "./clip_board_controller";
 import MonthlyCalendarRowController from "./monthly_calendar_row_controller";
 import WeeklyCalendarController from "./weekly_calendar_controller";
 import ShiftDragController from "./shift_drag_controller";
+import CalendarNavController from "./calendar_nav_controller";
 
 window.Stimulus = Application.start();
 Stimulus.register("drawer", DrawerController);
@@ -15,3 +16,4 @@ Stimulus.register("clipboard", ClipBoardController);
 Stimulus.register("monthly-calendar-row", MonthlyCalendarRowController);
 Stimulus.register("weekly-calendar", WeeklyCalendarController);
 Stimulus.register("shift-drag", ShiftDragController);
+Stimulus.register("calendar-nav", CalendarNavController);

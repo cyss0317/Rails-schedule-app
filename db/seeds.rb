@@ -1,77 +1,133 @@
 # frozen_string_literal: true
 
-require 'factory_bot_rails'
-
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# Idempotent seed — safe to re-run at any time.
 #
-# Example:
+# Creates:
+#   • 1 developer/admin user: test@test.com  (password: asdfasdf)
+#   • 1 company + 1 location
+#   • 4 active employees tied to the location
+#   • 4 weeks of historical morning/evening meetings (CST) so
+#     ShiftGenerationService can detect patterns on the first run.
 #
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Patterns seeded (every day of the week):
+#   Alice + Bob  → morning shift (9AM–3PM CST) Mon–Sun
+#   Carol + Dave → evening shift (3PM–9PM CST) Mon–Sun
 
-# colors
-#
-colors = [
-  '#546E7A',
-  '#7E57C2',
-  '#FFA726',
-  '#689F38',
-  '#FF4081',
-  '#4FC3F7',
-  '#E040FB',
-  '#9CCC65',
-  '#FF7043',
-  '#29B6F6',
-  '#FFD54F'
-]
+TZ = 'America/Chicago'
 
-unless User.find_by(email: 'test@test.com')
-  FactoryBot.create(:user, email: 'test@test.com', password: 'asdfasdf',
-                           color: '#8C6E63')
+EMPLOYEE_COLORS = %w[
+  #546E7A
+  #7E57C2
+  #FFA726
+  #689F38
+  #FF4081
+  #4FC3F7
+].freeze
+
+# ── Developer / Admin user ────────────────────────────────────────────────────
+
+developer = User.find_or_create_by!(email: 'test@test.com') do |u|
+  u.first_name  = 'Test'
+  u.middle_name = ''
+  u.last_name   = 'User'
+  u.password    = 'asdfasdf'
+  u.color       = '#8C6E63'
 end
 
-user_id_array = User.all.pluck(:id)
+Flipper.enable_actor(:developer, Flipper::Actor.new('test@test.com'))
+Flipper.enable_actor(:admin,     Flipper::Actor.new('test@test.com'))
+Flipper.enable_actor(:active,    Flipper::Actor.new('test@test.com'))
 
-if user_id_array.length < 4
-  available_colors = colors - User.all.pluck(:color)
-  user_id_array << FactoryBot.create(:user,
-                                     color: available_colors[0]) until user_id_array.length == 4
+# ── Company & Location ────────────────────────────────────────────────────────
+
+company = Company.find_or_create_by!(name: 'Schedule App Demo') do |c|
+  c.user = developer
 end
 
-5.times do |i|
-  # morning shift
-  starting_time = Time.new.in_time_zone.noon + i.days - 4.hour
-  Meeting.create(
-    name: "Meeting #{i}",
-    user_id: user_id_array.sample,
-    start_time: starting_time,
-    end_time: starting_time + (4 + i).hour,
-    location_id: Location.first.id
-  )
-  Meeting.create(
-    name: "Meeting #{i}",
-    user_id: user_id_array.sample,
-    start_time: starting_time + 2.hour,
-    end_time: starting_time + (4 + i).hour,
-    location_id: Location.first.id
-  )
-  # dinner shift
-  starting_time = Time.new.in_time_zone.noon + i.days + 3.hour
-  Meeting.create(
-    name: "Meeting #{i}",
-    user_id: user_id_array.sample,
-    start_time: starting_time,
-    end_time: starting_time + i.hour,
-    location_id: Location.first.id
-  )
-  Meeting.create(
-    name: "Meeting #{i}",
-    user_id: user_id_array.sample,
-    start_time: starting_time,
-    end_time: starting_time + (2 + i).hour,
-    location_id: Location.first.id
-  )
+location = Location.find_or_create_by!(name: 'Main Office') do |l|
+  l.company        = company
+  l.street_address = '123 N Michigan Ave'
+  l.city           = 'Chicago'
+  l.state          = 'IL'
+  l.zip_code       = '60601'
 end
+
+# Developer gets an active admin seat at the location
+LocationUser.find_or_create_by!(user: developer, location:) do |lu|
+  lu.role   = 'admin'
+  lu.active = true
+end
+
+# ── Employees ─────────────────────────────────────────────────────────────────
+
+EMPLOYEE_ATTRS = [
+  { first_name: 'Alice', middle_name: 'M', last_name: 'Johnson',  color: EMPLOYEE_COLORS[0] },
+  { first_name: 'Bob',   middle_name: 'T', last_name: 'Williams', color: EMPLOYEE_COLORS[1] },
+  { first_name: 'Carol', middle_name: 'L', last_name: 'Davis',    color: EMPLOYEE_COLORS[2] },
+  { first_name: 'Dave',  middle_name: 'R', last_name: 'Martinez', color: EMPLOYEE_COLORS[3] },
+].freeze
+
+employees = EMPLOYEE_ATTRS.map do |attrs|
+  email = "#{attrs[:first_name].downcase}@example.com"
+
+  user = User.find_or_create_by!(email:) do |u|
+    u.first_name  = attrs[:first_name]
+    u.middle_name = attrs[:middle_name]
+    u.last_name   = attrs[:last_name]
+    u.password    = 'asdfasdf'
+    u.color       = attrs[:color]
+  end
+
+  Flipper.enable_actor(:active, Flipper::Actor.new(email))
+
+  LocationUser.find_or_create_by!(user:, location:) do |lu|
+    lu.role   = 'user'
+    lu.active = true
+  end
+
+  user
+end
+
+alice, bob, carol, dave = employees
+
+# ── Historical meetings (8 weeks back) ────────────────────────────────────────
+# Simple, consistent pattern so ShiftGenerationService detects it on first run:
+#   Alice + Bob  → morning shift (9AM–3PM CST) every day Mon–Sun
+#   Carol + Dave → evening shift (3PM–9PM CST) every day Mon–Sun
+#
+# 4 weeks matches LOOKBACK_WEEKS exactly. All slots appear 4/4 times, well
+# above the ranking threshold, so the top-2 selection fires immediately.
+
+MORNING_USERS = [alice, bob].freeze
+EVENING_USERS = [carol, dave].freeze
+
+4.times do |week_offset|
+  ref_monday = (Date.today - (week_offset + 1).weeks).beginning_of_week
+
+  (1..7).each do |cwday|
+    date = ref_monday + (cwday - 1).days
+
+    MORNING_USERS.each do |user|
+      start_t = date.in_time_zone(TZ).change(hour: 9)
+      end_t   = date.in_time_zone(TZ).change(hour: 15)
+      Meeting.find_or_create_by!(user:, location:, start_time: start_t, end_time: end_t)
+    end
+
+    EVENING_USERS.each do |user|
+      start_t = date.in_time_zone(TZ).change(hour: 15)
+      end_t   = date.in_time_zone(TZ).change(hour: 21)
+      Meeting.find_or_create_by!(user:, location:, start_time: start_t, end_time: end_t)
+    end
+  end
+end
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+
+puts <<~SUMMARY
+  Seed complete.
+    Company:   #{company.name}
+    Location:  #{location.name} (id: #{location.id})
+    Developer: #{developer.email}  [developer + admin + active]
+    Employees: #{employees.map(&:first_name).join(', ')}  (password: asdfasdf)
+    Meetings:  #{Meeting.where(location:).count} historical shifts seeded
+SUMMARY

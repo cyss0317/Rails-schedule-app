@@ -50,6 +50,10 @@ export default class extends Controller {
       // Offset within the shift element where the user grabbed
       offsetX: e.clientX - rect.left,
       offsetY: e.clientY - rect.top,
+      // Starting pointer position — used to detect real drags vs clicks
+      startX: e.clientX,
+      startY: e.clientY,
+      hasMoved: false,
       currentDropColumn: null,
       pendingStart: null, // { newDate, newHour, newMinute }
     };
@@ -110,7 +114,14 @@ export default class extends Controller {
     if (!this._drag) return;
     e.preventDefault();
 
-    const { ghost, offsetX, offsetY } = this._drag;
+    const { ghost, offsetX, offsetY, startX, startY } = this._drag;
+
+    // Mark as a real drag once the pointer travels more than 5px
+    if (!this._drag.hasMoved) {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (dx * dx + dy * dy > 25) this._drag.hasMoved = true;
+    }
 
     // Move ghost so it stays anchored to where the user grabbed it
     ghost.style.left = `${e.clientX - offsetX}px`;
@@ -162,8 +173,9 @@ export default class extends Controller {
     const snappedMinute = snappedMinutesFromStart % 60;
     const snappedHour = Math.min(8 + totalHoursOffset, 22);
 
-    // Convert back to pixel position for the indicator
-    const snappedTopPx = ((snappedHour - 8) * 60 + snappedMinute) / minutesPerPx / 60;
+    // Convert back to pixel position for the indicator:
+    // minutes-from-8AM ÷ (minutes-per-px) = pixels from top of calendar body
+    const snappedTopPx = ((snappedHour - 8) * 60 + snappedMinute) / minutesPerPx;
 
     return { snappedTopPx, snappedHour, snappedMinute };
   }
@@ -173,13 +185,24 @@ export default class extends Controller {
   _onPointerUp(e) {
     if (!this._drag) return;
 
-    const { meetingId, durationMs, originalEl, ghost, currentDropColumn, pendingStart } =
+    const { meetingId, durationMs, originalEl, ghost, currentDropColumn, pendingStart, hasMoved } =
       this._drag;
 
     this._removeDropIndicator();
     this._cleanupDrag(originalEl, ghost);
 
-    if (!currentDropColumn || !pendingStart) {
+    // Suppress the click event that the browser fires after pointerup so it
+    // doesn't navigate to the edit page when the user actually dragged.
+    if (hasMoved) {
+      const suppressClick = (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        document.removeEventListener("click", suppressClick, true);
+      };
+      document.addEventListener("click", suppressClick, true);
+    }
+
+    if (!hasMoved || !currentDropColumn || !pendingStart) {
       this._drag = null;
       return;
     }

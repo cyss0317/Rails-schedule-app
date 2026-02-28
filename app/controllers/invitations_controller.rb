@@ -14,7 +14,7 @@ class InvitationsController < ApplicationController
       email: email,
       location_id: params[:location_id],
       invited_by: current_user.full_name
-    ).deliver_later
+    ).deliver_now
 
     redirect_back fallback_location: root_path, notice: "Invitation sent to #{email}"
   end

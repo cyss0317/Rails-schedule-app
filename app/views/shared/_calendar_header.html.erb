@@ -1,10 +1,11 @@
-<div class="calendar-heading static top-0 md:sticky md:top-0 <%= current.downcase %>">
+<div class="calendar-heading static top-0 md:sticky md:top-0 <%= current.downcase %>"
+     data-controller="calendar-nav">
   <%= render layout: "shared/header" do %>
-    <%= render layout: "shared/tooltip", locals: { text: "Previous month"} do %>
-      <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view %>
+    <%= render layout: "shared/tooltip", locals: { text: "Previous #{current.downcase}"} do %>
+      <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view, data: { nav: "prev" } %>
     <% end %>
-    <%= render layout: "shared/tooltip", locals: { text: "Next month"} do %>
-      <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view %>
+    <%= render layout: "shared/tooltip", locals: { text: "Next #{current.downcase}"} do %>
+      <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view, data: { nav: "next" } %>
     <% end %>
     <%= link_to "#{calendar.current_month_in_string} #{calendar.year}", root_path, class: "calendar-title" %>
   <% end %>
@@ -13,13 +14,6 @@
 
   <%= render partial: "shared/dropdown", locals: { current: current, options: { "Week": weekly_location_meetings_path, "Month": monthly_location_meetings_path(location_id: params[:location_id]) } } %>
   <div class="user-name"><%= link_to "Home", root_path %></div>
-  
+
   <%= render partial: "shared/icons/hamburger", locals: { current: current } %>
 </div>
-
-<script>
-  document.addEventListener("turbo:load", () => {
-    //document.querySelector(".today").scrollIntoView()
-
-  })
-</script>

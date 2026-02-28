@@ -1,4 +1,28 @@
 <% @date_range = date_range %>
+
+<%# Overtime alert — hidden for now; re-enable by removing the `false &&` %>
+<% if false && (current_user.admin_user? || current_user.developer_user?) && @overtime_users.present? %>
+  <div class="mx-auto max-w-screen-xl px-4 pt-3">
+    <div class="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 shadow-sm">
+      <svg class="mt-0.5 h-5 w-5 shrink-0 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+      </svg>
+      <div>
+        <p class="text-sm font-semibold text-amber-800">Overtime this week</p>
+        <ul class="mt-1 space-y-0.5">
+          <% @overtime_users.each do |user, hours| %>
+            <li class="text-sm text-amber-700">
+              <span class="font-medium"><%= user.name_and_last_name %></span>
+              &mdash; <%= hours %>h
+              <span class="text-amber-500">(+<%= (hours - 40).round(1) %>h over)</span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <div class="weekly-calendar"
      data-controller="weekly-calendar shift-drag"
      data-weekly-calendar-location-id-value="<%= @location_id %>"
@@ -57,8 +81,7 @@
 
         <div class="hours">
           <% (8..23).each do |hour| %>
-            <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
-            <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+            <div class="hour-cell h-10" style="top: <%= table_row_top(hour) %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
           <% end %>
         </div>
 

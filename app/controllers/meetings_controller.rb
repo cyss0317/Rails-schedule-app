@@ -106,6 +106,8 @@ class MeetingsController < ApplicationController
       end
       [user, total_hours.round(1)]
     end
+
+    @overtime_users = @users_total_hours_for_week.select { |_, hours| hours > 40 }
   end
 
   def monthly

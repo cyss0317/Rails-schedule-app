@@ -15,6 +15,5 @@ production:
     schedule: every hour at minute 12
   weekly_shift_generation:
     class: WeeklyShiftGenerationJob
-    args: [<%= ENV.fetch('DEFAULT_LOCATION_ID', 1) %>]
-    schedule: "0 20 * * 6"  # Every Saturday at 8PM UTC
+    schedule: "0 20 * * 6"  # Every Saturday at 8PM UTC — runs for all locations
     queue: default

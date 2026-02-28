@@ -119,24 +119,19 @@ class Meeting < ApplicationRecord
     # table_row_top(start_time.hour)
   end
 
-  def table_row_left_shift(idx, meetings_count, hour_idx)
-    (idx.to_i % meetings_count) * table_row_width(meetings_count, hour_idx) + table_row_right_spacing(
-      meetings_count, idx, hour_idx
-    )
+  # Equal-width slots with a 1% gap between adjacent shifts.
+  # hour_idx is accepted for backward compatibility but is no longer used.
+  SHIFT_GAP_PERCENT = 1.0
+
+  def table_row_width(meetings_count, _hour_idx = nil)
+    return MAX_WIDTH.to_f if meetings_count <= 1
+
+    gaps = (meetings_count - 1) * SHIFT_GAP_PERCENT
+    (MAX_WIDTH - gaps) / meetings_count
   end
 
-  def avoid_overlap(hour_idx, _meetings_count)
-    avoid_width_by = 8
-    (hour_idx % 3) * avoid_width_by
-    # + (meetings_count - 1) * avoid_width_by
-  end
-
-  def table_row_right_spacing(meetings_count, idx, hour_idx)
-    ((MAX_WIDTH - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
-  end
-
-  def table_row_width(meetings_count, hour_idx)
-    MAX_WIDTH / meetings_count - avoid_overlap(hour_idx, meetings_count)
+  def table_row_left_shift(idx, meetings_count, _hour_idx = nil)
+    idx * (table_row_width(meetings_count) + SHIFT_GAP_PERCENT)
   end
 
   # display work time from to end
