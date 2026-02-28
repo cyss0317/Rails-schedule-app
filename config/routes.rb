@@ -12,6 +12,8 @@ end
 Rails.application.routes.draw do
   set_up_flipper
 
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
+
   root to: 'home#index'
   devise_for :users, controllers: {
     registrations: 'users/registrations',
@@ -31,6 +33,7 @@ Rails.application.routes.draw do
         get 'monthly', to: 'meetings#monthly'
         post 'seed', to: 'meetings#seed'
         post 'copy_previous_week_schedule'
+        post 'generate_weekly', to: 'meetings#generate_weekly'
         delete 'clear_selected_week'
       end
     end
@@ -40,10 +43,15 @@ Rails.application.routes.draw do
       end
     end
   end
-  # devise_for :registrations
-  # namespace :users do
-  #   resources :registrations, only: %i[new create]
-  # end
+  resources :invitations, only: [:create]
+
+  namespace :admin do
+    resources :jobs, only: [:index] do
+      collection do
+        post :trigger
+      end
+    end
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

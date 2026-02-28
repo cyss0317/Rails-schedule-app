@@ -5,6 +5,19 @@
     <%= render partial: "shared/icons/hamburger", locals: { current: "month" } %>
   </div>
 
+  <% if current_user.admin_user? || current_user.developer_user? %>
+    <div class="mb-4 p-4 rounded-xl border border-gray-200 bg-white shadow-sm">
+      <h2 class="text-sm font-semibold text-gray-700 mb-2">Invite New Employee</h2>
+      <%= form_with url: invitations_path, method: :post, class: "flex gap-2 flex-wrap" do |f| %>
+        <%= f.hidden_field :location_id, value: @location.id %>
+        <%= f.email_field :email, placeholder: "employee@email.com",
+              class: "flex-1 min-w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" %>
+        <%= f.submit "Send Invite",
+              class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 cursor-pointer" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="divide-y rounded-xl border border-gray-200 bg-white shadow-sm">
     <% @location_users.each do |lu| %>
       <%= turbo_frame_tag dom_id(lu) do %>

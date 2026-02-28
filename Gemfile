@@ -69,6 +69,9 @@ group :development do
   # gem "spring"
 
   gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
+
+  # Preview emails in the browser instead of sending them
+  gem 'letter_opener_web'
 end
 
 group :test do
@@ -97,3 +100,5 @@ gem 'sentry-rails', '~> 5.15'
 gem 'flipper-ui', '~> 1.2'
 
 gem 'date_validator', '~> 0.12.0'
+
+gem 'solid_queue'

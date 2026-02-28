@@ -64,11 +64,13 @@ export default class extends Controller {
 
         const rect = el.getBoundingClientRect();
         const yOffset = e.clientY - rect.top;
-        const hourOffset = Math.floor(
-          (yOffset / rect.height) * (rect.height / this.rowHeightValue)
-        );
         const hour = 8 + Math.floor(yOffset / this.rowHeightValue);
-        const clickedTime = `${hour}:00`;
+        // Snap minutes to nearest :00 or :30
+        const rawMinutes = (yOffset % this.rowHeightValue) / this.rowHeightValue * 60;
+        const snappedMinutes = Math.round(rawMinutes / 30) * 30;
+        const finalHour = snappedMinutes === 60 ? hour + 1 : hour;
+        const finalMinute = snappedMinutes === 60 ? 0 : snappedMinutes;
+        const clickedTime = `${finalHour}:${String(finalMinute).padStart(2, "0")}`;
         const date = el.dataset.date;
 
         window.location.href = `/locations/${this.locationIdValue}/meetings/new?start_date=${date} ${clickedTime}`;

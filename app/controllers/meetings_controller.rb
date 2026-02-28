@@ -123,18 +123,24 @@ class MeetingsController < ApplicationController
 
   def copy_previous_week_schedule
     @unable_to_copy_meeting_list = []
-    # params should have selected week
     target_week = convert_target_week_param
-    # grab the most recent meeting and scope them by the week
-    meetings = Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list,
-                                                                        location_id)
 
-    notice_message = if meetings.present?
-                       @unable_to_copy_meeting_list.map do |meeting|
+    if params[:source_date].present?
+      source_date = Date.parse(params[:source_date])
+      Meeting.copy_week_meetings_from_source(source_date, target_week, location_id, @unable_to_copy_meeting_list)
+      source_meetings = Meeting.meetings_for_source_week(source_date, location_id)
+    else
+      source_meetings = Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list,
+                                                                                 location_id)
+    end
+
+    notice_message = if source_meetings.present?
+                       failures = @unable_to_copy_meeting_list.map do |meeting|
                          "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
-                       end.join('<br>').html_safe
+                       end
+                       failures.empty? ? 'Shifts copied successfully' : failures.join('<br>').html_safe
                      else
-                       'There are no previous schedules to copy'
+                       'There are no schedules to copy from that week'
                      end
 
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
@@ -156,6 +162,16 @@ class MeetingsController < ApplicationController
 
     Rails.logger.info("CACHED: #{Rails.cache.read('last_cleared_schedules')}")
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
+  end
+
+  def generate_weekly
+    unless current_user.developer_user?
+      return redirect_to root_path, alert: 'Not allowed'
+    end
+
+    target_week = convert_target_week_param
+    ShiftGenerationService.new(location_id, target_week).call
+    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: 'Weekly shifts generated'
   end
 
   def location_id

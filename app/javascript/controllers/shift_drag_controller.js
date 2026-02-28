@@ -155,8 +155,8 @@ export default class extends Controller {
     const rowHeight = this.rowHeightValue; // px per hour (50)
     const minutesPerPx = 60 / rowHeight;
     const rawMinutesFromStart = Math.max(0, topPx * minutesPerPx);
-    // Snap to nearest 15-minute slot
-    const snappedMinutesFromStart = Math.round(rawMinutesFromStart / 15) * 15;
+    // Snap to nearest 30-minute slot
+    const snappedMinutesFromStart = Math.round(rawMinutesFromStart / 30) * 30;
 
     const totalHoursOffset = Math.floor(snappedMinutesFromStart / 60);
     const snappedMinute = snappedMinutesFromStart % 60;

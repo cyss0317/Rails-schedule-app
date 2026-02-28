@@ -144,6 +144,33 @@ class Meeting < ApplicationRecord
     "#{format_date(start_time)}-#{format_date(end_time)}"
   end
 
+  def self.meetings_for_source_week(source_date, location_id)
+    week_start = source_date.beginning_of_week.beginning_of_day
+    week_end   = source_date.end_of_week.end_of_day
+    filter_by_location_id(location_id).where(start_time: week_start..week_end)
+  end
+
+  def self.copy_week_meetings_from_source(source_date, target_week, location_id, unable_list = [])
+    source_meetings = meetings_for_source_week(source_date, location_id)
+    target_cwday_to_date = target_week.each_with_object({}) { |d, h| h[d.cwday] = d }
+
+    source_meetings.each do |meeting|
+      target_date   = target_cwday_to_date[meeting.convert_wday_to_cwday(meeting.start_time.wday)]
+      new_start     = meeting.updated_date_on_start_time(target_date)
+      new_end       = meeting.updated_date_on_end_time(target_date)
+      already_exists = filter_by_location_id(location_id)
+                         .where(user_id: meeting.user_id, start_time: new_start, end_time: new_end)
+                         .exists?
+      next if already_exists
+
+      if meeting.user.can_work_for_time_frame?(new_start, new_end, target_date)
+        create!(start_time: new_start, end_time: new_end, user_id: meeting.user_id, location_id:)
+      else
+        unable_list << meeting
+      end
+    end
+  end
+
   def self.most_recent_week_meetings(location_id)
     most_recent_meeting = Meeting.filter_by_location_id(location_id).sort_by_start_time.last
     week_start_time = most_recent_meeting&.start_time&.at_beginning_of_week&.at_beginning_of_day
