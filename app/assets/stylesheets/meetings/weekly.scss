@@ -20,12 +20,25 @@ $number-of-hour-cells: 16;
 }
 
 // ── Weekly Calendar Layout ─────────────────────────────────────────────────
+// Shell = full-viewport flex column.  The calendar header sits here at the
+// top, OUTSIDE the scroll container, so the hamburger drawer (position:fixed)
+// is never trapped inside the overflow:auto compositing layer.
+.weekly-calendar-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
 .weekly-calendar {
   // Single 2-D scroll container: scroll right to see all 7 days,
   // scroll down to see later hours. Sticky header/column work against
   // this container — NOT the window — so they need overflow here.
   overflow: auto;
-  height: 100dvh;
+  flex: 1;
+  min-height: 0; // required: flex children don't shrink below content size by default
+  // Contain all sticky z-index layers inside this stacking context so the
+  // fixed hamburger drawer (outside this element) always paints above them.
+  isolation: isolate;
   // Subtle scrollbar (Chrome 121+, Firefox; degrades gracefully on Safari)
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.12) transparent;

@@ -23,12 +23,19 @@
   </div>
 <% end %>
 
+<%# Outer shell: flex column fills the full viewport height.
+    The calendar header lives here — OUTSIDE the scroll container —
+    so the hamburger drawer (position:fixed) is never trapped inside
+    the overflow:auto layer that causes sticky elements to composite
+    above the fixed backdrop/panel. %>
+<div class="weekly-calendar-shell">
+  <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
+
 <div class="weekly-calendar"
      data-controller="weekly-calendar shift-drag"
      data-weekly-calendar-location-id-value="<%= @location_id %>"
      data-weekly-calendar-row-height-value="<%= Meeting::HOUR_HEIGHT_IN_PX %>"
      data-shift-drag-row-height-value="<%= Meeting::HOUR_HEIGHT_IN_PX %>">
-  <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
 
   <div class="table flex flex-col justify-center">
     <div class="table-header sticky top-0 md:sticky  my-sticky-offset ">
@@ -105,4 +112,5 @@
       <% end %>
     </div>
   </div>
-</div>
+</div><%# closes .weekly-calendar %>
+</div><%# closes .weekly-calendar-shell %>

@@ -20,10 +20,16 @@ export default class extends Controller {
     if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
     if (document.activeElement?.isContentEditable) return;
 
+    let href;
     if (e.key === "ArrowLeft") {
-      this.element.querySelector("[data-nav='prev']")?.click();
+      href = this.element.querySelector("[data-nav='prev']")?.href;
     } else if (e.key === "ArrowRight") {
-      this.element.querySelector("[data-nav='next']")?.click();
+      href = this.element.querySelector("[data-nav='next']")?.href;
+    }
+
+    if (href) {
+      e.preventDefault();
+      Turbo.visit(href);
     }
   }
 }

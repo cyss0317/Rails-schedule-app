@@ -7,8 +7,10 @@ import MonthlyCalendarRowController from "./monthly_calendar_row_controller";
 import WeeklyCalendarController from "./weekly_calendar_controller";
 import ShiftDragController from "./shift_drag_controller";
 import CalendarNavController from "./calendar_nav_controller";
+import DayLayoutController from "./day_layout_controller";
 
 window.Stimulus = Application.start();
+Stimulus.register("day-layout", DayLayoutController);
 Stimulus.register("drawer", DrawerController);
 Stimulus.register("active-toggle", ActiveToggleController);
 Stimulus.register("modal", ModalController);
