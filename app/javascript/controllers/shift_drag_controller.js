@@ -12,8 +12,9 @@ export default class extends Controller {
   };
 
   connect() {
-    this._drag   = null;
-    this._resize = null;
+    this._drag          = null;
+    this._resize        = null;
+    this._longPressTimer = null;
 
     this._onPointerMove = this._onPointerMove.bind(this);
     this._onPointerUp   = this._onPointerUp.bind(this);
@@ -24,6 +25,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    clearTimeout(this._longPressTimer);
     this._cancelDrag();
     this._cancelResize();
   }
@@ -49,8 +51,50 @@ export default class extends Controller {
     const durationSec = parseInt(shift.dataset.meetingDuration, 10);
     if (!meetingId || !durationSec) return;
 
-    const rect         = shift.getBoundingClientRect();
-    const durationMs   = durationSec * 1000;
+    if (e.pointerType === "touch") {
+      this._awaitLongPress(e, shift, meetingId, durationSec);
+    } else {
+      this._initiateDrag(e.clientX, e.clientY, shift, meetingId, durationSec);
+    }
+  }
+
+  // ── Long-press guard (touch only) ─────────────────────────────────────────
+  // Waits 300 ms before committing to drag. If the finger moves > 10 px first
+  // the pending drag is cancelled so the user can scroll normally.
+
+  _awaitLongPress(e, shift, meetingId, durationSec) {
+    const startX = e.clientX, startY = e.clientY;
+
+    const cleanup = () => {
+      clearTimeout(this._longPressTimer);
+      this._longPressTimer = null;
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup",    onCancel);
+      document.removeEventListener("pointercancel", onCancel);
+    };
+
+    const onMove = (ev) => {
+      const dx = ev.clientX - startX, dy = ev.clientY - startY;
+      if (dx * dx + dy * dy > 100) cleanup(); // > 10 px ➜ scrolling, not dragging
+    };
+
+    const onCancel = () => cleanup();
+
+    document.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerup",    onCancel, { once: true });
+    document.addEventListener("pointercancel", onCancel, { once: true });
+
+    this._longPressTimer = setTimeout(() => {
+      cleanup();
+      this._initiateDrag(startX, startY, shift, meetingId, durationSec);
+    }, 300);
+  }
+
+  // ── Initiate Drag ──────────────────────────────────────────────────────────
+
+  _initiateDrag(clientX, clientY, shift, meetingId, durationSec) {
+    const rect          = shift.getBoundingClientRect();
+    const durationMs    = durationSec * 1000;
     const shiftHeightPx = (durationSec / 3600) * this.rowHeightValue;
 
     this._drag = {
@@ -60,10 +104,10 @@ export default class extends Controller {
       originalEl: shift,
       ghost: this._createGhost(shift, rect),
       dropIndicator: null,
-      offsetX: e.clientX - rect.left,
-      offsetY: e.clientY - rect.top,
-      startX: e.clientX,
-      startY: e.clientY,
+      offsetX: clientX - rect.left,
+      offsetY: clientY - rect.top,
+      startX: clientX,
+      startY: clientY,
       hasMoved: false,
       currentDropColumn: null,
       pendingStart: null,

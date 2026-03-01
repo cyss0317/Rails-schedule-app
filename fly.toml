@@ -17,7 +17,7 @@ console_command = "/rails/bin/rails console"
 # "worker" — SolidQueue background job processor + recurring cron schedule
 [processes]
   app    = "./bin/rails server"
-  worker = "bundle exec solid_queue start"
+  worker = "bin/rails solid_queue:start"
 
 # ── Web (app process only) ────────────────────────────────────────────────────
 [http_service]

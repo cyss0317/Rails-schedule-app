@@ -27,8 +27,8 @@ gem 'stimulus-rails'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 
-gem 'simple_calendar', '~> 2.4'
 gem 'after_party'
+gem 'simple_calendar', '~> 2.4'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -52,10 +52,10 @@ group :development, :test do
 
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec-rails'
   gem 'pry'
-  gem 'pry-rails'
   gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -102,3 +102,5 @@ gem 'flipper-ui', '~> 1.2'
 gem 'date_validator', '~> 0.12.0'
 
 gem 'solid_queue'
+
+gem 'faraday'
