@@ -93,23 +93,18 @@
         </div>
 
         <% week.each do |day| %>
-            <div data-date="<%= day.to_s %>" class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? || current_user.developer_user? %>">
+            <div data-date="<%= day.to_s %>"
+                 data-controller="day-layout"
+                 class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? || current_user.developer_user? %>">
               <% if calendar.td_classes_for(day).include?("today") %>
                 <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user? || current_user.developer_user? %>"></div>
               <% end %>
-              <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
-                <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
-              <% else %>
-              <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each_with_index do |shifts_by_hour, hour_idx| %>
-                <% shifts_by_hour.each_with_index do |shift, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, hour_idx: hour_idx, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
-                <% end %>
+              <% sorted_events.fetch(day, []).each_with_index do |shift, idx| %>
+                <%= render partial: "meetings/weekly_meeting", locals: { meeting: shift, idx: idx, classes: "weekly-meeting-#{shift.id}" } %>
               <% end %>
             </div>
           <% end %>
         <% end %>
-
-      <% end %>
     </div>
   </div>
 </div><%# closes .weekly-calendar %>

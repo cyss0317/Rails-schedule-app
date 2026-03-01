@@ -13,6 +13,7 @@ export default class extends Controller {
     this._positionCurrentTimeLiner();
     this._setupTodayDateClick();
     this._setupAdminTableClick();
+    this._setupHoverHighlight();
     this._setupEmployeeHoursToggle();
     this._setupMeetingHoverGrouping();
   }
@@ -75,6 +76,31 @@ export default class extends Controller {
 
         window.location.href = `/locations/${this.locationIdValue}/meetings/new?start_date=${date} ${clickedTime}`;
       });
+    });
+  }
+
+  // ── 30-min Slot Hover Highlight ───────────────────────────────────────────
+
+  _setupHoverHighlight() {
+    const slotHeight = this.rowHeightValue / 2; // 25px = 30 min
+
+    this.element.querySelectorAll(".admin-table").forEach((col) => {
+      const slot = document.createElement("div");
+      slot.className = "hover-slot";
+      slot.style.height = `${slotHeight}px`;
+      col.appendChild(slot);
+
+      col.addEventListener("mousemove", (e) => {
+        if (e.target.closest(".weekly-meeting") || e.target.closest(".resize-handle")) {
+          slot.hidden = true;
+          return;
+        }
+        const yOffset = e.clientY - col.getBoundingClientRect().top;
+        slot.style.top = `${Math.round(yOffset / slotHeight) * slotHeight}px`;
+        slot.hidden = false;
+      });
+
+      col.addEventListener("mouseleave", () => { slot.hidden = true; });
     });
   }
 

@@ -334,6 +334,20 @@ $number-of-hour-cells: 16;
           background-color: rgba(79, 70, 229, 0.05);
         }
 
+        // 30-min slot hover highlight — shown as cursor moves over empty space
+        .hover-slot {
+          position: absolute;
+          left: 0;
+          right: 0;
+          background: rgba(79, 70, 229, 0.08);
+          border-top: 1px dashed rgba(79, 70, 229, 0.35);
+          border-bottom: 1px dashed rgba(79, 70, 229, 0.35);
+          border-radius: 3px;
+          pointer-events: none;
+          z-index: 2;
+          transition: top 0.05s ease;
+        }
+
         // Drop indicator: shows the full shift duration in the target column
         .drop-indicator {
           position: absolute;
@@ -478,6 +492,13 @@ $number-of-hour-cells: 16;
       }
     }
 
+    // ── Extremely narrow card (< 13px): no padding ──────────────────────────
+    @container (max-width: 12px) {
+      .shift-info {
+        padding: 0;
+      }
+    }
+
     // ── Very narrow card (< 22px): single vertical strip ────────────────────
     // Owns the < 22px range exclusively — the 47px rule above uses min-width:22px
     // so it never fires here. No cascade conflict regardless of source order.
@@ -508,6 +529,14 @@ $number-of-hour-cells: 16;
       }
     }
 
+    @container (max-width: 14px) {
+      .shift-info {
+        flex-direction: column;
+        gap: 2px;
+        padding: 3px 1px;
+      }
+    }
+
     &:hover,
     &.hovered {
       outline: 2px solid #4f46e5;
@@ -517,7 +546,7 @@ $number-of-hour-cells: 16;
       transform: translateY(-1px);
     }
 
-    // Admin shifts are draggable
+    // Admin shifts are draggable + resizable
     &.admin {
       cursor: grab;
       // Prevent the browser from hijacking touch events for pan/zoom so the
@@ -527,6 +556,51 @@ $number-of-hour-cells: 16;
       &:active {
         cursor: grabbing;
       }
+
+      // Resize handles — top and bottom edges
+      .resize-handle {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 8px;
+        cursor: ns-resize;
+        z-index: 3;
+        touch-action: none;
+
+        &--top { top: 0; }
+        &--bottom { bottom: 0; }
+
+        // Subtle grip indicator, visible on hover
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: 1px;
+          opacity: 0;
+          transition: opacity 0.15s ease;
+        }
+
+        &--top::after  { top: 2px; }
+        &--bottom::after { bottom: 2px; }
+      }
+
+      &:hover .resize-handle::after,
+      &.hovered .resize-handle::after {
+        opacity: 1;
+      }
+    }
+
+    // Active resize state
+    &.resizing {
+      cursor: ns-resize !important;
+      z-index: 50 !important;
+      transition: none !important;
+      opacity: 0.9;
     }
 
     // Ghost element during drag

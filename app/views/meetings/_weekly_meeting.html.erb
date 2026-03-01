@@ -1,16 +1,18 @@
-<% delay = (idx.to_f * 0.05 + hour_idx.to_f * 0.02).round(3) %>
-<% opacity = meetings_count > 1 ? [1.0 - idx * 0.1, 0.7].max.round(2) : 1.0 %>
+<% delay = (idx.to_f * 0.05).round(3) %>
 <% shared_style = "background-color:#{meeting.user_color};
-  width:#{meeting.table_row_width(meetings_count)}%;
+  width:100%;
   height:#{meeting.table_row_height}px;
   top:#{meeting.table_row_top_shift}px;
-  left:#{meeting.table_row_left_shift(idx, meetings_count)}%;
-  opacity:#{opacity};
+  left:0%;
   animation-delay:#{delay}s;" %>
 
 <% shared_data = {
   meeting_id: meeting.id,
-  meeting_duration: (meeting.end_time - meeting.start_time).to_i
+  meeting_duration: (meeting.end_time - meeting.start_time).to_i,
+  id: meeting.id,
+  start_min: meeting.start_time.hour * 60 + meeting.start_time.min,
+  end_min: meeting.end_time.hour * 60 + meeting.end_time.min,
+  day_layout_target: "event"
 } %>
 
 <% if current_user.location_admin_user? || current_user.developer_user? %>
@@ -18,10 +20,12 @@
     class: "weekly-meeting shadow #{classes} admin",
     style: shared_style,
     data: shared_data do %>
+    <div class="resize-handle resize-handle--top"></div>
     <div class="shift-info">
       <span class="shift-name"><%= meeting.user_weekly_name %></span>
       <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
     </div>
+    <div class="resize-handle resize-handle--bottom"></div>
   <% end %>
 <% else %>
   <%= content_tag :div,
