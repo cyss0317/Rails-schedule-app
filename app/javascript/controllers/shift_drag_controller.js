@@ -80,7 +80,7 @@ export default class extends Controller {
     ghost.style.top = `${rect.top}px`;
     ghost.style.margin = "0";
     ghost.style.pointerEvents = "none";
-    ghost.style.zIndex = "9999";
+    ghost.style.zIndex = "99999";
     ghost.style.backgroundColor = shift.style.backgroundColor;
     document.body.appendChild(ghost);
     return ghost;

@@ -18,15 +18,19 @@
     class: "weekly-meeting shadow #{classes} admin",
     style: shared_style,
     data: shared_data do %>
-    <span class="shift-name"><%= meeting.user_weekly_name %></span>
-    <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    <div class="shift-info">
+      <span class="shift-name"><%= meeting.user_weekly_name %></span>
+      <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    </div>
   <% end %>
 <% else %>
   <%= content_tag :div,
     class: "weekly-meeting shadow #{classes}",
     style: shared_style,
     data: shared_data do %>
-    <span class="shift-name"><%= meeting.user_weekly_name %></span>
-    <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    <div class="shift-info">
+      <span class="shift-name"><%= meeting.user_weekly_name %></span>
+      <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    </div>
   <% end %>
 <% end %>

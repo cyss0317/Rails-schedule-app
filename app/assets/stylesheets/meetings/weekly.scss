@@ -368,16 +368,13 @@ $number-of-hour-cells: 16;
     border-left: 4px solid rgba(255, 255, 255, 0.7);
     border-radius: 6px;
     text-decoration: none;
-    // Horizontal card layout: name top, time directly below
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 2px;
-    padding: 5px 6px 4px 8px;
     outline: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
+    // Container queries watch this element's own rendered width so vertical
+    // layout triggers on any narrow card regardless of screen size.
+    container-type: inline-size;
 
     // Entrance animation (delay set per-shift via inline style)
     animation: shiftEnter 0.28s ease-out both;
@@ -388,6 +385,18 @@ $number-of-hour-cells: 16;
       box-shadow 0.18s ease,
       transform 0.15s ease,
       z-index 0s;
+
+    // Inner wrapper owns flex direction + spacing so the container query
+    // can flip it to row without touching .weekly-meeting itself.
+    .shift-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2px;
+      padding: 5px 6px 4px 8px;
+      height: 100%;
+      overflow: hidden;
+    }
 
     // Employee name — top of card
     .shift-name {
@@ -411,19 +420,47 @@ $number-of-hour-cells: 16;
       line-height: 1.2;
     }
 
-    // ── Mobile: vertical text layout ────────────────────────────────────────
-    // Name and time sit side-by-side as two vertical columns, both reading
-    // top → bottom, anchored to the top of the card with a small gap.
-    // The second condition catches phones rotated to landscape: their width
-    // exceeds 767px but height drops to ~360–430px (pointer: coarse + hover: none
-    // excludes desktops/tablets in landscape which are taller).
+    // ── Narrow card (22px–47px): two-column vertical text ───────────────────
+    // Range is min-width:22px so it never matches cards < 22px — the very-narrow
+    // rule below owns that range exclusively and there is no cascade conflict.
+    @container (min-width: 22px) and (max-width: 47px) {
+      .shift-info {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3px;
+        padding: 4px 2px;
+      }
+
+      .shift-name {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.7rem;
+      }
+
+      .shift-time {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+    }
+
+    // ── Mobile / landscape phone: vertical text layout ───────────────────────
+    // The second condition catches phones rotated to landscape (width > 767px
+    // but height ≤ 500px, touch-only device).
     @media (max-width: 767px),
            (orientation: landscape) and (max-height: 500px) and (hover: none) and (pointer: coarse) {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
-      gap: 3px;
-      padding: 4px 3px;
+      .shift-info {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 3px;
+        padding: 4px 3px;
+      }
 
       .shift-name {
         writing-mode: vertical-lr;
@@ -436,6 +473,36 @@ $number-of-hour-cells: 16;
         writing-mode: vertical-lr;
         white-space: nowrap;
         overflow: hidden;
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+    }
+
+    // ── Very narrow card (< 22px): single vertical strip ────────────────────
+    // Owns the < 22px range exclusively — the 47px rule above uses min-width:22px
+    // so it never fires here. No cascade conflict regardless of source order.
+    // All vertical-text styles are declared here directly since the 47px rule
+    // no longer matches.
+    @container (max-width: 27px) {
+      .shift-info {
+        flex-direction: column;
+        gap: 2px;
+        padding: 3px 1px;
+      }
+
+      .shift-name {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.7rem;
+      }
+
+      .shift-time {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
         font-size: 0.6rem;
         opacity: 0.85;
       }
