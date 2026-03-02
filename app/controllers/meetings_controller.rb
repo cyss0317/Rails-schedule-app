@@ -166,14 +166,14 @@ class MeetingsController < ApplicationController
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
   end
 
-  def generate_weekly
-    unless current_user.developer_user?
+  def paste_last_week
+    unless current_user.location_admin_user? || current_user.developer_user?
       return redirect_to root_path, alert: 'Not allowed'
     end
 
     target_week = convert_target_week_param
-    ShiftGenerationService.new(location_id, target_week).call
-    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: 'Weekly shifts generated'
+    PasteLastWeekService.new(location_id, target_week).call
+    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: "Last week's shifts pasted"
   end
 
   def location_id

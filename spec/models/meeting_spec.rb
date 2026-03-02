@@ -101,26 +101,26 @@ RSpec.describe Meeting, type: :model do
 
         expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(0)
       end
-      it 'returns 20 when idx is 1 and meetings_count is 4 and hour_idx is 1' do
+      it 'returns 20.25 when idx is 1 and meetings_count is 4' do
         idx = 1
         meetings_count = 4
         hour_idx = 1
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(20)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(20.25)
       end
-      it 'returns 84 when idx is 5 and meetings_count is 4 and hour_idx is 2' do
-        idx = 5
+      it 'returns 40.5 when idx is 2 and meetings_count is 4' do
+        idx = 2
         meetings_count = 4
         hour_idx = 2
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(84)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(40.5)
       end
-      it 'returns 20 when idx is 9 and meetings_count is 4 and hour_idx is 3' do
-        idx = 9
+      it 'returns 60.75 when idx is 3 and meetings_count is 4' do
+        idx = 3
         meetings_count = 4
         hour_idx = 3
 
-        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(20)
+        expect(meeting.table_row_left_shift(idx, meetings_count, hour_idx)).to eq(60.75)
       end
     end
 

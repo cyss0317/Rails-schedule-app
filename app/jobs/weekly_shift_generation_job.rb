@@ -14,6 +14,6 @@ class WeeklyShiftGenerationJob < ApplicationJob
     target_week       = (0..6).map { |i| target_week_start + i }
 
     location_ids = location_id ? [location_id] : Location.pluck(:id)
-    location_ids.each { |lid| ShiftGenerationService.new(lid, target_week).call }
+    location_ids.each { |lid| PasteLastWeekService.new(lid, target_week).call }
   end
 end

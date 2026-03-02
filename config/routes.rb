@@ -33,7 +33,7 @@ Rails.application.routes.draw do
         get 'monthly', to: 'meetings#monthly'
         post 'seed', to: 'meetings#seed'
         post 'copy_previous_week_schedule'
-        post 'generate_weekly', to: 'meetings#generate_weekly'
+        post 'paste_last_week', to: 'meetings#paste_last_week'
         delete 'clear_selected_week'
       end
     end

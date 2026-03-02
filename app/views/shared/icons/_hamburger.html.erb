@@ -91,18 +91,14 @@
         <%= link_to "Edit Profile", edit_user_registration_path,
           class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
 
-        <%# Dev-only: generate a standard week of shifts %>
-        <% if current_user.developer_user? && current == "Week" %>
-          <%= button_to "Generate Weekly Shifts",
-                generate_weekly_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
-                method: :post,
-                data: { turbo_confirm: "Generate a standard week of shifts for all active employees?" },
-                class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-blue-600 text-sm" %>
-        <% end %>
-
-        <%# Admin: copy/clear week schedules %>
+        <%# Admin: copy/clear/paste week schedules %>
         <% if (current_user.location_admin_user? || current_user.developer_user?) && current == "Week" %>
           <% if @meetings.empty? %>
+            <%= button_to "Paste Last Week Shifts",
+                  paste_last_week_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
+                  method: :post,
+                  data: { turbo_confirm: "Paste shifts from last week into this week?" },
+                  class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-blue-600 text-sm" %>
             <details class="w-full group">
               <summary class="cursor-pointer list-none rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
                 Copy Shifts From Week…
@@ -114,7 +110,9 @@
                 <%= form_with url: copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id]),
                               method: :post,
                               data: { turbo_confirm: "Copy shifts from the selected source week?" } do |f| %>
-                  <%= f.hidden_field :target_week, value: @date_range %>
+                  <% @date_range.each do |date| %>
+                    <input type="hidden" name="target_week[]" value="<%= date %>">
+                  <% end %>
                   <div class="flex flex-col gap-1 mt-1">
                     <label class="text-xs text-gray-500">Source week starting (Monday):</label>
                     <%= f.date_field :source_date,
