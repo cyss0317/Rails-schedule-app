@@ -44,7 +44,6 @@ export default class extends Controller {
     if (!shift) return;
     if (e.button !== undefined && e.button !== 0) return;
 
-    e.preventDefault();
     e.stopPropagation();
 
     const meetingId   = shift.dataset.meetingId;
@@ -52,8 +51,12 @@ export default class extends Controller {
     if (!meetingId || !durationSec) return;
 
     if (e.pointerType === "touch") {
+      // Don't preventDefault — lets the browser scroll normally through shifts.
+      // The long-press timer decides whether this becomes a drag, and
+      // _onPointerMove (non-passive) will preventDefault once drag commits.
       this._awaitLongPress(e, shift, meetingId, durationSec);
     } else {
+      e.preventDefault(); // mouse/pen: prevent text selection and browser drag artefacts
       this._initiateDrag(e.clientX, e.clientY, shift, meetingId, durationSec);
     }
   }

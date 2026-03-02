@@ -62,6 +62,15 @@ $number-of-hour-cells: 16;
       }
     }
 
+    // Landscape phones (width ≥ 768px but short screen): no top offset —
+    // .weekly-calendar already starts below the calendar heading in the flex
+    // shell, so the table-header should stick flush at the top.
+    @media (min-width: 768px) and (orientation: landscape) and (max-height: 500px) {
+      .my-sticky-offset {
+        top: 0 !important;
+      }
+    }
+
     .empty-tr {
       cursor: pointer;
       height: 90px;
@@ -549,9 +558,6 @@ $number-of-hour-cells: 16;
     // Admin shifts are draggable + resizable
     &.admin {
       cursor: grab;
-      // Prevent the browser from hijacking touch events for pan/zoom so the
-      // Pointer Events drag handler receives them reliably on iOS/Android.
-      touch-action: none;
 
       &:active {
         cursor: grabbing;
