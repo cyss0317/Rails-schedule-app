@@ -69,8 +69,9 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
+  # Use SolidQueue for background jobs. SolidQueue tables live in the primary
+  # database, so no connects_to override is needed.
+  config.active_job.queue_adapter = :solid_queue
   # config.active_job.queue_name_prefix = "rails_schedule_ap_production"
 
   config.action_mailer.perform_caching = false

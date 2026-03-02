@@ -53,7 +53,7 @@ class MeetingsController < ApplicationController
           redirect_to weekly_location_meetings_path(location_id: @meeting.location_id, start_date: @meeting.start_time.beginning_of_day.to_date),
                       notice: 'Meeting was successfully updated.'
         end
-        format.json { render :show, status: :ok, location: @meeting }
+        format.json { render json: { id: @meeting.id, start_time: @meeting.start_time, end_time: @meeting.end_time }, status: :ok }
       end
     else
       respond_to do |format|
@@ -106,6 +106,8 @@ class MeetingsController < ApplicationController
       end
       [user, total_hours.round(1)]
     end
+
+    @overtime_users = @users_total_hours_for_week.select { |_, hours| hours > 40 }
   end
 
   def monthly
@@ -123,18 +125,24 @@ class MeetingsController < ApplicationController
 
   def copy_previous_week_schedule
     @unable_to_copy_meeting_list = []
-    # params should have selected week
     target_week = convert_target_week_param
-    # grab the most recent meeting and scope them by the week
-    meetings = Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list,
-                                                                        location_id)
 
-    notice_message = if meetings.present?
-                       @unable_to_copy_meeting_list.map do |meeting|
+    if params[:source_date].present?
+      source_date = Date.parse(params[:source_date])
+      Meeting.copy_week_meetings_from_source(source_date, target_week, location_id, @unable_to_copy_meeting_list)
+      source_meetings = Meeting.meetings_for_source_week(source_date, location_id)
+    else
+      source_meetings = Meeting.copy_most_recent_week_of_meetings_to_target_week(target_week, @unable_to_copy_meeting_list,
+                                                                                 location_id)
+    end
+
+    notice_message = if source_meetings.present?
+                       failures = @unable_to_copy_meeting_list.map do |meeting|
                          "Failed to create for #{meeting.user.name_and_last_name}, #{meeting.start_time.to_date}"
-                       end.join('<br>').html_safe
+                       end
+                       failures.empty? ? 'Shifts copied successfully' : failures.join('<br>').html_safe
                      else
-                       'There are no previous schedules to copy'
+                       'There are no schedules to copy from that week'
                      end
 
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
@@ -156,6 +164,16 @@ class MeetingsController < ApplicationController
 
     Rails.logger.info("CACHED: #{Rails.cache.read('last_cleared_schedules')}")
     redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: notice_message
+  end
+
+  def paste_last_week
+    unless current_user.location_admin_user? || current_user.developer_user?
+      return redirect_to root_path, alert: 'Not allowed'
+    end
+
+    target_week = convert_target_week_param
+    PasteLastWeekService.new(location_id, target_week).call
+    redirect_to weekly_location_meetings_path(start_date: target_week[0]), notice: "Last week's shifts pasted"
   end
 
   def location_id

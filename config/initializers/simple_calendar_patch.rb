@@ -19,6 +19,8 @@ module SimpleCalendar
         shifts.select { |shift| shift.shift_start_from?(hour) }
       end
     end
+
+
   end
 
   class MonthCalendar

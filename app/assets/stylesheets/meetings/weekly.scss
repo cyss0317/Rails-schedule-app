@@ -1,11 +1,9 @@
 @import "../variables.scss";
 @import "../calendar/header.scss";
+@import "../shared/animation.scss";
 
-$empty-tr-width-small: 47px;
-// $empty-tr-width-small: 110px;
+$empty-tr-width-small:  47px;
 $empty-tr-width-medium: 69px;
-// $empty-tr-width-medium: 110px;
-// $table-row-width: 150px;
 $table-row-width-small: calc(
   ($main-width-medium - #{$empty-tr-width-small}) / 7
 );
@@ -16,31 +14,73 @@ $table-body-row-height: 50px;
 $table-border-color: rgb(218, 220, 224);
 $number-of-hour-cells: 16;
 
-#dragElement {
-  width: 100px;
-  height: 100px;
-  background-color: red;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  cursor: grab;
-  transition: top 0.3s ease-in-out; /* Transition for smooth movement */
-}
-
+// ── Utility ────────────────────────────────────────────────────────────────
 .line-height-50 {
   line-height: 50px;
 }
 
+// ── Weekly Calendar Layout ─────────────────────────────────────────────────
+// Shell = full-viewport flex column.  The calendar header sits here at the
+// top, OUTSIDE the scroll container, so the hamburger drawer (position:fixed)
+// is never trapped inside the overflow:auto compositing layer.
+.weekly-calendar-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
 .weekly-calendar {
+  // Single 2-D scroll container: scroll right to see all 7 days,
+  // scroll down to see later hours. Sticky header/column work against
+  // this container — NOT the window — so they need overflow here.
+  overflow: auto;
+  flex: 1;
+  min-height: 0; // required: flex children don't shrink below content size by default
+  // Contain all sticky z-index layers inside this stacking context so the
+  // fixed hamburger drawer (outside this element) always paints above them.
+  isolation: isolate;
+  // Subtle scrollbar (Chrome 121+, Firefox; degrades gracefully on Safari)
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   .table {
     @media (min-width: 768px) {
       .my-sticky-offset {
-        top: 2.5rem !important; /* whatever top-10 is (2.5rem = 40px) */
+        top: 2.5rem !important;
       }
     }
+
+    // Landscape phones (width ≥ 768px but short screen): no top offset —
+    // .weekly-calendar already starts below the calendar heading in the flex
+    // shell, so the table-header should stick flush at the top.
+    @media (min-width: 768px) and (orientation: landscape) and (max-height: 500px) {
+      .my-sticky-offset {
+        top: 0 !important;
+      }
+    }
+
     .empty-tr {
       cursor: pointer;
       height: 90px;
+      flex-shrink: 0;
+      // Sticky in both directions: stays at the top-left corner when
+      // scrolling right (frozen column) and when scrolling down (frozen row).
+      position: sticky;
+      left: 0;
+      z-index: 25;
+      background-color: $theme-white;
       @media (min-width: 368px) and (max-width: 768px) {
         width: $empty-tr-width-small;
       }
@@ -61,105 +101,153 @@ $number-of-hour-cells: 16;
       justify-content: flex-end;
       align-items: center;
       max-width: 100%;
-      gap: 0.5rem;
-      height: 51px;
+      gap: 0.35rem;
+      height: 56px;
 
       @media (min-width: 368px) and (max-width: 768px) {
-        height: 60px;
+        height: 64px;
       }
     }
+
     .request-day-off-btn {
       color: $today-date-color;
       background: transparent;
-    }
-    .today {
-      // border: 1px solid #0b57d0;
-    }
-    .hours {
-      border-right: 1px solid $table-border-color;
-      padding-right: 8px;
-      position: relative;
+      transition: color 0.15s ease;
+      // Larger tap target on touch devices
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 4px;
 
-      @media (min-width: 368px) and (max-width: 768px) {
-        width: calc($empty-tr-width-small + 1px);
+      &:hover {
+        color: $today-date-hover-color;
       }
+    }
+
+    // ── Hours Column ───────────────────────────────────────────────────────
+    .hours {
+      border-right: 2px solid $table-border-color;
+      padding-right: 8px;
+      // sticky pins the column to left:0 at every viewport width.
+      // A defined width is required for sticky to work — use the small size as
+      // the unconditional base and upgrade at 768px.
+      position: sticky;
+      left: 0;
+      z-index: 12;
+      background-color: $theme-white;
+      flex-shrink: 0;
+      // Subtle right-edge shadow so it reads as "frozen" even when not scrolled.
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+      // Base width — covers all screens including very small ones (<368px).
+      width: calc(#{$empty-tr-width-small} + 1px);
 
       @media (min-width: 768px) {
-        width: calc($empty-tr-width-medium + 1px);
+        width: calc(#{$empty-tr-width-medium} + 1px);
       }
 
       .hour-cell {
         height: $table-body-row-height;
         text-align: center;
         position: absolute;
+        font-size: 0.7rem;
+        color: $text-color;
+        letter-spacing: 0.01em;
 
         &:nth-child(1) {
           border-top: 1px solid $table-border-color;
         }
 
-        @media (min-width: 368px) and (max-width: 768px) {
-          width: $empty-tr-width-small;
-          padding: 0;
-        }
+        // Base: same as column width
+        width: $empty-tr-width-small;
+        padding: 0;
 
         @media (min-width: 768px) {
           width: $empty-tr-width-medium;
+          padding: unset;
         }
       }
     }
 
+    // ── Employee Hours Header ──────────────────────────────────────────────
     .employee-hours {
-      font-size: 12px;
+      font-size: 11px;
       border-radius: 10px;
-      padding: 0;
+      padding: 2px 5px;
       text-align: center;
+      transition: filter 0.15s ease;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+
+      &:hover {
+        filter: brightness(0.92);
+      }
     }
 
+    // ── Table Header ───────────────────────────────────────────────────────
     .table-header {
       display: flex;
       flex-direction: row;
       align-items: flex-end;
       background-color: $theme-white;
-      z-index: 2;
-
+      // z-index must be above .hours (z-index: 12) so day-name cells render
+      // on top of the time-column when both are sticky.
+      z-index: 20;
       width: $main-width-medium;
+      // On narrow screens enforce enough width for 7 × 90px columns so the
+      // calendar scrolls horizontally instead of squishing shifts unreadably.
+      min-width: calc(7 * 90px + #{$empty-tr-width-small} + 2px);
 
       .date {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         border: none;
+        border-radius: 50%;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: background-color 0.15s ease;
+
+        @media (min-width: 768px) {
+          width: 30px;
+          height: 30px;
+          font-size: inherit;
+          font-weight: inherit;
+        }
       }
 
       .weekly-date {
         border-bottom: 1px solid $table-border-color;
-        padding: 3px;
-        gap: 0.25rem;
+        padding: 3px 2px;
+        gap: 0.2rem;
         display: flex;
         justify-content: center;
         flex-direction: column;
         align-items: center;
-
-        // > div, >p {
-        //   background: transparent;
-        //   width:100%;
-        //   height:50px;
-        // }
-
-        @media (min-width: 368px) and (max-width: 768px) {
-          width: $table-row-width-small;
-        }
-
-        @media (min-width: 768px) {
-          width: $table-row-width-medium;
-        }
+        // Grow to fill available space, never shrink below 90px.
+        // Combined with min-width on .table-header this forces horizontal
+        // scroll on narrow viewports rather than squishing columns.
+        flex: 1 0 90px;
 
         * {
           border: none;
-          padding: 0 0.25rem 0 0.25rem;
+          padding: 0 0.2rem;
           margin-bottom: 0;
+        }
+
+        // Day-name abbreviation — slightly smaller on mobile
+        p {
+          font-size: 0.7rem;
+          color: $text-color;
+
+          @media (min-width: 768px) {
+            font-size: 0.75rem;
+          }
         }
       }
 
@@ -172,25 +260,21 @@ $number-of-hour-cells: 16;
         background-color: $today-date-color;
         color: $white;
         cursor: pointer;
+        transition: background-color 0.15s ease;
 
         &:hover {
           background-color: $today-date-hover-color;
         }
       }
     }
+
+    // ── Table Body ─────────────────────────────────────────────────────────
     .table-body {
       display: flex;
       border-bottom: 1px solid $table-border-color;
       width: $main-width-medium;
+      min-width: calc(7 * 90px + #{$empty-tr-width-small} + 2px);
       position: relative;
-
-      @media (min-width: 368px) and (max-width: 768px) {
-        width: $main-width-medium;
-      }
-
-      @media (min-width: 768px) {
-        width: $main-width-medium;
-      }
 
       .hours {
         height: calc($number-of-hour-cells * $table-body-row-height);
@@ -198,81 +282,92 @@ $number-of-hour-cells: 16;
         flex-direction: column;
       }
 
-      .current-time {
-        border-top: 1px solid $theme-red;
-      }
-
       .current-time-liner {
-        border-bottom: none;
-        border-top: 2px solid red;
+        border-top: 2px solid #e53e3e;
         position: relative;
         z-index: 1;
         background-color: transparent;
-        &::before {
-          content: "";
-          position: absolute;
-          width: 13px;
-          height: 13px;
-          background-color: #f4511e;
-          left: -12px;
-          top: -8px;
-          border-radius: 50%;
-        }
+
+        &::before,
         &::after {
           content: "";
           position: absolute;
-          width: 13px;
-          height: 13px;
+          width: 10px;
+          height: 10px;
           background-color: #f4511e;
-          right: -12px;
-          top: -8px;
+          top: -6px;
           border-radius: 50%;
+        }
+
+        &::before {
+          left: -10px;
+        }
+
+        &::after {
+          right: -10px;
         }
       }
 
-      .hour-cell-row-separator {
-        padding: none !important;
-        position: absolute;
-        width: $main-width-medium;
-        border-bottom: 1px solid $table-border-color;
-        z-index: -3;
-      }
-
+      // ── Day Columns (drop zones) ─────────────────────────────────────────
       .meetings {
         display: flex;
         flex-direction: column;
         position: relative;
         border-right: 1px solid $table-border-color;
         height: calc($number-of-hour-cells * $table-body-row-height);
-
-        .weekly-meeting {
-          position: absolute;
-          border: 3px solid white;
-          border-radius: 10px;
-          text-decoration: transparent;
-          writing-mode: vertical-rl;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          outline: 1px solid $theme-gray;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          &:hover {
-            outline: 2px solid blue;
-            overflow: visible;
-            z-index: 1;
-            cursor: pointer;
-          }
-        }
-        @media (min-width: 368px) and (max-width: 768px) {
-          width: $table-row-width-small;
-          padding: 2px;
-        }
+        transition: background-color 0.12s ease;
+        // Grow to fill available space, never shrink below 90px (mirrors .weekly-date).
+        flex: 1 0 90px;
+        padding: 2px;
 
         @media (min-width: 768px) {
           padding: 8px;
-          width: $table-row-width-medium;
+        }
+
+        // Hour + 30-min grid lines drawn directly on each day column.
+        // Hour mark is noticeably darker so time slots are easy to identify.
+        // 30-min mark is a lighter mid-tone for reference without competing.
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 24px,
+          rgba(180, 185, 194, 0.45) 24px,  // 30-min mark — subtle
+          rgba(180, 185, 194, 0.45) 25px,
+          transparent 25px,
+          transparent 49px,
+          rgb(100, 108, 120) 49px,          // hour mark — dark, clearly readable
+          rgb(100, 108, 120) 50px
+        );
+
+        &.drop-target {
+          background-color: rgba(79, 70, 229, 0.05);
+        }
+
+        // 30-min slot hover highlight — shown as cursor moves over empty space
+        .hover-slot {
+          position: absolute;
+          left: 0;
+          right: 0;
+          background: rgba(79, 70, 229, 0.08);
+          border-top: 1px dashed rgba(79, 70, 229, 0.35);
+          border-bottom: 1px dashed rgba(79, 70, 229, 0.35);
+          border-radius: 3px;
+          pointer-events: none;
+          z-index: 2;
+          transition: top 0.05s ease;
+        }
+
+        // Drop indicator: shows the full shift duration in the target column
+        .drop-indicator {
+          position: absolute;
+          left: 3px;
+          right: 3px;
+          border-radius: 6px;
+          background-color: rgba(79, 70, 229, 0.15);
+          border: 2px dashed rgba(79, 70, 229, 0.55);
+          pointer-events: none;
+          z-index: 5;
+          transition: top 0.07s ease;
         }
       }
 
@@ -288,7 +383,265 @@ $number-of-hour-cells: 16;
     }
   }
 
+  // ── Shift Blocks ───────────────────────────────────────────────────────────
+  .weekly-meeting {
+    position: absolute;
+    // Left accent stripe + subtle all-around border
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 4px solid rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    text-decoration: none;
+    outline: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    // Container queries watch this element's own rendered width so vertical
+    // layout triggers on any narrow card regardless of screen size.
+    container-type: inline-size;
+
+    // Entrance animation (delay set per-shift via inline style)
+    animation: shiftEnter 0.28s ease-out both;
+
+    // Smooth hover transitions
+    transition:
+      outline 0.15s ease,
+      box-shadow 0.18s ease,
+      transform 0.15s ease,
+      z-index 0s;
+
+    // Inner wrapper owns flex direction + spacing so the container query
+    // can flip it to row without touching .weekly-meeting itself.
+    .shift-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2px;
+      padding: 5px 6px 4px 8px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    // Employee name — top of card
+    .shift-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.95);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+
+    // Time range — directly below name
+    .shift-time {
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    // ── Narrow card (22px–47px): two-column vertical text ───────────────────
+    // Range is min-width:22px so it never matches cards < 22px — the very-narrow
+    // rule below owns that range exclusively and there is no cascade conflict.
+    @container (min-width: 22px) and (max-width: 47px) {
+      .shift-info {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3px;
+        padding: 4px 2px;
+      }
+
+      .shift-name {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.7rem;
+      }
+
+      .shift-time {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+    }
+
+    // ── Mobile / landscape phone: vertical text layout ───────────────────────
+    // The second condition catches phones rotated to landscape (width > 767px
+    // but height ≤ 500px, touch-only device).
+    @media (max-width: 767px),
+           (orientation: landscape) and (max-height: 500px) and (hover: none) and (pointer: coarse) {
+      .shift-info {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 3px;
+        padding: 4px 3px;
+      }
+
+      .shift-name {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 0.7rem;
+      }
+
+      .shift-time {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+    }
+
+    // ── Extremely narrow card (< 13px): no padding ──────────────────────────
+    @container (max-width: 12px) {
+      .shift-info {
+        padding: 0;
+      }
+    }
+
+    // ── Very narrow card (< 22px): single vertical strip ────────────────────
+    // Owns the < 22px range exclusively — the 47px rule above uses min-width:22px
+    // so it never fires here. No cascade conflict regardless of source order.
+    // All vertical-text styles are declared here directly since the 47px rule
+    // no longer matches.
+    @container (max-width: 27px) {
+      .shift-info {
+        flex-direction: column;
+        gap: 2px;
+        padding: 3px 1px;
+      }
+
+      .shift-name {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.7rem;
+      }
+
+      .shift-time {
+        writing-mode: vertical-lr;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        font-size: 0.6rem;
+        opacity: 0.85;
+      }
+    }
+
+    @container (max-width: 14px) {
+      .shift-info {
+        flex-direction: column;
+        gap: 2px;
+        padding: 3px 1px;
+      }
+    }
+
+    &:hover,
+    &.hovered {
+      outline: 2px solid #4f46e5;
+      overflow: visible;
+      z-index: 10;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+      transform: translateY(-1px);
+    }
+
+    // Admin shifts are draggable + resizable
+    &.admin {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      // Resize handles — top and bottom edges
+      .resize-handle {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 8px;
+        cursor: ns-resize;
+        z-index: 3;
+        touch-action: none;
+
+        &--top { top: 0; }
+        &--bottom { bottom: 0; }
+
+        // Subtle grip indicator, visible on hover
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: 1px;
+          opacity: 0;
+          transition: opacity 0.15s ease;
+        }
+
+        &--top::after  { top: 2px; }
+        &--bottom::after { bottom: 2px; }
+      }
+
+      &:hover .resize-handle::after,
+      &.hovered .resize-handle::after {
+        opacity: 1;
+      }
+    }
+
+    // Active resize state
+    &.resizing {
+      cursor: ns-resize !important;
+      z-index: 50 !important;
+      transition: none !important;
+      opacity: 0.9;
+    }
+
+    // Ghost element during drag
+    &.drag-ghost {
+      cursor: grabbing !important;
+      opacity: 0.88;
+      border: 2px dashed rgba(255, 255, 255, 0.8) !important;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      transform: rotate(1.5deg) !important;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    // Original element while being dragged
+    &.dragging {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
   .day-off.link {
     cursor: pointer;
+  }
+
+  // ── Day-off link badges ─────────────────────────────────────────────────
+  .day-off {
+    font-size: 0.65rem;
+    border-radius: 6px;
+    padding: 2px 4px;
+    line-height: 1.3;
+    text-align: center;
+
+    @media (min-width: 768px) {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+    }
   }
 }

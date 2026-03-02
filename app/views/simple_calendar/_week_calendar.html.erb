@@ -1,6 +1,41 @@
 <% @date_range = date_range %>
-<div class="weekly-calendar">
+
+<%# Overtime alert — hidden for now; re-enable by removing the `false &&` %>
+<% if false && (current_user.admin_user? || current_user.developer_user?) && @overtime_users.present? %>
+  <div class="mx-auto max-w-screen-xl px-4 pt-3">
+    <div class="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 shadow-sm">
+      <svg class="mt-0.5 h-5 w-5 shrink-0 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+      </svg>
+      <div>
+        <p class="text-sm font-semibold text-amber-800">Overtime this week</p>
+        <ul class="mt-1 space-y-0.5">
+          <% @overtime_users.each do |user, hours| %>
+            <li class="text-sm text-amber-700">
+              <span class="font-medium"><%= user.name_and_last_name %></span>
+              &mdash; <%= hours %>h
+              <span class="text-amber-500">(+<%= (hours - 40).round(1) %>h over)</span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%# Outer shell: flex column fills the full viewport height.
+    The calendar header lives here — OUTSIDE the scroll container —
+    so the hamburger drawer (position:fixed) is never trapped inside
+    the overflow:auto layer that causes sticky elements to composite
+    above the fixed backdrop/panel. %>
+<div class="weekly-calendar-shell">
   <%= render partial: 'shared/calendar_header', locals: { calendar: calendar, start_date: date_range[0], current: "Week"} %>
+
+<div class="weekly-calendar"
+     data-controller="weekly-calendar shift-drag"
+     data-weekly-calendar-location-id-value="<%= @location_id %>"
+     data-weekly-calendar-row-height-value="<%= Meeting::HOUR_HEIGHT_IN_PX %>"
+     data-shift-drag-row-height-value="<%= Meeting::HOUR_HEIGHT_IN_PX %>">
 
   <div class="table flex flex-col justify-center">
     <div class="table-header sticky top-0 md:sticky  my-sticky-offset ">
@@ -31,7 +66,6 @@
                 <% end %>
 
                 <% if day_off.morning_off?(day.in_time_zone) && day.after?(Time.now) %>
-                   <%# link_to "Request Evening Off", "day_offs/new?start_time=#{day.in_time_zone.change(hour: 15)}&end_time=#{day.in_time_zone.change(hour:23)}", class: "day-off shadow request-day-off-btn" %>
                    <%= link_to "Request Evening Off", new_location_day_off_path(day_off.location_id, start_time: day.in_time_zone.change(hour: 15), end_time: day.in_time_zone.change(hour:23)), class: "day-off shadow request-day-off-btn" %>
                 <% elsif day_off.evening_off?(day.in_time_zone) && day.after?(Time.now) %>
                    <%= link_to "Request Morning Off", new_location_day_off_path(day_off.location_id, start_time: day.in_time_zone.change(hour: 9), end_time: day.in_time_zone.change(hour:15)), class: "day-off shadow request-day-off-btn" %>
@@ -54,103 +88,24 @@
 
         <div class="hours">
           <% (8..23).each do |hour| %>
-            <div class="hour-cell-row-separator" style="top: <%= table_row_top(hour) - 17 %>px"></div>
-            <div class="hour-cell h-10" style="top: <%= table_row_top(hour)  %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
+            <div class="hour-cell h-10" style="top: <%= table_row_top(hour) %>px"><%= hour < 12 ? "#{idx_to_time(hour)}AM" : "#{idx_to_time(hour)}PM" %></div>
           <% end %>
         </div>
 
         <% week.each do |day| %>
-            <div data-date=<%= day.to_s %> class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? || current_user.developer_user? %>">
+            <div data-date="<%= day.to_s %>"
+                 data-controller="day-layout"
+                 class="week-day meetings <%= calendar.td_classes_for(day).join(" ") %> <%= 'admin-table' if current_user.location_admin_user? || current_user.developer_user? %>">
               <% if calendar.td_classes_for(day).include?("today") %>
                 <div class="current-time-liner relative <%='current-time-liner-admin' if current_user.location_admin_user? || current_user.developer_user? %>"></div>
               <% end %>
-              <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
-                <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
-              <% else %>
-              <% calendar.render_shifts_by_hour(sorted_events.fetch(day,[])).each_with_index do |shifts_by_hour, hour_idx| %>
-                <% shifts_by_hour.each_with_index do |shift, idx| %>
-                  <%= render partial: "meetings/weekly_meeting", locals: {meeting: shift, idx: idx, meetings_count: shifts_by_hour.count, hour_idx: hour_idx, classes: "weekly-meeting-#{shift.id}", style: { height: "2.5rem"}} %>
-                <% end %>
+              <% sorted_events.fetch(day, []).each_with_index do |shift, idx| %>
+                <%= render partial: "meetings/weekly_meeting", locals: { meeting: shift, idx: idx, classes: "weekly-meeting-#{shift.id}" } %>
               <% end %>
             </div>
           <% end %>
         <% end %>
-        
-      <% end %>
     </div>
   </div>
-</div>
-
-<script>
-  document.addEventListener("turbo:load", function() {
-    row_height = <%= Meeting::HOUR_HEIGHT_IN_PX %>
-
-    // current time liner
-    current_time_liner = document.querySelector(".current-time-liner")
-    if (current_time_liner) {
-      current_time = new Date()
-      current_hour = current_time.getHours()
-      current_minutes = current_time.getMinutes()
-      current_time_height_from_top = (current_hour - 8) * row_height + current_minutes /60 * row_height
-      current_time_liner.style.top = `${current_time_height_from_top}px`
-      // add date attribute to the current time liner to be used in the click event
-
-      current_time.setMinutes(0)
-      current_time.setSeconds(0)
-
-      admin_current_time_liner = document.querySelector(".current-time-liner-admin")
-      admin_current_time_liner?.addEventListener("click", (e) => {
-        e.stopPropagation()
-        window.location.href = "/locations/<%= @location_id %>/meetings/new?start_date=" + encodeURIComponent(current_time)
-      })
-
-      // append the current time liner to the today column//
-
-      // onClick scroll down to the current time
-      document.querySelector(".today-date")?.addEventListener("click", (e) => {
-        y = admin_current_time_liner.getBoundingClientRect().top + window.pageYOffset - 200
-
-        window.scrollTo({top: y})
-      })
-    }
-
-
-    table_body = document.querySelectorAll(".admin-table")
-        console.log("loaded")
-    table_body.forEach(el => {
-      el.addEventListener("click", (e) => {
-        //time configuration
-        window.target = e
-  console.log("CLICKED")
-        clicked_el = e.target.getClientRects()[0]
-        table_cell_height = clicked_el.height / 17
-        y_axis = e.clientY - clicked_el.top
-
-      total_hours = y_axis / table_cell_height
-      clicked_spot_into_hour = Math.floor(total_hours)
-      exact_minutes = Math.round((total_hours - clicked_spot_into_hour) * 60)
-      rounded_down_minutes = Math.floor(exact_minutes / 15) * 15
-      clicked_time_in_hour = `${(8 + clicked_spot_into_hour)}:00`
-
-        //date configuration
-        date = e.target.getAttribute("data-date")
-        window.location.href =`/locations/${<%= @location_id %>}/meetings/new?start_date=${date} ${clicked_time_in_hour}`
-        date_and_time = new Date(`${date} ${clicked_time_in_hour}`)
-        console.log(date_and_time)
-        //window.location.href = "/meetings/new?start_date=" + encodeURIComponent(date_and_time)
-        //table_body.querySelector(".meeting-form").style.display = "block"
-
-      
-      })
-    })
-
-    employee_hours = document.querySelectorAll(".employee-hours")
-    employee_hours?.forEach(el => {
-      el.addEventListener("click", (e) => {
-        document.querySelector(".empty-tr")?.classList.toggle("overflow-auto")
-        document.querySelector(".empty-tr")?.classList.toggle("z-20")
-
-      })
-    })
-  })
-</script>
+</div><%# closes .weekly-calendar %>
+</div><%# closes .weekly-calendar-shell %>

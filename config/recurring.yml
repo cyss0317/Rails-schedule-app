@@ -1,0 +1,31 @@
+# examples:
+#   periodic_cleanup:
+#     class: CleanSoftDeletedRecordsJob
+#     queue: background
+#     args: [ 1000, { batch_size: 500 } ]
+#     schedule: every hour
+#   periodic_cleanup_with_command:
+#     command: "SoftDeletedRecord.due.delete_all"
+#     priority: 2
+#     schedule: at 5am every day
+
+production:
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
+
+  # Start worker — 7:55 PM CST Saturday
+  start_worker:
+    class: StartWorkerJob
+    schedule: "55 1 * * 0"
+
+  # Weekly shift generation — 8:00 PM CST Saturday
+  weekly_shift_generation:
+    class: WeeklyShiftGenerationJob
+    schedule: "0 2 * * 0"
+    queue: default
+
+  # Stop worker — 8:10 PM CST Saturday
+  stop_worker:
+    class: StopWorkerJob
+    schedule: "10 2 * * 0"

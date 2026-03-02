@@ -1,48 +1,40 @@
-  <% if current_user.location_admin_user? || current_user.developer_user? %>
-    <%= link_to "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}", edit_meeting_path(meeting),
-      {  
-        class: "weekly-meeting shadow #{classes} admin",
-        style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
-          opacity: #{1 - (hour_idx * 0.015)};
-          height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
-          left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
-      } 
-    %>
-  <% else %>
-    <%= content_tag :div, "#{meeting.user_weekly_name}   #{time_from_to(meeting.start_time, meeting.end_time)}",
-      {  
-        class: "weekly-meeting shadow #{classes}",
-        style: "background-color:#{meeting.user_color}; width: #{meeting.table_row_width(meetings_count, hour_idx)}%;
-          opacity: #{1 - (hour_idx * 0.015)};
-          height: #{meeting.table_row_height}px; top: #{meeting.table_row_top_shift}px;
-          left: #{meeting.table_row_left_shift(idx, meetings_count, hour_idx)}%;"
-      } 
-    %>
-  <% end %>
-  <script>
-    // make border line appear on blocks of time that belongs to a meeting
-    document.addEventListener('turbo:load', () => {
-      document.querySelectorAll(".weekly-meeting").forEach(node => {
-        node.addEventListener("click", (e) => e.stopPropagation());
-      });
+<% delay = (idx.to_f * 0.05).round(3) %>
+<% shared_style = "background-color:#{meeting.user_color};
+  width:100%;
+  height:#{meeting.table_row_height}px;
+  top:#{meeting.table_row_top_shift}px;
+  left:0%;
+  animation-delay:#{delay}s;" %>
 
-      document.querySelectorAll(".<%= classes %>").forEach(meeting => {
-        // meeting.getBoundingClientRect();
-        // meeting.style.left = 
-        meeting.addEventListener("mouseover", (e) => {
-          document.querySelectorAll(".<%= classes %>").forEach(meeting => {
-            meeting.style.outline = "2px solid blue";
-            meeting.style.overflow = "visible";
-            meeting.style.zIndex = "1";
-          })
-        })
-        meeting.addEventListener("mouseleave", (e) => {
-          document.querySelectorAll(".<%= classes %>").forEach(meeting => {
-            meeting.style.outline = "none"
-            meeting.style.overflow = "hidden"
-            meeting.style.zIndex = "0";
-          })
-        })
-      })
-    })
-  </script>
+<% shared_data = {
+  meeting_id: meeting.id,
+  meeting_duration: (meeting.end_time - meeting.start_time).to_i,
+  id: meeting.id,
+  start_min: meeting.start_time.hour * 60 + meeting.start_time.min,
+  end_min: meeting.end_time.hour * 60 + meeting.end_time.min,
+  day_layout_target: "event"
+} %>
+
+<% if current_user.location_admin_user? || current_user.developer_user? %>
+  <%= link_to edit_meeting_path(meeting),
+    class: "weekly-meeting shadow #{classes} admin",
+    style: shared_style,
+    data: shared_data do %>
+    <div class="resize-handle resize-handle--top"></div>
+    <div class="shift-info">
+      <span class="shift-name"><%= meeting.user_weekly_name %></span>
+      <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    </div>
+    <div class="resize-handle resize-handle--bottom"></div>
+  <% end %>
+<% else %>
+  <%= content_tag :div,
+    class: "weekly-meeting shadow #{classes}",
+    style: shared_style,
+    data: shared_data do %>
+    <div class="shift-info">
+      <span class="shift-name"><%= meeting.user_weekly_name %></span>
+      <span class="shift-time"><%= time_from_to(meeting.start_time, meeting.end_time) %></span>
+    </div>
+  <% end %>
+<% end %>

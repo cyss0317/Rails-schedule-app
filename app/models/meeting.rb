@@ -46,7 +46,7 @@ class Meeting < ApplicationRecord
   end
 
   def user_name
-    user.first_name
+    user.name_and_last_name
   end
 
   def user_name_month
@@ -119,35 +119,51 @@ class Meeting < ApplicationRecord
     # table_row_top(start_time.hour)
   end
 
-  def table_row_left_shift(idx, meetings_count, hour_idx)
-    (idx.to_i % meetings_count) * table_row_width(meetings_count, hour_idx) + table_row_right_spacing(
-      meetings_count, idx, hour_idx
-    )
+  # Equal-width slots with a 1% gap between adjacent shifts.
+  # hour_idx is accepted for backward compatibility but is no longer used.
+  SHIFT_GAP_PERCENT = 1.0
+
+  def table_row_width(meetings_count, _hour_idx = nil)
+    return MAX_WIDTH.to_f if meetings_count <= 1
+
+    gaps = (meetings_count - 1) * SHIFT_GAP_PERCENT
+    (MAX_WIDTH - gaps) / meetings_count
   end
 
-  def avoid_overlap(hour_idx, _meetings_count)
-    avoid_width_by = 8
-    (hour_idx % 3) * avoid_width_by
-    # + (meetings_count - 1) * avoid_width_by
+  def table_row_left_shift(idx, meetings_count, _hour_idx = nil)
+    idx * (table_row_width(meetings_count) + SHIFT_GAP_PERCENT)
   end
-
-  def table_row_right_spacing(meetings_count, idx, hour_idx)
-    ((MAX_WIDTH - meetings_count * table_row_width(meetings_count, hour_idx)) / meetings_count) * idx
-  end
-
-  def table_row_width(meetings_count, hour_idx)
-    MAX_WIDTH / meetings_count - avoid_overlap(hour_idx, meetings_count)
-  end
-
-  # def self.current_time_class
-  #   DateHelper.current_time_hour
-  # end
-
-  def self.morning_shifts; end
 
   # display work time from to end
   def work_time
     "#{format_date(start_time)}-#{format_date(end_time)}"
+  end
+
+  def self.meetings_for_source_week(source_date, location_id)
+    week_start = source_date.beginning_of_week.beginning_of_day
+    week_end   = source_date.end_of_week.end_of_day
+    filter_by_location_id(location_id).where(start_time: week_start..week_end)
+  end
+
+  def self.copy_week_meetings_from_source(source_date, target_week, location_id, unable_list = [])
+    source_meetings = meetings_for_source_week(source_date, location_id)
+    target_cwday_to_date = target_week.each_with_object({}) { |d, h| h[d.cwday] = d }
+
+    source_meetings.each do |meeting|
+      target_date   = target_cwday_to_date[meeting.convert_wday_to_cwday(meeting.start_time.wday)]
+      new_start     = meeting.updated_date_on_start_time(target_date)
+      new_end       = meeting.updated_date_on_end_time(target_date)
+      already_exists = filter_by_location_id(location_id)
+                         .where(user_id: meeting.user_id, start_time: new_start, end_time: new_end)
+                         .exists?
+      next if already_exists
+
+      if meeting.user.can_work_for_time_frame?(new_start, new_end, target_date)
+        create!(start_time: new_start, end_time: new_end, user_id: meeting.user_id, location_id:)
+      else
+        unable_list << meeting
+      end
+    end
   end
 
   def self.most_recent_week_meetings(location_id)
@@ -195,14 +211,6 @@ class Meeting < ApplicationRecord
     return 7 if number.zero?
 
     number
-  end
-
-  def user_can_work?
-    # check if meetings start_time and end_time collapse with user's day_off's start_time and end_time
-  end
-
-  def user_name
-    user.name_and_last_name
   end
 
   private

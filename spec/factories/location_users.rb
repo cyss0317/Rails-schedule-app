@@ -5,6 +5,10 @@ FactoryBot.define do
     transient { meetings_count { 2 }}
     role { %w[admin user].sample }
 
+    trait :active do
+      active { true }
+    end
+
     trait(:with_relationships) do
       association :user
       association :location

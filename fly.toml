@@ -12,6 +12,14 @@ console_command = "/rails/bin/rails console"
 [deploy]
   release_command = "./bin/rails db:prepare"
 
+# ── Processes ────────────────────────────────────────────────────────────────
+# "app"    — Puma web server (receives HTTP traffic)
+# "worker" — SolidQueue background job processor + recurring cron schedule
+[processes]
+  app    = "./bin/rails server"
+  worker = "bin/rails solid_queue:start"
+
+# ── Web (app process only) ────────────────────────────────────────────────────
 [http_service]
   internal_port = 3000
   force_https = true
@@ -34,10 +42,19 @@ console_command = "/rails/bin/rails console"
     [checks.status.headers]
       X-Forwarded-Proto = "https"
 
+# ── VM sizing per process ─────────────────────────────────────────────────────
 [[vm]]
   cpu_kind = "shared"
   cpus = 1
   memory_mb = 512
+  processes = ["app"]
+
+# Worker needs less memory — SolidQueue is lightweight.
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+  processes = ["worker"]
 
 [[statics]]
   guest_path = "/rails/public"

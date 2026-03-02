@@ -46,9 +46,8 @@
     </div>
 
     <!-- Body -->
-    <div class="px-4 py-3">
-      <!-- Optional profile/brand -->
-      <%# Example user badge %>
+    <div class="px-4 py-3 overflow-y-auto h-[calc(100vh-64px)]">
+      <!-- User badge -->
       <div class="mb-4 flex items-center gap-3 rounded-xl border p-3">
         <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center font-semibold text-indigo-700">
           <%= (current_user&.email || 'U')[0].upcase %>
@@ -61,19 +60,29 @@
 
       <!-- Nav links -->
       <nav class="space-y-1" aria-label="Main">
-        <% if params[:location_id].present? %>
-          <button
-            type="button"
-            class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            data-controller="clipboard"
-            data-action="click->clipboard#copy"
-            data-clipboard-text="<%= new_user_registration_url(location_id: params[:location_id]) %>"
-          >
-            Copy Employee Sign Up URL
-          </button>
-        <% end %>
+        <%# Send invitation (replaces copy URL button) %>
         <% if (current_user.admin_user? || current_user.developer_user?) && params[:location_id].present? %>
-          <div> <%= link_to "Show Employees", location_location_users_path(location_id: params[:location_id]), class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %></div>
+          <details class="w-full group">
+            <summary class="cursor-pointer list-none rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+              Send Sign-Up Invitation
+              <svg class="h-4 w-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+              </svg>
+            </summary>
+            <div class="mt-1 pl-2 pb-2">
+              <%= form_with url: invitations_path, method: :post do |f| %>
+                <%= f.hidden_field :location_id, value: params[:location_id] %>
+                <%= f.email_field :email, placeholder: "employee@email.com",
+                      class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm mt-1 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" %>
+                <%= f.submit "Send Invite",
+                      class: "mt-2 w-full rounded-xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 cursor-pointer" %>
+              <% end %>
+            </div>
+          </details>
+        <% end %>
+
+        <% if (current_user.admin_user? || current_user.developer_user?) && params[:location_id].present? %>
+          <div><%= link_to "Show Employees", location_location_users_path(location_id: params[:location_id]), class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %></div>
         <% end %>
 
         <%= link_to "Home", root_path,
@@ -82,24 +91,45 @@
         <%= link_to "Edit Profile", edit_user_registration_path,
           class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
 
-        <% if Rails.env.development? && current == "week" %>
-          <%= button_to "SEED Shifts", seed_location_meetings_path, method: :post,
-            class: "block rounded-xl px-3 py-2 hover:bg-gray-50" %>
-        <% end %>
-
+        <%# Admin: copy/clear/paste week schedules %>
         <% if (current_user.location_admin_user? || current_user.developer_user?) && current == "Week" %>
           <% if @meetings.empty? %>
-            <%= button_to "Copy Last Week Shifts",
-                  copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
+            <%= button_to "Paste Last Week Shifts",
+                  paste_last_week_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
                   method: :post,
-                  data: { turbo_confirm: "Are you sure you want to copy the most recent week of shifts?"},
-                  class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50" %>
+                  data: { turbo_confirm: "Paste shifts from last week into this week?" },
+                  class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-blue-600 text-sm" %>
+            <details class="w-full group">
+              <summary class="cursor-pointer list-none rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+                Copy Shifts From Week…
+                <svg class="h-4 w-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                </svg>
+              </summary>
+              <div class="mt-1 pl-2 pb-2">
+                <%= form_with url: copy_previous_week_schedule_location_meetings_path(location_id: params[:location_id]),
+                              method: :post,
+                              data: { turbo_confirm: "Copy shifts from the selected source week?" } do |f| %>
+                  <% @date_range.each do |date| %>
+                    <input type="hidden" name="target_week[]" value="<%= date %>">
+                  <% end %>
+                  <div class="flex flex-col gap-1 mt-1">
+                    <label class="text-xs text-gray-500">Source week starting (Monday):</label>
+                    <%= f.date_field :source_date,
+                          class: "w-full rounded-lg border border-gray-300 px-2 py-1.5 text-sm",
+                          value: (Date.today - 1.week).beginning_of_week %>
+                  </div>
+                  <%= f.submit "Copy Shifts",
+                        class: "mt-2 w-full rounded-xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 cursor-pointer" %>
+                <% end %>
+              </div>
+            </details>
           <% else %>
             <%= button_to "Clear This Week Shifts",
                   clear_selected_week_location_meetings_path(location_id: params[:location_id], target_week: @date_range),
                   method: :delete,
                   data: { turbo_confirm: "Are you sure you want to delete all the shifts?" },
-                  class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-red-600" %>
+                  class: "w-full text-left rounded-xl px-3 py-2 hover:bg-gray-50 text-red-600 text-sm" %>
           <% end %>
         <% end %>
 
